@@ -20,8 +20,15 @@ const postSchema = new mongoose.Schema({
     // media array to store images/videos
     media: [
         {
-            url: { type: String, required: true },   // Cloudinary/S3 URL
-            type: { type: String, enum: ["image", "video"], required: true }
+            url: {
+                type: String,
+                required: true
+            },  // Cloudinary/S3 URL
+
+            type: {
+                type: String, enum: ["image", "video"],
+                required: true
+            } // media type (image/video)
         }
     ],
 
