@@ -1,6 +1,6 @@
 import mongoose from "mongoose"; // Import mongoose
 
-// Post schema
+// comment schema
 const commentSchema = new mongoose.Schema({
 
     // post id on which the comment is made
