@@ -1,4 +1,6 @@
 import mongoose from "mongoose"; // Import mongoose
+import bcrypt from "bcryptjs"; // Import bcrypt for password hashing
+import jwt from "jsonwebtoken"; // Import JWT for authentication
 
 // Creating a user schema
 const userSchema = new mongoose.Schema({
@@ -45,6 +47,12 @@ const userSchema = new mongoose.Schema({
         default: "",
     },
 
+    // cloudinary public id for profile image
+    cloudinaryPublicId: {
+        type: String,
+        default: "",
+    },
+
     // user bio
     bio: {
         type: String,
@@ -54,7 +62,7 @@ const userSchema = new mongoose.Schema({
     // user gender 
     gender: {
         type: String,
-        enum: ["make", "female", "other"],
+        enum: ["male", "female", "other"],
     },
 
     // user followers
@@ -95,9 +103,41 @@ const userSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
+// Pre-save hook to hash the password before saving
+userSchema.pre("save", async function (next) {
+
+    try {
+
+        // if password not modified skip hashing
+        if (!this.isModified("password")) return next();
+
+        // hash and replace password
+        this.password = await bcrypt.hash(this.password, 10);
+
+        // proceed to save
+        next();
+
+    } catch (err) {
+
+        // call next with error if error occurs
+        next(err);
+
+    }
+
+});
+
+// Creating a JWT token for the user
+userSchema.methods.getJwtToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE })
+}
+
+// Method to compare passwords
+userSchema.methods.comparePassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password); // Compare entered password with hashed password
+}
+
 // Create a user model
 const User = mongoose.model("User", userSchema);
 
 // Export the user model
 export default User;
-
