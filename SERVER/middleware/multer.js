@@ -6,16 +6,23 @@ import crypto from 'crypto'; // Importing crypto module for generating unique fi
 // folder to store tem uploads
 const tmpDir = path.join(process.cwd(), 'public', 'tmpUploads');
 
-// create the tmp directory if it doesn't exist
-fs.mkdirSync(tmpDir, { recursive: true });
-
 // Multer storage configuration
 const storage = multer.diskStorage({
 
-    // destination where files will be stored
     destination: (req, file, cb) => {
-        cb(null, tmpDir)
+        try {
+            // create the tmp directory if it doesn't exist on request
+            fs.mkdirSync(tmpDir, { recursive: true });
+            cb(null, tmpDir);
+        } catch (err) {
+            cb(err); // multer will forward this error
+        }
     },
+
+    // destination where files will be stored
+    // destination: (req, file, cb) => {
+    //     cb(null, tmpDir)
+    // },
 
     // filename configuration to avoid name conflicts
     filename: (req, file, cb) => {
@@ -45,5 +52,5 @@ const imageFilter = (req, file, cb) => {
 export const upload = multer({
     storage: storage,
     fileFilter: imageFilter,
-    limits: { fileSize: 10 * 1024 * 1024 } // limit file size to 10MB
+    limits: { fileSize: 20 * 1024 * 1024 } // limit file size to 10MB
 });

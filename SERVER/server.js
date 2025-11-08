@@ -3,8 +3,9 @@ import express from "express"; // Express framework for building APIs
 import dotenv from "dotenv"; // Import dotenv for environment variables
 import connectDB from "./config/dataBase.js"; // Import the function to connect to MongoDB
 import errorMiddleware from "./middleware/error.js"; // Import custom error handling middleware
-import userRouter from "./routes/userRoutes.js"; // Import user routes
 import cookieParser from "cookie-parser"; // Import cookie-parser middleware
+import postRouter from "./routes/postRoutes.js"; // Import post routes
+import userRouter from "./routes/userRoutes.js"; // Import user routes
 
 // -------------------- CONFIGURATION  -------------------- //
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.set('query parser', 'extended');
 
 // Enable cookie parsing for incoming requests
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 // -------------------- CONNECT TO MONGODB -------------------- //
 
@@ -31,6 +32,9 @@ connectDB(); // Call the function to connect to MongoDB
 
 // user routes `/api/users`
 app.use("/api/users", userRouter); // Use userRouter for handling user-related routes
+
+// post routes `/api/posts`
+app.use("/api/posts", postRouter); // Use postRouter for handling post-related routes
 
 // -------------------- ERROR MIDDLEWARE -------------------- //
 

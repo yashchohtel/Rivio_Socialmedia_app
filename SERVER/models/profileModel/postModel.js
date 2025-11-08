@@ -20,15 +20,21 @@ const postSchema = new mongoose.Schema({
     // media array to store images/videos
     media: [
         {
+            mediaType: {
+                type: String, enum: ["image", "video"],
+                required: true
+            }, // media type (image/video)
+
             url: {
                 type: String,
                 required: true
             },  // Cloudinary/S3 URL
 
-            type: {
-                type: String, enum: ["image", "video"],
+            cloudinaryPublicId: {
+                type: String,
                 required: true
-            } // media type (image/video)
+            } // Cloudinary public id
+
         }
     ],
 
@@ -69,7 +75,7 @@ const postSchema = new mongoose.Schema({
         type: String
     }
 
-}, { timeseriestamps: true });
+}, { timestamps: true });
 
 // Creating a post modal
 const Post = mongoose.model("Post", postSchema);
