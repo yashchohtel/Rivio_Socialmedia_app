@@ -42,13 +42,6 @@ export const registerUser = async (req, res, next) => {
     // Save the new user to the database
     const savedUser = await newUser.save();
 
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- register controller ---↓');
-        console.log(`User created: ${savedUser}`);
-        console.log('↑--- register controller ---↑');
-    }
-
     // sending token to the user
     sendToken(savedUser, 200, res);
 
@@ -82,13 +75,6 @@ export const loginUser = async (req, res, next) => {
         return next(new ErrorHandler("Invalid credentials", 401));
     }
 
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- login controller ---↓');
-        console.log(`User logged in: ${user}`);
-        console.log('↑--- login controller ---↑');
-    }
-
     // sending token to the user
     sendToken(user, 200, res);
 
@@ -103,13 +89,6 @@ export const logoutUser = async (req, res, next) => {
         secure: true,
         sameSite: 'none',
     });
-
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- logout controller ---↓');
-        console.log("User logged out successfully");
-        console.log('↑--- logout controller ---↑');
-    }
 
     // Return success response
     res.status(200).json({
@@ -132,13 +111,6 @@ export const getMyProfile = async (req, res, next) => {
         return next(new ErrorHandler("User not found", 404));
     }
 
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- getMyProfile controller ---↓');
-        console.log("Profile fetched successfully" + user);
-        console.log('↑--- getMyProfile controller ---↑');
-    }
-
     // send user profile as response
     res.status(200).json({
         success: true,
@@ -158,13 +130,6 @@ export const getUserProfile = async (req, res, next) => {
 
     if (!user) {
         return next(new ErrorHandler("User not found", 404));
-    }
-
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- getUserProfileById controller ---↓');
-        console.log("Profile fetched successfully", user);
-        console.log('↑--- getUserProfileById controller ---↑');
     }
 
     // send user profile as response
@@ -223,13 +188,6 @@ export const editProfile = async (req, res, next) => {
     // save the user details
     await user.save();
 
-    // logs for debugging remove in production
-    if (process.env.NODE_ENV === "development") {
-        console.log('↓--- editProfile controller ---↓');
-        console.log("Profile updated successfully", user);
-        console.log('↑--- editProfile controller ---↑');
-    }
-
     // send success response
     res.status(200).json({
         success: true,
@@ -256,15 +214,10 @@ export const removeProfilePicture = async (req, res, next) => {
     user.profileImage = null;
     user.cloudinaryPublicId = null;
 
+    // save user
     await user.save();
 
-    // Optional: Log only in development
-    if (process.env.NODE_ENV === "development") {
-        console.log("↓--- removeProfileImage controller ---↓");
-        console.log("Profile image removed successfully", user);
-        console.log("↑--- removeProfileImage controller ---↑");
-    }
-
+    // return response
     res.status(200).json({
         success: true,
         message: "Profile image removed successfully",
@@ -323,9 +276,6 @@ export const getSuggestedUsers = async (req, res, next) => {
 
     }
 
-    console.log(suggestedUsers);
-    console.log(suggestedUsers.length);
-
     // Send success response
     res.status(200).json({
         success: true,
@@ -342,9 +292,6 @@ export const followUnfollowUser = async (req, res, next) => {
     // Extract information from request
     const { id } = req.user
     const { targetUserId } = req.params;
-
-    console.log(id);
-    console.log(targetUserId);
 
     // Find both users
     const currentUser = await User.findById(id).select("following followers");

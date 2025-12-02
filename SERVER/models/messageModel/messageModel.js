@@ -23,7 +23,7 @@ const messageSchema = new mongoose.Schema({
         default: ""
     },
 
-})
+});
 
 // Create a message model
 const Message = mongoose.model("Message", messageSchema);

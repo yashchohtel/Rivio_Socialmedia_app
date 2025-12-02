@@ -6,6 +6,7 @@ import errorMiddleware from "./middleware/error.js"; // Import custom error hand
 import cookieParser from "cookie-parser"; // Import cookie-parser middleware
 import postRouter from "./routes/postRoutes.js"; // Import post routes
 import userRouter from "./routes/userRoutes.js"; // Import user routes
+import chatRoutes from "./routes/chatsRoutes.js"; // Import chats routes
 
 // -------------------- CONFIGURATION  -------------------- //
 
@@ -35,6 +36,9 @@ app.use("/api/users", userRouter); // Use userRouter for handling user-related r
 
 // post routes `/api/posts`
 app.use("/api/posts", postRouter); // Use postRouter for handling post-related routes
+
+// post routes `/api/chats`
+app.use("/api/chats", chatRoutes); // Use chatRoutes for handling chats-related routes
 
 // -------------------- ERROR MIDDLEWARE -------------------- //
 
