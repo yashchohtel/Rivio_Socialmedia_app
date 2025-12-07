@@ -1,0 +1,32 @@
+.welcomepage {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcomepage .imageContainer {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcomepage .imageContainer img {
+  width: 95%;
+  height: auto;
+}
+
+.welcomepage .welcomePageForm {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.welcomepage .welcomePageForm .logoImage img {
+  width: 25rem;
+}
