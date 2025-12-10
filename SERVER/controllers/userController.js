@@ -37,7 +37,7 @@ export const registerUser = async (req, res, next) => {
         email,
         password,
         dateOfBirth
-    })
+    });
 
     // Save the new user to the database
     const savedUser = await newUser.save();
@@ -45,7 +45,7 @@ export const registerUser = async (req, res, next) => {
     // sending token to the user
     sendToken(savedUser, 200, res);
 
-}
+};
 
 // LOGIN 
 export const loginUser = async (req, res, next) => {

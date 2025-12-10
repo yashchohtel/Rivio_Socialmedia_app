@@ -4,31 +4,35 @@ import RegisterLogin from '../../Components/RegisterLoginForm/RegisterLogin'
 
 const Welcome = () => {
 
-    const formType = "login";
+    // state to show hide image
+    const [formChange, setFormChange] = React.useState("none");
 
+    // handle form change
+    function handleFormChange() {
+        setFormChange("changed");
+    }
+    
     return (
         <>
             {/* welcome page */}
             <section className='welcomepage'>
 
                 {/* welcome page image container */}
-                <div className="imageContainer">
-                    <img src="/images/welcomeImage.png" alt="welcome" />
-                </div>
+                {formChange !== "changed" && (
+                    <div className="imageContainer">
+                        <img src="/images/welcomeImagep.png" alt="welcome" />
+                    </div>
+                )}
 
                 {/* welcome page */}
                 <div className="welcomePageForm">
 
-                    {/* logo image */}
-                    <div className="logoImage">
-                        <img src="/images/transparentLogoWhite.png" alt="logo" />
-                    </div>
 
                     {/* form container */}
                     <div className="welcFormContainer">
 
                         {/* register/logn form component */}
-                        <RegisterLogin formType={formType}/>
+                        <RegisterLogin handleFormChange={handleFormChange} />
 
                     </div>
 
@@ -37,6 +41,6 @@ const Welcome = () => {
             </section>
         </>
     )
-}
+};
 
-export default Welcome
+export default Welcome;

@@ -1,9 +1,10 @@
 .welcomepage {
   width: 100%;
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 4rem 0;
+  min-height: 100vh;
 }
 
 .welcomepage .imageContainer {
@@ -24,9 +25,4 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3rem;
-}
-
-.welcomepage .welcomePageForm .logoImage img {
-  width: 25rem;
 }
