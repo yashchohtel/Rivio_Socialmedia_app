@@ -62,8 +62,10 @@ const userSchema = new mongoose.Schema({
     // user gender 
     gender: {
         type: String,
-        enum: ["male", "female", "other"],
+        enum: ["male", "female", "other", "prefer_not_to_say"],
+        default: "prefer_not_to_say",
     },
+
 
     // user followers
     followers: [{

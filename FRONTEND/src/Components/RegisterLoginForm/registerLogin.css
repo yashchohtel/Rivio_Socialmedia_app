@@ -119,6 +119,55 @@
   cursor: pointer;
 }
 
+.page2label {
+  color: var(--text-color-1);
+  font-size: 1.4rem;
+  pointer-events: none;
+  font-family: var(--font-main);
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.inputGroupPage2 {
+  margin-bottom: 1rem;
+}
+
+.genderSelect {
+  width: 100%;
+  padding: 12px;
+  background: #1c1c1c; /* same dark bg */
+  border: 1px solid #333; /* same border */
+  border-radius: 8px; /* same rounded corners */
+  font-size: 14px;
+  color: #fff; /* white text */
+  outline: none;
+  cursor: pointer;
+}
+
+/* On focus (same as date input) */
+input[type="radio"] {
+  accent-color: #00aaff;
+}
+
+input[type="radio"]:checked + span {
+  color: #00aaff;
+}
+
+.gender-container {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.gender-container .gender-option {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 1.6rem;
+  color: var(--text-color-1);
+  cursor: pointer;
+}
+
 .agreement-text {
   margin-top: 1rem;
   text-align: center;
@@ -136,6 +185,13 @@
   font-family: var(--font-main);
   font-weight: 500;
   font-family: inherit;
+}
+
+.backBtn {
+  color: var(--text-color-3);
+  font-size: 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
 }
 
 .forgot-password {
@@ -158,4 +214,12 @@
   font-family: var(--font-heading);
   font-weight: 600;
   cursor: pointer;
+}
+
+.formError {
+  color: #fb0000;
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-family: var(--font-heading);
+  letter-spacing: 0.02rem;
 }
