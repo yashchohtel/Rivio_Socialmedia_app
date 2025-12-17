@@ -6,23 +6,23 @@ const Welcome = () => {
 
     // state to show hide image
     const [formChange, setFormChange] = React.useState("none");
-    
+
     // handle form change
     function handleFormChange() {
         setFormChange("changed");
     }
-    
+
     return (
         <>
             {/* welcome page */}
             <section className='welcomepage'>
 
                 {/* welcome page image container */}
-                {/* {formChange !== "changed" && (
-                   <div className="imageContainer">
+                {formChange !== "changed" && (
+                    <div className="imageContainer">
                         <img src="/images/welcomeImagep.png" alt="welcome" />
-                    </div> 
-                )} */}
+                    </div>
+                )}
 
                 {/* welcome page */}
                 <div className="welcomePageForm">

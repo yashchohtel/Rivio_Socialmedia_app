@@ -217,7 +217,7 @@ input[type="radio"]:checked + span {
 }
 
 .formError {
-  color: #fb0000;
+  color: #ff2b2b;
   font-size: 1.3rem;
   font-weight: 400;
   font-family: var(--font-heading);

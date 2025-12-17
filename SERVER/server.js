@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"; // Import cookie-parser middleware
 import postRouter from "./routes/postRoutes.js"; // Import post routes
 import userRouter from "./routes/userRoutes.js"; // Import user routes
 import chatRoutes from "./routes/chatsRoutes.js"; // Import chats routes
+import cors from "cors"; // Middleware to enable CORS (Cross-Origin Resource Sharing)
 
 // -------------------- CONFIGURATION  -------------------- //
 
@@ -21,6 +22,16 @@ const app = express();
 // Enable JSON parsing for request bodies
 app.use(express.json());
 app.set('query parser', 'extended');
+
+// Enable CORS to allow frontend to communicate with backend
+app.use(cors({
+    // Allow requests from this origin
+    origin: [
+        "http://localhost:3000"
+    ], 
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed HTTP methods
+    credentials: true, // Allow cookies to be sent with requests
+}));
 
 // Enable cookie parsing for incoming requests
 app.use(cookieParser());
