@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import './registerLogin.css'
-
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../../features/auth/authThunk';
+
 const RegisterLogin = ({ handleImageChange }) => {
+
+    // configure dispatch use to dispatch actions 
+    const dispatch = useDispatch();
+
+    // getting required Data from global store using useSelector
+    const { loading, successMessage, error, user, isAuthenticated } = useSelector((state) => state.auth);
 
     // state to show/hide password
     const [showPassword, setShowPassword] = useState(false);

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { registerUser } from "./authThunk";
 
 // initial state for auth slice
 const initialState = {
@@ -27,6 +28,38 @@ const authSlice = createSlice({
             state.error = null;
             state.successMessage = null;
         },
+
+    },
+
+
+    // extrareducers to handle async actions
+    extraReducers: (builder) => {
+
+        // add cases for async thunks here
+        builder
+
+            // register user
+            .addCase(registerUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.successMessage = null;
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                console.log("er action" + action);
+
+                state.loading = false;
+                state.successMessage = action.payload.message;
+                state.isAuthenticated = true;
+                state.user = action.payload.user;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+
+                console.log("er action" + action);
+                console.log(action);
+                state.loading = false;
+                state.error = action.payload;
+                state.isAuthenticated = false;
+            });
 
     },
 
