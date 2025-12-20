@@ -27,8 +27,8 @@ app.set('query parser', 'extended');
 app.use(cors({
     // Allow requests from this origin
     origin: [
-        "http://localhost:3000"
-    ], 
+        "http://localhost:5173",
+    ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allow cookies to be sent with requests
 }));

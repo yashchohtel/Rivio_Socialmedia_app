@@ -179,6 +179,9 @@ img {
   transition: background-color 0.3s ease;
   cursor: not-allowed;
   text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-pri-active {
@@ -191,5 +194,34 @@ img {
   background: var(--btn-bg-primary-hover);
 }
 
-/* #4a5df98f */
-/* #ffffffba */
+/* btn loader */
+.spinner {
+  display: inline-flex;
+  animation: spin 1s linear infinite;
+  font-size: 2rem;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* page loader */
+.loder_2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-primary-bright);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

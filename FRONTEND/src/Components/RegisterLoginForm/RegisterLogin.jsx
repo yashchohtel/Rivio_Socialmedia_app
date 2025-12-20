@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './registerLogin.css'
 import { LuEye } from "react-icons/lu";
 import { LuEyeClosed } from "react-icons/lu";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../features/auth/authThunk';
+import { loginUser, registerUser } from '../../features/auth/authThunk.js';
+import { CgSpinner } from "react-icons/cg";
+import { clearMessages } from '../../features/auth/authSlice.js';
 
 const RegisterLogin = ({ handleImageChange }) => {
 
@@ -12,7 +14,7 @@ const RegisterLogin = ({ handleImageChange }) => {
     const dispatch = useDispatch();
 
     // getting required Data from global store using useSelector
-    const { loading, successMessage, error, user, isAuthenticated } = useSelector((state) => state.auth);
+    const { formLoading, error: backendErr } = useSelector((state) => state.auth);
 
     // state to show/hide password
     const [showPassword, setShowPassword] = useState(false);
@@ -48,6 +50,10 @@ const RegisterLogin = ({ handleImageChange }) => {
 
         // Notify parent component about the form change
         handleImageChange();
+
+        // clear the error or succes message of redux state
+        dispatch(clearMessages());
+
     }
 
     /* -------------------------------------- */
@@ -208,6 +214,7 @@ const RegisterLogin = ({ handleImageChange }) => {
 
     /* -------------------------------------- */
 
+    // function to handle form submission
     const handleFormSubmit = (e) => {
 
         // prevent default form submission behavior
@@ -224,8 +231,18 @@ const RegisterLogin = ({ handleImageChange }) => {
                 return;
             }
 
+            // data required for signup
+            const signupFormData = {
+                username: formData.username,
+                fullName: formData.fullname,
+                email: formData.email,
+                password: formData.password,
+                dateOfBirth: formData.dateOfBirth,
+                gender: formData.gender
+            }
+
             // Handle signup logic
-            console.log("Signup data:", formData);
+            dispatch(registerUser(signupFormData));
 
         } else {
 
@@ -237,11 +254,27 @@ const RegisterLogin = ({ handleImageChange }) => {
                 return;
             }
 
+            // data required for login
+            const loginFormData = {
+                identifier: formData.identifier,
+                password: formData.password
+            };
+
             // Handle login logic
-            console.log("Login data:", formData);
+            dispatch(loginUser(loginFormData));
 
         }
     }
+
+    /* -------------------------------------- */
+
+    // redirect to page 1 if backend error occurs
+    useEffect(() => {
+        if (backendErr) {
+            setCurrentFormPage(1)
+        }
+    }, [backendErr]);
+
 
     /* -------------------------------------- */
 
@@ -327,6 +360,9 @@ const RegisterLogin = ({ handleImageChange }) => {
                                 {/* error */}
                                 {errors.email && (<span className="formError">{errors.email}</span>)}
 
+                                {/* backend error */}
+                                {backendErr && backendErr.toLowerCase().includes("email") && (<span className="formError">{backendErr}</span>)}
+
                             </>
                         )}
 
@@ -350,6 +386,9 @@ const RegisterLogin = ({ handleImageChange }) => {
 
                                 {/* error */}
                                 {errors.username && (<span className="formError">{errors.username}</span>)}
+
+                                {/* backend error */}
+                                {backendErr && backendErr.toLowerCase().includes("username") && (<span className="formError">{backendErr}</span>)}
 
                             </>
                         )}
@@ -403,6 +442,9 @@ const RegisterLogin = ({ handleImageChange }) => {
 
                                 {/* error */}
                                 {errors.password && (<span className="formError">{errors.password}</span>)}
+
+                                {/* backend error */}
+                                {backendErr && backendErr.toLowerCase().includes("credentials") && (<span className="formError">{backendErr}</span>)}
 
                             </>
                         )}
@@ -535,7 +577,13 @@ const RegisterLogin = ({ handleImageChange }) => {
                                 onClick={(e) => {
                                     handleFormSubmit(e);
                                 }}>
-                                Log In
+
+                                {formLoading ? (
+                                    <span className="spinner"> <CgSpinner /> </span>
+                                ) : (
+                                    "Log In"
+                                )}
+
                             </button>
                         )}
 
@@ -563,7 +611,13 @@ const RegisterLogin = ({ handleImageChange }) => {
                                 onClick={(e) => {
                                     handleFormSubmit(e);
                                 }}>
-                                Sign Up
+
+                                {formLoading ? (
+                                    <span className="spinner"> <CgSpinner /> </span>
+                                ) : (
+                                    "Sign Up"
+                                )}
+
                             </button>
                         )}
 

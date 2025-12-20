@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 export const registerUser = async (req, res, next) => {
 
     // Extract user details from request body
-    const { fullName, username, email, password, dateOfBirth } = req.body;
+    const { fullName, username, email, password, dateOfBirth, gender } = req.body;
 
     // Check if all required fields are provided
     if (!fullName || !username || !email || !password || !dateOfBirth) {
@@ -99,6 +99,25 @@ export const logoutUser = async (req, res, next) => {
 
 }
 
+// IS USER AUTHENTICATED
+export const isUserAuthenticated = async (req, res, next) => {
+
+    try {
+
+        // send success response
+        return res.status(200).json({
+            success: true,
+            message: "User is authenticated",
+        });
+
+    } catch (error) {
+
+        return next(new ErrorHandler("Something went wrong", 500));
+
+    }
+
+}
+
 // GET MY PROFILE
 export const getMyProfile = async (req, res, next) => {
 
@@ -115,6 +134,7 @@ export const getMyProfile = async (req, res, next) => {
     // send user profile as response
     res.status(200).json({
         success: true,
+        message: "User profile fetched successfully",
         user
     });
 

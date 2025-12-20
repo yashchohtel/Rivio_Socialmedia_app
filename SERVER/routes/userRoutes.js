@@ -1,5 +1,5 @@
 import express from "express"; // Express framework for building APIs
-import { editProfile, followUnfollowUser, getMyProfile, getSuggestedUsers, getUserProfile, loginUser, logoutUser, registerUser, removeProfilePicture } from "../controllers/userController.js"; // Import controller
+import { editProfile, followUnfollowUser, getMyProfile, getSuggestedUsers, getUserProfile, isUserAuthenticated, loginUser, logoutUser, registerUser, removeProfilePicture } from "../controllers/userController.js"; // Import controller
 import catchAsyncError from "../middleware/catchAsyncError.js"; // Import async error handler middleware
 import { isUserAuth } from "../middleware/auth.js"; // Import authentication middleware
 import { upload } from "../middleware/multer.js"; // Import multer middleware for file uploads
@@ -15,6 +15,10 @@ userRouter.post('/registerUser', catchAsyncError(registerUser));
 // Login [POST]
 userRouter.post('/loginUser', catchAsyncError(loginUser));
 // 'http://localhost:5000/api/users/loginUser'
+
+// User authentcation [GET]
+userRouter.get('/isUserAuthenticated', isUserAuth, isUserAuthenticated);
+// 'http://localhost:5000/api/users/isUserAuthenticated'
 
 // Logout [POST]
 userRouter.post('/logoutUser', catchAsyncError(logoutUser));
