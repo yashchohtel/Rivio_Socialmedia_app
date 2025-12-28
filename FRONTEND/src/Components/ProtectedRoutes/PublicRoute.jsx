@@ -10,7 +10,7 @@ const PublicRoute = ({ children }) => {
 
     // check if user is Authenticated or not
     if (isAuthenticated) {
-        return <Navigate to="/home" replace />;
+        return <Navigate to="/app" replace />;
     }
 
     // if user is authenticated then return the children component
@@ -18,4 +18,4 @@ const PublicRoute = ({ children }) => {
 
 }
 
-export default PublicRoute;
+export default PublicRoute; 

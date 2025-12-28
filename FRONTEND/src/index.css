@@ -10,6 +10,10 @@
   /* background colors */
   --bg-primary: #0c1014;
   --bg-secondary: #25292e;
+  --bg-tirtary: #262626;
+
+  /* hovers color */
+  --hover-primary: #25282c;
 
   /* border colors */
   --border-primary: #262626;
@@ -27,6 +31,11 @@
 
   /* button hover */
   --btn-bg-primary-hover: #6273ff;
+
+  /* transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.4s ease;
 }
 
 /* Universal Reset */
@@ -35,6 +44,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Outfit", sans-serif;
+  /* border: 1px solid blue; */
 }
 
 /* HTML & Body Styling */
@@ -45,9 +55,10 @@ html {
 
 body {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: var(--bg-primary);
   position: relative;
+  /* overflow: hidden; */
 }
 
 /* Headings & Paragraph */
@@ -208,12 +219,24 @@ img {
 }
 
 /* page loader */
+.loader_2_container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
 .loder_2 {
+  position: absolute;
+  top: 25%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-color-primary-bright);
   animation: spin 1s linear infinite;
+  color: var(--text-color-1);
 }
 
 @keyframes spin {

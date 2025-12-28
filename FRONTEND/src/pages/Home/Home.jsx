@@ -1,10 +1,47 @@
 import React from 'react'
 import './home.css'
+import AccountSuggestion from '../../Components/AccountSuggestion/AccountSuggestion';
+import Stories from '../../Components/Story Component/Stories/Stories';
 
 const Home = () => {
     return (
-        <div>Welcome to home</div>
-    )
-}
+        <>
+            {/* home page */}
+            <div className="homePage">
 
-export default Home
+                {/* home page container */}
+                <div className="homePageContentCont">
+
+                    {/* story and feed container */}
+                    <div className="storyAndFeedCont">
+
+                        {/* story */}
+                        <div className="storyCont">
+
+                            {/* story component */}
+                            <Stories />
+
+                        </div>
+
+                        {/* feed area */}
+                        <div className="feedCont"></div>
+
+                    </div>
+
+                    {/* suggestion contaienr */}
+                    <div className="accountSuggestionCont">
+
+                        {/* account suggestion component */}
+                        <AccountSuggestion />
+
+                    </div>
+
+                </div>
+
+            </div>
+        </>
+
+    )
+};
+
+export default Home;

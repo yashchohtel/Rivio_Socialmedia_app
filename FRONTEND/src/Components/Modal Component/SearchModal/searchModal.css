@@ -1,0 +1,7 @@
+.searchModal {
+  background: var(--bg-primary);
+  height: 100vh;
+  width: 40rem;
+  border-right: 1px solid var(--border-primary);
+  background-color: rgb(74, 74, 83);
+}

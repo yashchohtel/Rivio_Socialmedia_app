@@ -1,0 +1,34 @@
+.mainLayout {
+  display: flex;
+  height: 100vh;
+  position: relative;
+}
+
+/* side navigation bar */
+.mainLayout .SideNavigationBar {
+  width: 25rem;
+}
+
+/* content outlet */
+.mainLayout .contentOutlet {
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+/* modal container */
+.modalContainer {
+  position: fixed;
+  top: 0;
+  left: 8rem; /* hamesha same */
+  width: calc(100% - 8rem);
+  height: 100vh;
+  transform: translateX(-100%); /* hidden */
+  transition: transform 0.3s ease;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.modalContainer.active {
+  transform: translateX(0);
+}
