@@ -1,21 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./mainLayout.css"
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import SideNavBar from '../Components/SideNavBar/SideNavBar';
 import SearchModal from '../Components/Modal Component/SearchModal/SearchModal';
 import NotificationModal from '../Components/Modal Component/NotificationModal/NotificationModal';
+import CreatePostModal from '../Components/Modal Component/CreatePostModal/CreatePostModal';
 
 const MainLayout = () => {
+
+    // initilize useLocation 
+    const location = useLocation();
+
+    /* -------------------------------------- */
 
     // state to make sidebar link active
     const [activeItem, setActiveItem] = useState("home");
 
     // state to store last active page
     const [lastPageItem, setLastPageItem] = useState("home");
-
-    console.log("Active Item:", activeItem);
-    console.log("Last Page Item:", lastPageItem);
-
 
     // function to handle pagelink click
     const handlePageLinkClick = (item) => {
@@ -49,11 +51,12 @@ const MainLayout = () => {
     // state to make sidebar collapse
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-    // to collapse sidevar
+    // to collapse sidebar
     const handleSBCollapse = () => {
         setIsSidebarCollapsed(true);
     }
-    // to expande sidevar
+
+    // to expande sidebar
     const handleSBExpande = () => {
         setIsSidebarCollapsed(false);
     }
@@ -61,7 +64,7 @@ const MainLayout = () => {
     /* -------------------------------------- */
 
     // state to handle modal open and clsoe
-    const [activeModal, setActiveModal] = useState(null);
+    const [activeModal, setActiveModal] = useState("create");
 
     // function to open modal and auto close other
     const toggleModal = (modalName) => {
@@ -112,13 +115,25 @@ const MainLayout = () => {
 
     };
 
+    /* -------------------------------------- */
+
+    // effect to check pathname and set sidebar collapse and actie item status
+    useEffect(() => {
+        if (location.pathname.includes("message")) {
+            setIsSidebarCollapsed(true);
+            setActiveItem("message");
+        }
+    }, [location.pathname]);
+
     return (
         <>
 
             <div className="mainLayout">
 
                 {/* navigation menu */}
-                <div className="SideNavigationBar">
+                <div
+                    className={`SideNavigationBar  ${activeItem === 'message' ? 'active' : ''}`}
+                >
 
                     {/* side navigation bar */}
                     <SideNavBar
@@ -126,8 +141,10 @@ const MainLayout = () => {
                         handlePageLinkClick={handlePageLinkClick} // to handle page link click activity
                         handleModalLinkClick={handleModalLinkClick} // to handle modal link click activity
                         isSidebarCollapsed={isSidebarCollapsed} // status of sidebar collapse expande
+                        setIsSidebarCollapsed={setIsSidebarCollapsed} // only to set directly sidebar collapsed
                         handleSBCollapse={handleSBCollapse} // to collapse sidebar
                         handleSBExpande={handleSBExpande} // to expande sidebar
+                        activeModal={activeModal} // active modal status
                     />
 
                     {/* search modal container  */}
@@ -147,6 +164,15 @@ const MainLayout = () => {
                     >
                         <NotificationModal />
                     </div>
+
+                    {/* create modal container */}
+                    {activeModal === "create" && (
+                        <div className="createPostModalContainer">
+                            <CreatePostModal
+                                closeModal={closeModal} // to close the modal
+                            />
+                        </div>
+                    )}
 
                 </div>
 

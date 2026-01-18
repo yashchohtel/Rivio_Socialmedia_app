@@ -15,7 +15,7 @@ export const createPost = async (req, res, next) => {
 
     // access files from request
     const files = req.files || [];
-
+    
     // Extract caption, location, tags from request body
     const caption = req.body.caption?.trim() || "";
     const location = req.body.location?.trim() || "";

@@ -13,8 +13,9 @@ import Explore from "./pages/Explore/Explore";
 import Profile from "./pages/Profile/Profile";
 import Message from "./pages/Message/Message";
 
-
 function App() {
+
+  /* -------------------------------------- */
 
   // configure dispatch use to dispatch actions
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ function App() {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
+
+  /* -------------------------------------- */
 
   // if data is loading return a loader
   if (authLoading) {
@@ -61,7 +64,6 @@ function App() {
           <Route path="profile" element={<Profile />} />
 
         </Route>
-
 
       </Routes>
 

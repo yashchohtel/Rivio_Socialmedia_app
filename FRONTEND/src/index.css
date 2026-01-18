@@ -11,9 +11,13 @@
   --bg-primary: #0c1014;
   --bg-secondary: #25292e;
   --bg-tirtary: #262626;
+  --bg-four: #2b2f33;
+  --bg-five: #dbdbdb;
+  --bg-six: #212328;
 
   /* hovers color */
   --hover-primary: #25282c;
+  --hover-secondary: #3a3f45;
 
   /* border colors */
   --border-primary: #262626;
@@ -23,7 +27,7 @@
   --text-color-1: #a8a8a8;
   --text-color-2: #ffffff;
   --text-color-3: #6878ff;
-
+  --text-color-4: #e4e6eb;
   --text-error-color: #ff4d4d;
 
   /* buttons bg color */
@@ -31,6 +35,7 @@
 
   /* button hover */
   --btn-bg-primary-hover: #6273ff;
+  --btn-bg-secondary-hover: #162fff;
 
   /* transitions */
   --transition-fast: 0.2s ease;
@@ -203,6 +208,28 @@ img {
 
 .btn-pri-active:hover {
   background: var(--btn-bg-primary-hover);
+}
+
+.btn-blue {
+  height: 3.7rem;
+  background: var(--btn-bg-primary);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  transition: background-color 0.3s ease;
+  cursor: not-allowed;
+  text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  padding: 0.8rem 1.6rem;
+  cursor: pointer;
+  color: var(--text-color-2);
+  font-weight: 500;
+}
+
+.btn-blue:hover {
+  background: var(--btn-bg-secondary-hover);
 }
 
 /* btn loader */

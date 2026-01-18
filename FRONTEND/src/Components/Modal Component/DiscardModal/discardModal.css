@@ -1,0 +1,69 @@
+.discardOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  inset: 0;
+  background: #00000099;
+  display: flex;
+  justify-content: center;
+  z-index: 3;
+}
+
+.discardModal {
+  width: 55rem;
+  background: var(--bg-six);
+  border-radius: 2rem;
+  text-align: center;
+  box-shadow: var(--transition-fast);
+  height: 21rem;
+  transform: translateY(11rem);
+}
+
+/* Title */
+.discardModal h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 1.4rem;
+  text-transform: capitalize;
+  font-family: var(--font-heading);
+  color: var(--text-color-2);
+}
+
+/* Subtitle */
+.discardModal p {
+  font-size: 1.5rem;
+  color: var(--text-color-1);
+  margin: 1rem 2.4rem 2.4rem;
+  font-family: var(--font-heading);
+  font-weight: 400;
+}
+
+/* Divider line */
+.discardModal .divider {
+  height: 1.5px;
+  background: var(--bg-four);
+  width: 100%;
+}
+
+/* Buttons */
+.discardModal button {
+  width: 100%;
+  padding: 1.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+  font-family: var(--font-heading);
+}
+
+/* Red discard button */
+.discardModal .discardBtn {
+  color: var(--text-error-color);
+  font-weight: 600;
+}
+
+/* Cancel button */
+.discardModal .cancelBtn {
+  color: var(--text-color-2);
+  font-weight: 500;
+}

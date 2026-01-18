@@ -1,0 +1,165 @@
+.moreOptionModal {
+  background: var(--bg-four);
+  width: 26rem;
+  padding: 1rem 0;
+  border-radius: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-fast);
+}
+
+/* option row */
+.moreOptionModal .moreOptionLink {
+  margin: 0 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: pointer;
+  padding: 1.1rem 1.2rem; /* compact height */
+  border-radius: 0.8rem;
+  color: var(--text-color-4);
+  transition: var(--transition-normal);
+}
+
+/* hover */
+.moreOptionModal .moreOptionLink:hover {
+  background: var(--hover-secondary);
+}
+
+/* icon */
+.moreOptionModal .moreOptIcon {
+  height: 2.4rem;
+  width: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--text-color-4);
+}
+
+/* text */
+.moreOptionModal .optionName {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: var(--text-color-4);
+}
+
+/* divider */
+.moreOptionModal .rule {
+  height: 1px;
+  background: #3a3f45;
+  margin: 0.6rem 0;
+}
+
+/* APPEARANCE MENU */
+.appearanceHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 0 0.8rem;
+}
+
+.appearanceHeader .headLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.appearanceHeader .headLeft .moreOptIcon {
+  color: var(--text-color-1);
+}
+
+/* ------------------- */
+
+.mainMenu {
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: translateX(0);
+  transition: var(--transition-fast);
+}
+
+.mainMenu.active {
+  transform: translateX(100%);
+  height: 0;
+}
+
+.appearanceMenu {
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: translateX(100%);
+  height: 0;
+  transition: var(--transition-fast);
+}
+
+.appearanceMenu.active {
+  transform: translateX(0%);
+  height: auto;
+}
+
+/* ------------------- */
+
+.toggleRow {
+  justify-content: space-between;
+}
+
+/* switch outer box */
+.switch {
+  display: inline-block;
+  position: relative;
+  width: 4rem;
+  height: 2.5rem;
+}
+
+/* hide checkbox */
+.switch input {
+  display: none;
+}
+
+/* slider background  */
+.slider {
+  position: absolute;
+  background-color: var(--bg-primary);
+  border-radius: 24px;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.3s;
+}
+
+/* slider circle */
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 50%;
+  left: 4px;
+  top: 4px;
+  transition: 0.3s;
+}
+
+/* checked state */
+input:checked + .slider {
+  background-color: var(--bg-five);
+}
+
+input:checked + .slider::before {
+  transform: translateX(1.5rem);
+  background: var(--bg-primary);
+}
+
+/* ------------------- */

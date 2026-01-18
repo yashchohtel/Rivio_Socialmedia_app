@@ -12,11 +12,17 @@ import { FaPlus } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa6";
 import { PiPaperPlaneTiltBold } from "react-icons/pi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
+import MoreOption from "../Modal Component/MoreOptionModal/MoreOption";
+import { useSelector } from "react-redux";
 
 const SideNavBar = (props) => {
 
     // destructuring props
-    const { activeItem, isSidebarCollapsed, handlePageLinkClick, handleSBCollapse, handleSBExpande, handleModalLinkClick } = props
+    const { activeItem, activeModal, isSidebarCollapsed, handlePageLinkClick, handleSBCollapse, handleSBExpande, handleModalLinkClick } = props
+
+    /* -------------------------------------- */
+
+    const { user } = useSelector((state) => state.auth);
 
     /* -------------------------------------- */
 
@@ -140,7 +146,13 @@ const SideNavBar = (props) => {
                             }}
                             className={`linkContainer profile ${activeItem === "profile" ? "active" : ""}`}
                         >
-                            <span className="icon imageIcon"> <img src="/images/userprofile.jpeg" alt="profile" /> </span>
+                            <span className="icon imageIcon">
+                                {user.profileImage ?
+                                    <img src={user.profileImage} alt="profile" />
+                                    :
+                                    <img src="/images/userprofile.jpeg" alt="profile" />
+                                }
+                            </span>
 
                             {!isSidebarCollapsed && (
                                 <span className={`name ${activeItem === "profile" ? "active" : ""}`}> Profile </span>
@@ -165,6 +177,24 @@ const SideNavBar = (props) => {
                     {!isSidebarCollapsed && (
                         <span className={`name ${activeItem === "more" ? "active" : ""}`}> More </span>
                     )}
+
+                    {/* more option modal container */}
+                    {activeModal === "more" && (
+                        <div
+                            className="moreOptionModalContainer"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <MoreOption />
+                        </div>
+                    )}
+
+                    {/* overlay to cloe modal */}
+                    <div
+                        className={`overlay ${activeModal === "more" ? "active" : ""}`}
+                        onClick={() => {
+                            handleModalLinkClick("more")
+                        }}
+                    ></div>
 
                 </div>
 

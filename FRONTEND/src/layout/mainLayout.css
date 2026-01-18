@@ -9,6 +9,10 @@
   width: 25rem;
 }
 
+.mainLayout .SideNavigationBar.active {
+  width: max-content;
+}
+
 /* content outlet */
 .mainLayout .contentOutlet {
   flex: 1;
@@ -23,7 +27,7 @@
   left: 8rem; /* hamesha same */
   width: calc(100% - 8rem);
   height: 100vh;
-  transform: translateX(-100%); /* hidden */
+  transform: translateX(-110%); /* hidden */
   transition: transform 0.3s ease;
   z-index: 1;
   cursor: pointer;

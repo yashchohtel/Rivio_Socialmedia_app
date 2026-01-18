@@ -19,7 +19,7 @@
 
 /* sidebar logo */
 .sidebar .navContainer .logo {
-  margin: 2rem 0 3rem 1rem;
+  margin: 2rem 0 5rem 1rem;
 }
 
 /* sidebar logo */
@@ -77,6 +77,9 @@
 .sidebar .icon.imageIcon {
   border-radius: 50%;
   overflow: hidden;
+  height: 4rem;
+  width: 4rem;
+  border: -13px solid red;
 }
 
 .sidebar .name {
@@ -95,4 +98,27 @@
 
 .sidebar .name.active {
   font-weight: 600;
+}
+
+/* more option modal */
+.optionContainer {
+  position: relative;
+}
+
+.optionContainer .moreOptionModalContainer {
+  position: absolute;
+  bottom: 110%;
+  left: 0;
+  z-index: 2;
+}
+
+.optionContainer .overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: none;
+}
+
+.optionContainer .overlay.active {
+  display: block;
 }

@@ -275,7 +275,6 @@ const RegisterLogin = ({ handleImageChange }) => {
         }
     }, [backendErr]);
 
-
     /* -------------------------------------- */
 
     return (
