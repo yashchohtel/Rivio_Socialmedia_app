@@ -9,6 +9,7 @@ const tmpDir = path.join(process.cwd(), 'public', 'tmpUploads');
 // Multer storage configuration
 const storage = multer.diskStorage({
 
+    // destination where files will be stored if folder dont exist it will create
     destination: (req, file, cb) => {
         try {
             // create the tmp directory if it doesn't exist on request
@@ -18,11 +19,6 @@ const storage = multer.diskStorage({
             cb(err); // multer will forward this error
         }
     },
-
-    // destination where files will be stored
-    // destination: (req, file, cb) => {
-    //     cb(null, tmpDir)
-    // },
 
     // filename configuration to avoid name conflicts
     filename: (req, file, cb) => {

@@ -47,7 +47,7 @@ export const uploadFileToCloudinary = async (filePath, mimetype, optimizedPath, 
             folder: folderName,
             resource_type: resourceType,
         });
-
+        
         // Return upload result
         return {
             url: result.secure_url,

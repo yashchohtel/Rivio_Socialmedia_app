@@ -15,7 +15,7 @@ export const createPost = async (req, res, next) => {
 
     // access files from request
     const files = req.files || [];
-    
+
     // Extract caption, location, tags from request body
     const caption = req.body.caption?.trim() || "";
     const location = req.body.location?.trim() || "";
@@ -30,6 +30,9 @@ export const createPost = async (req, res, next) => {
     // to keep track of uploaded files for cleanup in case of error
     let uploadResults = []
 
+    // to keep track of optimize files for cleanup in case of error
+    let optimizedPaths = [];
+
     // folder name on Cloudinary
     const folderName = "RIVIO_posts";
 
@@ -43,7 +46,7 @@ export const createPost = async (req, res, next) => {
         if (!files || files.length === 0) return next(new ErrorHandler("No files uploaded", 400));
 
         // Optimize all images concurrently using potimizeImage utility
-        const optimizedPaths = await Promise.all(files.map(f => optimizeImage(f.path)));
+        optimizedPaths = await Promise.all(files.map(f => optimizeImage(f.path)));
 
         // Upload each file to Cloudinary by uploadFileToCloudinary helper
         uploadResults = await Promise.all(files.map((file, index) =>
@@ -75,7 +78,7 @@ export const createPost = async (req, res, next) => {
         // Save updated user document
         await user.save();
 
-        // Clean up temporary files (both original and optimized)
+        // Clean up temporary files (both original and optimized)              
         await Promise.allSettled([
             // temp original files delete
             ...files.map(f => fs.promises.unlink(f.path)
