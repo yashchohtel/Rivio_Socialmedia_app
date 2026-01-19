@@ -60,6 +60,8 @@ export const createPost = async (req, res, next) => {
             cloudinaryPublicId: r.public_id || r.publicId || r.public_id,
         }));
 
+        console.log(media);
+    
         // Create new post document
         const post = new Post({
             caption,

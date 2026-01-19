@@ -47,7 +47,7 @@ const postSlice = createSlice({
                 state.success = false;
             })
             .addCase(createPost.fulfilled, (state, action) => {
-                console.log("slice " + action.payload);
+                console.log(action.payload);
                 state.postLoading = false;
                 state.success = true;
                 state.message = action.payload?.message || "Post created successfully";
@@ -57,7 +57,6 @@ const postSlice = createSlice({
                 state.success = false;
                 state.error = action.payload || "Post creation failed";
             });
-
 
     }
 

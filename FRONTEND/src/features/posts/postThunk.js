@@ -21,14 +21,10 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
             formData.append("postImage", file);
         });
 
-        console.log("formdata thunk" + formData);
-
         // send post request to register user
         const { data } = await axios.post(`${backendUrl}/api/posts/createPost`, formData, {
             withCredentials: true,
         });
-
-        console.log("data thunk " + data);
 
         // return succes response
         return data;

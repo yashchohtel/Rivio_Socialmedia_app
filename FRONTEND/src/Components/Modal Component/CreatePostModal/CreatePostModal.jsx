@@ -19,6 +19,14 @@ const CreatePostModal = ({ closeModal }) => {
     // get user state form store
     const { user } = useSelector((state) => state.auth);
 
+    // get post state from store
+    const { postLoading, success, message, error } = useSelector((state) => state.post);
+
+    console.log("postLoading:", postLoading);
+    console.log("success:", success);
+    console.log("message:", message);
+    console.log("error:", error);
+    
     // initialize use dispatch
     const dispatch = useDispatch();
 
