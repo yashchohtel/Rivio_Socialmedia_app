@@ -6,6 +6,7 @@ import { createPost } from "./postThunk";
 const initialState = {
     posts: [],
     postLoading: false,
+    phase: null,
     success: false,
     message: null,
     error: null,
@@ -42,15 +43,16 @@ const postSlice = createSlice({
             // CREATE POST
             .addCase(createPost.pending, (state) => {
                 state.postLoading = true;
+                state.phase = "started"
                 state.error = null;
                 state.message = null;
                 state.success = false;
             })
             .addCase(createPost.fulfilled, (state, action) => {
-                console.log(action.payload);
                 state.postLoading = false;
                 state.success = true;
                 state.message = action.payload?.message || "Post created successfully";
+                state.phase = "uploaded"
             })
             .addCase(createPost.rejected, (state, action) => {
                 state.postLoading = false;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import "./createPostModal.css"
 import { IoClose } from "react-icons/io5";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -11,6 +11,8 @@ import "swiper/css/pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { IoLocationOutline } from "react-icons/io5";
 import { createPost } from '../../../features/posts/postThunk';
+import { FaCheck } from "react-icons/fa6";
+import { clearMessages } from '../../../features/posts/postSlice';
 
 const CreatePostModal = ({ closeModal }) => {
 
@@ -20,13 +22,8 @@ const CreatePostModal = ({ closeModal }) => {
     const { user } = useSelector((state) => state.auth);
 
     // get post state from store
-    const { postLoading, success, message, error } = useSelector((state) => state.post);
+    const { postLoading, success } = useSelector((state) => state.post);
 
-    console.log("postLoading:", postLoading);
-    console.log("success:", success);
-    console.log("message:", message);
-    console.log("error:", error);
-    
     // initialize use dispatch
     const dispatch = useDispatch();
 
@@ -87,7 +84,8 @@ const CreatePostModal = ({ closeModal }) => {
     };
 
     /* -------------------------------------- */
-    // state to track WindowStep - "select" | "edit" | "post"
+
+    // state to track WindowStep - "select" | "edit" | "post" | "sharing"
     const [windowStep, setWindowStep] = useState("select")
 
     // state to store discard modal open claose
@@ -108,17 +106,16 @@ const CreatePostModal = ({ closeModal }) => {
     // handle modal overlay click
     const handleCreateModalClose = () => {
 
-        // if step is not equal to select then firs ask to dicard image upload
-        if (windowStep !== "select") {
+        // if window is select or sharing direct close the modal widhout asking for confirmation
+        if (windowStep === "select" || windowStep === "sharing") {
 
-            // open discard modal
-            openDiscardModal();
+            // direct close close
+            closeModal();
 
         } else {
 
-            // close modal
-            closeModal()
-
+            // else ask for confirmation
+            openDiscardModal();
         }
 
     };
@@ -136,6 +133,20 @@ const CreatePostModal = ({ closeModal }) => {
         closeModal();
 
     }
+
+    /* -------------------------------------- */
+
+    // effect to close modal after 3 second on sucess
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => {
+                closeModal();
+                dispatch(clearMessages()); 
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [closeModal, success, dispatch]);
 
     /* -------------------------------------- */
 
@@ -213,9 +224,28 @@ const CreatePostModal = ({ closeModal }) => {
 
                                 {/* next button */}
                                 <span className="next"
-                                    onClick={handlePostSubmit}
+                                    onClick={() => {
+                                        handlePostSubmit()
+                                        setWindowStep("sharing")
+                                    }}
                                 >
                                     Share
+                                </span>
+                            </>
+                        )}
+
+                        {/* uploading area header content*/}
+                        {windowStep === "sharing" && (
+                            <>
+                                {/* title */}
+                                <h2 className='title'>Uploading your post!</h2>
+
+                                <span
+                                    className="headerIcon"
+                                    onClick={() => {
+                                        handleCreateModalClose()
+                                    }}
+                                > <IoClose />
                                 </span>
                             </>
                         )}
@@ -394,6 +424,43 @@ const CreatePostModal = ({ closeModal }) => {
 
                         </div>
 
+                    )}
+
+                    {/* body - sharing area */}
+                    {windowStep === "sharing" && (
+                        <>
+                            <div className="sharing-area">
+
+                                {/* note */}
+                                {success ?
+                                    <p className="description">Post uploaded successfully!</p>
+                                    :
+                                    <p className="description">Your post is uploading. This may take a moment.</p>
+                                }
+
+                                {/* loading div */}
+                                <div className="loadingCircle">
+
+                                    {/* loader wrapper (never rotates) */}
+                                    <div className="insta-loader">
+
+                                        {/* rotating ring */}
+                                        <div className={`ring ${postLoading ? "loading" : ""}`}></div>
+
+                                    </div>
+
+                                    {/* success tick */}
+                                    <span className={`right ${success ? "show" : ""}`}>
+                                        <FaCheck />
+                                    </span>
+
+                                </div>
+
+                                {/* info */}
+                                <p className="info">You can close this. Upload will continue.</p>
+
+                            </div>
+                        </>
                     )}
 
                 </div>

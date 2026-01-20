@@ -77,9 +77,8 @@
 .sidebar .icon.imageIcon {
   border-radius: 50%;
   overflow: hidden;
-  height: 4rem;
-  width: 4rem;
-  border: -13px solid red;
+  height: 3.5rem;
+  width: 3.5rem;
 }
 
 .sidebar .name {

@@ -64,7 +64,7 @@ const MainLayout = () => {
     /* -------------------------------------- */
 
     // state to handle modal open and clsoe
-    const [activeModal, setActiveModal] = useState("create");
+    const [activeModal, setActiveModal] = useState(null);
 
     // function to open modal and auto close other
     const toggleModal = (modalName) => {
