@@ -59,7 +59,7 @@ export const createPost = async (req, res, next) => {
             url: r.url,
             cloudinaryPublicId: r.public_id || r.publicId || r.public_id,
         }));
-    
+
         // Create new post document
         const post = new Post({
             caption,
@@ -129,7 +129,6 @@ export const getAllPosts = async (req, res, next) => {
 
     // Find user by ID and exclude password from the result
     const currentUser = await User.findById(userId).select("followers following");
-
     if (!currentUser) return next(new ErrorHandler("User not found", 404));
 
     // build allowed set (viewer + following + followers)
@@ -172,6 +171,7 @@ export const getMyPosts = async (req, res, next) => {
             populate: { path: "user", select: "username profileImage" }
         });
 
+    // console.log(posts[0]._doc);
 
     // return response
     return res.status(200).json({

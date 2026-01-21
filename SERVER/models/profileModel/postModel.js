@@ -46,6 +46,12 @@ const postSchema = new mongoose.Schema({
         }
     ],
 
+    // likes counts 
+    likesCount: {
+        type: Number,
+        default: 0
+    },
+
     // comments array to store comment ids
     comments: [
         {
@@ -54,13 +60,11 @@ const postSchema = new mongoose.Schema({
         }
     ],
 
-    // array to store user ids who is tagged in the post
-    tags: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User" // tagged users
-        }
-    ],
+    // commant counts
+    commentsCount: {
+        type: Number,
+        default: 0
+    },
 
     // array to store share info
     shares: [
@@ -70,10 +74,24 @@ const postSchema = new mongoose.Schema({
         }
     ],
 
+    // share counts
+    sharesCount: {
+        type: Number,
+        default: 0
+    },
+
     // location of the post
     location: {
         type: String
-    }
+    },
+
+    // array to store user ids who is tagged in the post
+    tags: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User" // tagged users
+        }
+    ],
 
 }, { timestamps: true });
 
