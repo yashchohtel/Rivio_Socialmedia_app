@@ -21,6 +21,7 @@
   height: 11rem;
   width: 100%;
   border: 1px solid var(--border-primary);
+  background: var(--bg-six);
 }
 
 .homePage .feedCont {
@@ -34,4 +35,5 @@
   height: 90vh;
   margin-left: 4rem;
   border: 1px solid var(--border-primary);
+  background: var(--bg-six);
 }

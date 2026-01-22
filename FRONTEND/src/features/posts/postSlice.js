@@ -5,13 +5,14 @@ import { createPost } from "./postThunk";
 // initial state for auth slice
 const initialState = {
     posts: [],
+    cursor: null,        
+    hasMore: true,
     postLoading: false,
     phase: null,
     success: false,
     message: null,
     error: null,
 };
-
 
 // creating slice for auth 
 const postSlice = createSlice({

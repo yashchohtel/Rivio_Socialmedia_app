@@ -127,28 +127,51 @@ export const getAllPosts = async (req, res, next) => {
     // Extract user ID from request
     const userId = req.user.id;
 
+    // extract cursor from req send from frontend
+    const { cursor } = req.query;
+
     // Find user by ID and exclude password from the result
     const currentUser = await User.findById(userId).select("followers following");
     if (!currentUser) return next(new ErrorHandler("User not found", 404));
 
-    // build allowed set (viewer + following + followers)
-    const allowed = new Set([String(userId)]);
+    // array of allowed users id's
+    const allowedUserIds = [
+        userId,
+        ...(currentUser.following || []),
+        ...(currentUser.followers || [])
+    ];
 
-    (currentUser.following || []).forEach(id => allowed.add(String(id)));
-    (currentUser.followers || []).forEach(id => allowed.add(String(id)));
+    // cursor condition
+    const cursorCondition = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
 
     // getting all post from db
-    const posts = await Post.find().sort({ createdAt: -1 }).populate("user", "username fullName profileImage isVerified isPrivate");
+    const posts = await Post.find(cursorCondition)
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .populate({
+            path: "user",
+            select: "username fullName profileImage isVerified isPrivate",
+            match: {
+                $or: [
+                    { isPrivate: false },
+                    { _id: { $in: allowedUserIds } }
+                ]
+            }
+        });
 
     // filter: public OR allowed
-    const visible = posts.filter(p => {
-        if (!p.user) return false;
-        if (!p.user.isPrivate) return true;
-        return allowed.has(String(p.user._id));
-    });
+    const visiblePosts = posts.filter(post => post.user);
+
+    // next cursor (last post)
+    const nextCursor = visiblePosts.length > 0 ? visiblePosts[visiblePosts.length - 1].createdAt : null;
 
     // send response
-    return res.status(200).json({ success: true, count: visible.length, posts: visible });
+    return res.status(200).json({
+        success: true,
+        count: visiblePosts.length,
+        nextCursor,
+        posts: visiblePosts
+    });
 
 };
 

@@ -39,3 +39,22 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
     }
 
 });
+
+// thunk to load fead
+export const loadFead = createAsyncThunk('posts/loadFead', async (cursor, { rejectWithValue }) => {
+
+    try {
+
+        // cursor ho to query lagao
+        const url = cursor ? `/api/posts/getAllPosts?cursor=${cursor}` : `/api/posts/getAllPosts`;
+
+    } catch (err) {
+
+        console.log(err);
+
+        // handle error
+        return rejectWithValue(err.response?.data?.message || "Something went wrong");
+
+    }
+
+});
