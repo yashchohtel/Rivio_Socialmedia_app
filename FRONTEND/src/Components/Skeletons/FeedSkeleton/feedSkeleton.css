@@ -1,0 +1,67 @@
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+/* apply shimmer */
+.avatarSkeleton,
+.lineSkeleton .line1,
+.lineSkeleton .line2,
+.postImageSkeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-six) 25%,
+    /* darker */ var(--bg-secondary) 37%,
+    /* slightly lighter */ var(--bg-six) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* post skeleton container */
+.postSkeleton {
+  width: 100%;
+  max-width: 450px; /* optional feed limit */
+}
+
+/* header */
+.postHeaderSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.avatarSkeleton {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+}
+
+.lineSkeleton {
+  width: 20rem;
+}
+
+.lineSkeleton .line1 {
+  width: 100%;
+  height: 1.2rem;
+  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.lineSkeleton .line2 {
+  width: 70%;
+  height: 1.2rem;
+  border-radius: 0.4rem;
+}
+
+/* image */
+.postImageSkeleton {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* square */
+  border-radius: 0.8rem;
+}

@@ -5,7 +5,7 @@
 }
 
 .homePage .homePageContentCont {
-  width: 1020px;
+  width: 1040px;
   display: flex;
   margin-top: 2rem;
 }
@@ -20,20 +20,35 @@
 .homePage .storyCont {
   height: 11rem;
   width: 100%;
-  border: 1px solid var(--border-primary);
-  background: var(--bg-six);
 }
 
 .homePage .feedCont {
   width: 100%;
-  height: 60vh;
-  border: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  padding-bottom: 3rem;
 }
 
 .homePage .accountSuggestionCont {
-  width: 330px;
+  width: 280px;
   height: 90vh;
-  margin-left: 4rem;
-  border: 1px solid var(--border-primary);
-  background: var(--bg-six);
+  margin-left: 8rem;
+  margin-top: 2.5rem;
+}
+
+/* ================= DESKTOP FIRST ================= */
+
+/* -------- Large Desktop -------- */
+@media (max-width: 1353px) {
+  /* home page content container */
+  .homePage .homePageContentCont {
+    justify-content: center;
+  }
+
+  /* account sugestion container */
+  .homePage .accountSuggestionCont {
+    display: none;
+  }
 }

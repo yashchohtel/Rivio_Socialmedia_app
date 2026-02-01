@@ -158,6 +158,7 @@ export const getUserProfile = async (req, res, next) => {
         success: true,
         user
     });
+    
 };
 
 // EDIT PROFILE 

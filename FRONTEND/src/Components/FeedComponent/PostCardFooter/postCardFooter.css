@@ -1,0 +1,100 @@
+/* postCardFooter */
+.postCard .postCardFooter {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+/* footer top */
+.postCardFooter .postCardFooterTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+/* footer top left */
+.postCardFooterTop .postCardFooterTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 1.7rem;
+}
+
+/* footer to left sections */
+.postCardFooterTop .iconCountCont {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* footer top left seconds icons */
+.iconCountCont .icon {
+  font-size: 2.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-2);
+  transition: 0.2s ease;
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.iconCountCont .icon:hover {
+  transform: scale(1.1);
+}
+
+/* like icons click animation */
+.icon .heartOutline,
+.icon .heartFilled {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.icon .heartOutline {
+  display: none;
+}
+
+.icon .heartOutline.active {
+  display: block;
+}
+
+.icon .heartFilled {
+  display: none;
+  color: var(--bg-red);
+}
+
+.icon .heartFilled.active {
+  display: block;
+}
+
+.heartOutline.animate,
+.heartFilled.animate {
+  animation: heartPop 0.25s ease-out;
+}
+
+/* heart pop animation */
+@keyframes heartPop {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* footer top left seconds count */
+.iconCountCont .count {
+  font-family: var(--font-heading);
+  color: var(--text-color-6);
+  font-size: 1.4rem;
+  font-weight: 400;
+}

@@ -41,6 +41,11 @@ const SideNavBar = (props) => {
                             (<img src="/images/instalogowhite.png" className='name_logo' alt="logo" />)}
                     </div>
 
+                    {/* logo small */}
+                    <div className="logoSmall">
+                        <img src="/images/icon-logo.png" className="icon_logo" alt="logo" />
+                    </div>
+
                     {/* navigation links */}
                     <div className="navigationLinks">
 
@@ -201,6 +206,6 @@ const SideNavBar = (props) => {
             </div>
         </>
     )
-}
+};
 
 export default SideNavBar;

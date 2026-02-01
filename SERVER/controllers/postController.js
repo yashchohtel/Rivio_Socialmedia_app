@@ -144,10 +144,13 @@ export const getAllPosts = async (req, res, next) => {
     // cursor condition
     const cursorCondition = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
 
+    // Post Limit
+    const postLimit = 10;
+
     // getting all post from db
     const posts = await Post.find(cursorCondition)
         .sort({ createdAt: -1 })
-        .limit(10)
+        .limit(postLimit)
         .populate({
             path: "user",
             select: "username fullName profileImage isVerified isPrivate",
@@ -162,15 +165,47 @@ export const getAllPosts = async (req, res, next) => {
     // filter: public OR allowed
     const visiblePosts = posts.filter(post => post.user);
 
+    // posts array with isFollwing (current user followin owner of post) flag.
+    const postsWithFollowFlag = visiblePosts.map(post => {
+
+        // post user id
+        const postUserId = post.user._id.toString();
+
+        // current user id
+        const currentUserId = userId.toString();
+
+        // own post check
+        const isOwnPost = postUserId === currentUserId;
+
+        // follow check (only if not own post)
+        const isFollowing = isOwnPost ? false : currentUser.following?.some(id => id.toString() === postUserId);
+
+        // like check 
+        const isLiked = post.likes?.some(id => id.toString() === currentUserId);
+
+        // return result
+        return {
+            ...post.toObject(),   // mongoose doc → plain object
+            isOwnPost, // is own post flag
+            isLiked, // is liked flag
+            isFollowing, // is current user following
+        };
+
+    });
+
     // next cursor (last post)
     const nextCursor = visiblePosts.length > 0 ? visiblePosts[visiblePosts.length - 1].createdAt : null;
+
+    // hasMore flag to show DB has more posts or not
+    const hasMore = visiblePosts.length === postLimit;
 
     // send response
     return res.status(200).json({
         success: true,
         count: visiblePosts.length,
         nextCursor,
-        posts: visiblePosts
+        posts: postsWithFollowFlag,
+        hasMore,
     });
 
 };
@@ -226,16 +261,19 @@ export const likePost = async (req, res, next) => {
     const alreadyLiked = post.likes.some(likeId => likeId.equals(userId));
 
     let message;
+
     if (alreadyLiked) {
 
         // unlike, remove user id from likes
         post.likes.pull(userId); // mongoose array pull
+        post.likesCount -= 1; // update likes count
         message = "Post unliked";
 
     } else {
 
         // like, add user id to likes
         post.likes.push(userId);
+        post.likesCount += 1; //update likes count
         message = "Post liked";
 
     }

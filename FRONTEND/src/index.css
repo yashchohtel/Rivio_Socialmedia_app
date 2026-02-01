@@ -14,6 +14,8 @@
   --bg-four: #2b2f33;
   --bg-five: #dbdbdb;
   --bg-six: #212328;
+  --bg-black: #000000;
+  --bg-red: #ff3040;
 
   /* hovers color */
   --hover-primary: #25282c;
@@ -21,13 +23,15 @@
 
   /* border colors */
   --border-primary: #262626;
-  --border-secondary: #555555;
+  --border-secondary: #555555; 
 
   /* text color */
   --text-color-1: #a8a8a8;
   --text-color-2: #ffffff;
   --text-color-3: #6878ff;
   --text-color-4: #e4e6eb;
+  --text-color-5: #494949;
+  --text-color-6: #efefef;
   --text-error-color: #ff4d4d;
 
   /* buttons bg color */

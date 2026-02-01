@@ -18,21 +18,32 @@
 }
 
 /* sidebar logo */
-.sidebar .navContainer .logo {
+.sidebar .navContainer .logo,
+.sidebar .navContainer .logoSmall {
   margin: 2rem 0 5rem 1rem;
 }
 
-/* sidebar logo */
+.sidebar .navContainer .logoSmall {
+  display: none;
+}
+
 .sidebar .navContainer .logo .name_logo {
   height: 3.5rem;
   transition: var(--transition-fast);
 }
 
-.sidebar .navContainer .logo .icon_logo {
+.sidebar .navContainer .logo .icon_logo,
+.sidebar .navContainer .logoSmall .icon_logo {
   width: 3.5rem;
   transition: var(--transition-fast);
 }
 
+.sidebar .navContainer .logoSmall .icon_logo {
+  width: 3.5rem;
+  transition: var(--transition-fast);
+}
+
+/* nav link */
 .sidebar .navigationLinks {
   display: flex;
   flex-direction: column;
@@ -120,4 +131,32 @@
 
 .optionContainer .overlay.active {
   display: block;
+}
+
+/* ================= DESKTOP FIRST ================= */
+
+/* -------- Large Desktop -------- */
+@media (max-width: 1353px) {
+  /* sidebar*/
+  .sidebar {
+    width: max-content;
+  }
+
+  /* .logo */
+  .sidebar .navContainer .logo {
+    display: none;
+  }
+
+  .sidebar .navContainer .logoSmall {
+    display: block;
+  }
+
+  .sidebar .linkContainer {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar .name {
+    display: none;
+  }
 }

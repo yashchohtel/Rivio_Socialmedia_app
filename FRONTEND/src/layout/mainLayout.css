@@ -36,3 +36,35 @@
 .modalContainer.active {
   transform: translateX(0);
 }
+
+/* ================= DESKTOP FIRST ================= */
+
+/* -------- Large Desktop -------- */
+@media (max-width: 1353px) {
+
+  /* side navigaiton bar container of main layout */
+  .mainLayout .SideNavigationBar {
+    width: max-content;
+  }
+
+}
+
+/* -------- Laptop / Small Desktop -------- */
+@media (max-width: 1024px) {
+  /* tablet landscape / small laptop */
+}
+
+/* -------- Tablet -------- */
+@media (max-width: 768px) {
+  /* tablet portrait */
+}
+
+/* -------- Large Mobile -------- */
+@media (max-width: 640px) {
+  /* big phones */
+}
+
+/* -------- Small Mobile -------- */
+@media (max-width: 480px) {
+  /* small phones */
+}

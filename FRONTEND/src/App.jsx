@@ -60,8 +60,11 @@ function App() {
           {/* messages page */}
           <Route path="message" element={<Message />} />
 
-          {/* profile page */}
+          {/* profile page for self */}
           <Route path="profile" element={<Profile />} />
+
+          {/* profile page for other user*/}
+          <Route path="profile/:id" element={<Profile />} />
 
         </Route>
 

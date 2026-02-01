@@ -1,0 +1,115 @@
+/* header */
+.postCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  padding: 0 1rem;
+  user-select: none;
+}
+
+/* ---------------------------------- */
+
+/* header user info */
+.postCard .postCardHeader .userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+/* user info avatar */
+.postCardHeader .avatar {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: #555;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.postCardHeader .userInfoDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.postCardHeader .userInfoDetail .userNameAndTime {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.postCardHeader .userInfoDetail .userNameAndTime .username {
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  color: var(--text-color-4);
+}
+
+.postCardHeader .userInfoDetail .userNameAndTime .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--text-color-3);
+}
+
+.postCardHeader .userInfoDetail .userNameAndTime .dot {
+  color: var(--text-color-5);
+  font-size: 1.5rem;
+}
+
+.postCardHeader .userInfoDetail .userNameAndTime .time {
+  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--text-color-5);
+}
+
+.postCard .userInfoDetail .location {
+  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  color: var(--text-color-6);
+  font-weight: 400;
+  letter-spacing: 0.04rem;
+}
+
+/* ----------------------------------------- */
+
+/* header follow and option */
+.postCardHeader .btnAndOptions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.postCardHeader .btnAndOptions button {
+  font-size: 1.4rem;
+  font-family: var(--font-heading);
+  color: var(--text-color-3);
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s all ease;
+  border-bottom: 2px solid transparent;
+}
+
+.postCardHeader .btnAndOptions button:hover {
+  border-color: var(--btn-bg-primary-hover);
+}
+
+.postCardHeader .btnAndOptions .option .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 2rem;
+  color: var(--text-color-1);
+  cursor: pointer;
+}

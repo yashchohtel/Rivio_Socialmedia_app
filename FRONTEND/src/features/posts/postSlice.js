@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createPost } from "./postThunk";
+import { createPost, handlePostLike, loadFeed } from "./postThunk";
 
-
-// initial state for auth slice
+// initial state for post slice
 const initialState = {
     posts: [],
-    cursor: null,        
-    hasMore: true,
-    postLoading: false,
-    phase: null,
-    success: false,
-    message: null,
-    error: null,
+    postLoading: false, // for creating post
+    feedLoading: false, // for loading feed
+    success: false, // for sucess flag
+    hasMore: true, // for the feed
+    cursor: null, // to get the next batch of posts for feed
+    phase: null, // phase is for post uploading feature
+    message: null, // message is for succes message
+    error: null, // this is for erroe message
+    likeStatus: null, // "pending" | "success" | "error" 
 };
 
 // creating slice for auth 
@@ -31,6 +32,7 @@ const postSlice = createSlice({
             state.error = null;
             state.message = null;
             state.success = false;
+            state.phase = null;
         },
 
     },
@@ -59,6 +61,77 @@ const postSlice = createSlice({
                 state.postLoading = false;
                 state.success = false;
                 state.error = action.payload || "Post creation failed";
+            })
+
+            // LOAD FEED
+            .addCase(loadFeed.pending, (state) => {
+                state.feedLoading = true;
+                state.error = null;
+                state.success = false;
+                state.phase = "loadingFeed";
+            })
+            .addCase(loadFeed.fulfilled, (state, action) => {
+
+                console.log(action.payload);
+
+                state.feedLoading = false;
+                state.success = true;
+                state.phase = "feedLoaded";
+
+                // extracting posts, nextCursor and hasMore flag from payload
+                const { posts, nextCursor, hasMore } = action.payload;
+
+                //  append posts in posts initial state for fead
+                state.posts = [...state.posts, ...posts];
+
+                // update cursor
+                state.cursor = nextCursor;
+
+                // if no more post
+                state.hasMore = hasMore;
+
+            })
+            .addCase(loadFeed.rejected, (state, action) => {
+                state.feedLoading = false;
+                state.success = false;
+                state.phase = "feedError";
+                state.error = action.payload;
+            })
+
+            // LIKE POST
+            .addCase(handlePostLike.pending, (state) => {
+
+                // liking status 
+                state.likeStatus = "pending"
+
+                // no loader - (optimistic UI already)
+                state.error = null;
+
+            })
+            .addCase(handlePostLike.fulfilled, (state, action) => {
+
+                // set liking status
+                state.likeStatus = "success"
+
+                // set succces
+                state.success = true;
+
+                // extract data from payload
+                const { postId, liked, likesCount } = action.payload;
+
+                // find the post which we are handlin like 
+                const post = state.posts.find(p => p._id === postId);
+
+                if (post) {
+                    post.isLiked = liked;
+                    post.likesCount = likesCount;
+                }
+
+            })
+            .addCase(handlePostLike.rejected, (state, action) => {
+                state.likeStatus = "error"
+                state.success = false;
+                state.error = action.payload;
             });
 
     }

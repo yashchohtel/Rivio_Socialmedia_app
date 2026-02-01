@@ -2,6 +2,7 @@ import React from 'react'
 import './home.css'
 import AccountSuggestion from '../../Components/AccountSuggestion/AccountSuggestion';
 import Stories from '../../Components/Story Component/Stories/Stories';
+import Feed from '../../Components/FeedComponent/Feed/Feed';
 
 const Home = () => {
     return (
@@ -24,7 +25,12 @@ const Home = () => {
                         </div>
 
                         {/* feed area */}
-                        <div className="feedCont"></div>
+                        <div className="feedCont">
+
+                            {/* feed component */}
+                            <Feed/>
+                            
+                        </div>
 
                     </div>
 
@@ -41,7 +47,7 @@ const Home = () => {
             </div>
         </>
 
-    )
+    );
 };
 
 export default Home;
