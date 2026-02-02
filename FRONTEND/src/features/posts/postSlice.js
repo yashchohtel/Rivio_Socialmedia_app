@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createPost, handlePostLike, loadFeed } from "./postThunk";
+import { createPost, handlePostBookmark, handlePostLike, loadFeed } from "./postThunk";
 
 // initial state for post slice
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
     phase: null, // phase is for post uploading feature
     message: null, // message is for succes message
     error: null, // this is for erroe message
-    likeStatus: null, // "pending" | "success" | "error" 
+    bookMarkLoading :null, // book mark loading
 };
 
 // creating slice for auth 
@@ -101,20 +101,11 @@ const postSlice = createSlice({
             // LIKE POST
             .addCase(handlePostLike.pending, (state) => {
 
-                // liking status 
-                state.likeStatus = "pending"
-
                 // no loader - (optimistic UI already)
                 state.error = null;
 
             })
             .addCase(handlePostLike.fulfilled, (state, action) => {
-
-                // set liking status
-                state.likeStatus = "success"
-
-                // set succces
-                state.success = true;
 
                 // extract data from payload
                 const { postId, liked, likesCount } = action.payload;
@@ -129,8 +120,35 @@ const postSlice = createSlice({
 
             })
             .addCase(handlePostLike.rejected, (state, action) => {
-                state.likeStatus = "error"
                 state.success = false;
+                state.error = action.payload;
+            })
+
+            // BOOKMARK POST
+            .addCase(handlePostBookmark.pending, (state) => {
+
+                // set bookMarkLoadig true
+                state.bookMarkLoading = true;
+            })
+            .addCase(handlePostBookmark.fulfilled, (state, action) => {
+
+                console.log(action.payload);
+                
+                // set loaindg false
+                state.bookMarkLoading = false;
+
+                // extract postId and bookMarked
+                const { postId, bookmarked } = action.payload;
+
+                // fubd posts
+                const post = state.posts.find(p => p._id === postId);
+
+                if (post) {
+                    post.isBookmarked = bookmarked;
+                }
+
+            })
+            .addCase(handlePostBookmark.rejected, (state, action) => {
                 state.error = action.payload;
             });
 

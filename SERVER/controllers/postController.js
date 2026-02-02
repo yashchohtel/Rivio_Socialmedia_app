@@ -131,7 +131,7 @@ export const getAllPosts = async (req, res, next) => {
     const { cursor } = req.query;
 
     // Find user by ID and exclude password from the result
-    const currentUser = await User.findById(userId).select("followers following");
+    const currentUser = await User.findById(userId).select("followers following bookmarks");
     if (!currentUser) return next(new ErrorHandler("User not found", 404));
 
     // array of allowed users id's
@@ -166,7 +166,7 @@ export const getAllPosts = async (req, res, next) => {
     const visiblePosts = posts.filter(post => post.user);
 
     // posts array with isFollwing (current user followin owner of post) flag.
-    const postsWithFollowFlag = visiblePosts.map(post => {
+    const postsWithExtraData = visiblePosts.map(post => {
 
         // post user id
         const postUserId = post.user._id.toString();
@@ -183,12 +183,16 @@ export const getAllPosts = async (req, res, next) => {
         // like check 
         const isLiked = post.likes?.some(id => id.toString() === currentUserId);
 
+        // bookmark check
+        const isBookmarked = currentUser.bookmarks?.some(id => id.toString() === post._id.toString());
+
         // return result
         return {
             ...post.toObject(),   // mongoose doc → plain object
             isOwnPost, // is own post flag
-            isLiked, // is liked flag
             isFollowing, // is current user following
+            isLiked, // is liked flag
+            isBookmarked, // is post is bookmarked or not
         };
 
     });
@@ -204,7 +208,7 @@ export const getAllPosts = async (req, res, next) => {
         success: true,
         count: visiblePosts.length,
         nextCursor,
-        posts: postsWithFollowFlag,
+        posts: postsWithExtraData,
         hasMore,
     });
 
@@ -267,14 +271,14 @@ export const likePost = async (req, res, next) => {
         // unlike, remove user id from likes
         post.likes.pull(userId); // mongoose array pull
         post.likesCount -= 1; // update likes count
-        message = "Post unliked";
+        message = "unlike";
 
     } else {
 
         // like, add user id to likes
         post.likes.push(userId);
         post.likesCount += 1; //update likes count
-        message = "Post liked";
+        message = "like";
 
     }
 

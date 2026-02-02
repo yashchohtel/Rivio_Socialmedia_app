@@ -78,7 +78,7 @@ export const handlePostLike = createAsyncThunk("posts/handlePostLike", async (id
 
         // calling api thorugh axios instance
         const { data } = await api.patch(`/api/posts/likePost/${id}`);
-        
+
         // returnt the data 
         return data;
 
@@ -89,3 +89,21 @@ export const handlePostLike = createAsyncThunk("posts/handlePostLike", async (id
     }
 
 })
+
+// thunk to handle save post
+export const handlePostBookmark = createAsyncThunk("posts/handlePostBookmark", async (id, { rejectWithValue }) => {
+
+    try {
+
+        // calling api
+        const { data } = await api.patch(`/api/posts/bookMarkPost/${id}`);
+
+        // return data
+        return data;
+
+    } catch (err) {
+
+        return rejectWithValue(err.response?.data?.message || "Something went wrong");
+    }
+    
+});

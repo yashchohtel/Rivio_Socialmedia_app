@@ -14,7 +14,7 @@ import PostCardFooter from '../PostCardFooter/PostCardFooter';
 const PostCard = ({ post }) => {
 
     // destructure post data
-    const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount, likesCount, sharesCount, isLiked } = post;
+    const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount, likesCount, sharesCount, isLiked, isBookmarked } = post;
 
     return (
         <>
@@ -63,6 +63,7 @@ const PostCard = ({ post }) => {
                     sharesCount={sharesCount}
                     isLiked={isLiked}
                     postId={_id}
+                    isBookmarked={isBookmarked}
                 />
 
             </div>

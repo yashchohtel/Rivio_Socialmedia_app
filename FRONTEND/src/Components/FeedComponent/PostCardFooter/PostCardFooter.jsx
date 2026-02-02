@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import './postCardFooter.css'
 import { FaLeaf, FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
@@ -7,7 +7,7 @@ import { PiPaperPlaneTiltBold } from "react-icons/pi";
 import { FaRegBookmark } from "react-icons/fa";
 import { FaBookmark } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
-import { handlePostLike } from '../../../features/posts/postThunk';
+import { handlePostBookmark, handlePostLike } from '../../../features/posts/postThunk';
 
 const PostCardFooter = (props) => {
 
@@ -15,72 +15,59 @@ const PostCardFooter = (props) => {
     const dispatch = useDispatch();
 
     // Get auth loading state from Redux store
-    const { likeStatus } = useSelector((state) => state.post);
+    const { bookMarkLoading } = useSelector((state) => state.post);
 
     /* -------------------------------------- */
 
     // destructure proops
-    const { postId, commentsCount, likesCount, sharesCount, isLiked } = props;
+    const { postId, commentsCount, likesCount, sharesCount, isLiked, isBookmarked } = props;
+
+    console.log(bookMarkLoading);
 
     // like count of post
     const [uiLikesCount, setUiLikesCount] = useState(likesCount);
 
-    // state for stroing liked stated
+    // state for stroing liked status
     const [uiIsLiked, setUiIsLiked] = useState(isLiked);
 
     //  trigger animation
     const [triggerAnimation, setTriggerAnimation] = useState(false);
-
-    // state to store liking process
-    const [isLiking, setIsLiking] = useState(false);
-
-    // state to store last intetion
-    const [lastIntentin, setLastIntention] = useState(null)
 
     /* -------------------------------------- */
 
     // handle like click
     const handleLikeClick = () => {
 
-        // decide users last intention like/unlike the post
-        const intention = uiIsLiked ? "unlike" : "like";
-        setLastIntention(intention);
-
         // set liked status inverse of previous state
         setUiIsLiked(prev => !prev);
 
-        // set ui like count plus minus accordint to liked liked
+        // set ui like count plus minus accordint to liked 
         setUiLikesCount(prev => (uiIsLiked ? prev - 1 : prev + 1));
 
         // set trigger animation
         setTriggerAnimation(true);
 
-        // rapid click lock
-        if (isLiking) return;
-
-        // set isLiking to true
-        setIsLiking(true);
-
         // dispatch handle post like thunk
         dispatch(handlePostLike(postId));
 
     };
-
     /* -------------------------------------- */
 
-    // effect to set liking status fasle
-    useEffect(() => {
+    // state to store bookmarked status
+    const [uiIsBookMarked, setUiIsBookMarked] = useState(isBookmarked)
 
-        if (likeStatus === "success" || likeStatus === "error") {
-            setIsLiking(false);
-        }
+    // handle postBookMark
+    const handlePostBookMark = () => {
 
-    }, [likeStatus]);
+        // set liked status inverse of previous state
+        setUiIsBookMarked(prev => !prev);
 
-    useEffect(() => {
-        console.log("UPDATED lastIntention:", lastIntentin);
-        console.log("isLiking " + isLiking);
-    }, [lastIntentin, isLiking]);
+        // dispatch handle post like thunk
+        dispatch(handlePostBookmark(postId));
+
+    }
+
+    /* -------------------------------------- */
 
     return (
         <>
@@ -160,11 +147,14 @@ const PostCardFooter = (props) => {
                     <div className="postCardFooterTopRight">
 
                         {/* bookMark section */}
-                        <div className="bookMarkSection iconCountCont">
+                        <div
+                            className="bookMarkSection iconCountCont"
+                            onClick={() => handlePostBookMark()}
+                        >
 
                             {/* icon */}
                             <span className="icon">
-                                <FaRegBookmark />
+                                {uiIsBookMarked ? <FaBookmark /> : <FaRegBookmark />}
                             </span>
 
                         </div>
@@ -181,4 +171,4 @@ const PostCardFooter = (props) => {
     )
 }
 
-export default React.memo(PostCardFooter);
+export default PostCardFooter;
