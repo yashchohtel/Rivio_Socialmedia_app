@@ -12,7 +12,6 @@ const initialState = {
     phase: null, // phase is for post uploading feature
     message: null, // message is for succes message
     error: null, // this is for erroe message
-    bookMarkLoading :null, // book mark loading
 };
 
 // creating slice for auth 
@@ -125,17 +124,16 @@ const postSlice = createSlice({
             })
 
             // BOOKMARK POST
-            .addCase(handlePostBookmark.pending, (state) => {
+            .addCase(handlePostBookmark.pending, (state, action) => {
 
-                // set bookMarkLoadig true
-                state.bookMarkLoading = true;
+                // getting post
+                const post = state.posts.find(p => p._id === action.meta.arg);
+
+                // setting 
+                if (post) post.bookmarkLoading = true;
+
             })
             .addCase(handlePostBookmark.fulfilled, (state, action) => {
-
-                console.log(action.payload);
-                
-                // set loaindg false
-                state.bookMarkLoading = false;
 
                 // extract postId and bookMarked
                 const { postId, bookmarked } = action.payload;
@@ -144,7 +142,9 @@ const postSlice = createSlice({
                 const post = state.posts.find(p => p._id === postId);
 
                 if (post) {
+                    post.bookmarkLoading = false;
                     post.isBookmarked = bookmarked;
+                    post.bookmarkStatus = bookmarked ? "saved" : "unsaved";
                 }
 
             })

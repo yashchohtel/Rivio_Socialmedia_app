@@ -1,0 +1,44 @@
+/* comment box */
+.postCardFooter .captionBox {
+  width: 100%;
+}
+
+.captionBox .caption .usernameAndVerified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-right: 0.5rem;
+}
+
+.captionBox .caption .usernameAndVerified .username {
+  font-weight: 500;
+  font-size: 1.5rem;
+  font-family: var(--font-heading);
+  color: var(--text-color-2);
+}
+
+.captionBox .caption .usernameAndVerified .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-3);
+}
+
+.postCardFooter .captionBox .caption {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-color-6);
+  word-spacing: 0.04rem;
+  letter-spacing: 0.02rem;
+}
+
+.captionBox .caption .seeMore {
+  color: var(--text-color-1);
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.captionBox .caption .seeMore:hover {
+  color: var(--text-color-6);
+}

@@ -1,20 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './postCard.css'
 
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from "swiper/modules";
-
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
 import PostCardHeader from '../PostCardHeader/PostCardHeader';
 import PostCardFooter from '../PostCardFooter/PostCardFooter';
+import FeedImageContainer from '../FeedImageContainer/FeedImageContainer';
 
 const PostCard = ({ post }) => {
 
     // destructure post data
-    const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount, likesCount, sharesCount, isLiked, isBookmarked } = post;
+    const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount, likesCount, sharesCount, isLiked, isBookmarked, bookmarkStatus, caption } = post;
+    
+    /* -------------------------------------- */
+
+    // state to make bookmark toast active
+    const [bookmarkActive, setBookmarkActive] = useState(false);
+
+    // handle bookmark active
+    const handleBookmarkActive = () => {
+        setBookmarkActive(true)
+    }
+
+    /* -------------------------------------- */
 
     return (
         <>
@@ -32,38 +38,24 @@ const PostCard = ({ post }) => {
                 />
 
                 {/* post body */}
-                <div className="imageContainer">
-
-                    {/* image slider */}
-                    <Swiper
-                        modules={[Pagination]}
-                        pagination={{ clickable: true }}
-                        spaceBetween={0}
-                        slidesPerView={1}
-                    >
-
-                        {media.map((item) => (
-                            <SwiperSlide key={item._id}>
-                                <img
-                                    src={item.url}
-                                    alt="post"
-                                    loading="lazy"
-                                />
-                            </SwiperSlide>
-                        ))}
-
-                    </Swiper>
-
-                </div>
+                <FeedImageContainer
+                    media={media}
+                    bookmarkActive={bookmarkActive}
+                    bookmarkStatus={bookmarkStatus}
+                    setBookmarkActive={setBookmarkActive}
+                />
 
                 {/* post bottom */}
                 <PostCardFooter
+                    postId={_id}
                     commentsCount={commentsCount}
                     likesCount={likesCount}
                     sharesCount={sharesCount}
                     isLiked={isLiked}
-                    postId={_id}
                     isBookmarked={isBookmarked}
+                    handleBookmarkActive={handleBookmarkActive}
+                    caption={caption}
+                    user={user}
                 />
 
             </div>

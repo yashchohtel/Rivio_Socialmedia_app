@@ -12,6 +12,7 @@ import MainLayout from "./layout/MainLayout";
 import Explore from "./pages/Explore/Explore";
 import Profile from "./pages/Profile/Profile";
 import Message from "./pages/Message/Message";
+import SavePosts from "./pages/SavePosts/SavePosts";
 
 function App() {
 
@@ -65,6 +66,9 @@ function App() {
 
           {/* profile page for other user*/}
           <Route path="profile/:id" element={<Profile />} />
+
+          {/* save post page */}
+          <Route path="bookmark" element={<SavePosts />} />
 
         </Route>
 

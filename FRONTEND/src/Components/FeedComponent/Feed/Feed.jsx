@@ -6,6 +6,7 @@ import PostCard from '../PostCard/PostCard';
 import { loadFeed } from '../../../features/posts/postThunk';
 import { ImSpinner8 } from "react-icons/im";
 import FeedSkeleton from '../../Skeletons/FeedSkeleton/FeedSkeleton';
+import CommentModal from '../CommentModal/CommentModal';
 
 const Feed = () => {
 
@@ -14,6 +15,9 @@ const Feed = () => {
 
     // Get auth loading state from Redux store
     const { posts, feedLoading, hasMore, cursor, success, phase, message } = useSelector((state) => state.post);
+
+    // Get comment initial state from Redux store
+    const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
 
     /* -------------------------------------- */
 
@@ -73,8 +77,18 @@ const Feed = () => {
 
             {/* feed content */}
             {posts && posts.map((post) => (
-                <PostCard key={post._id} post={post} />
+                <PostCard
+                    key={post._id} // unique key
+                    post={post} // post data
+                />
             ))}
+
+            {/* comment modal for gloal comment system */}
+            {isCommentModalOpen && (
+                <CommentModal
+                    activePostId={activePostId} // pass active post id to comment modal
+                />
+            )}
 
             {/* feed loading spinner */}
             {feedLoading && (
@@ -94,4 +108,3 @@ const Feed = () => {
 }
 
 export default Feed;
- 

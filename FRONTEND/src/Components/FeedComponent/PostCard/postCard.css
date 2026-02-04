@@ -1,32 +1,72 @@
 /* post card */
 .postCard {
   width: 450px;
-  margin-bottom: 20rem;
 }
 
 /* ----------------------------------- */
 
 /* image container */
-.imageContainer {
+.feedImageContainer {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 0.8rem;
   overflow: hidden;
   background: var(--bg-black);
   border: 1px solid var(--border-primary);
+  position: relative;
 }
 
 /* ----------------------------------------- */
 
-.imageContainer .swiper,
-.imageContainer .swiper-slide {
+.feedImageContainer .swiper,
+.feedImageContainer .swiper-slide {
   width: 100%;
   height: 100%;
 }
 
-.imageContainer img {
+.feedImageContainer img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   user-select: none;
+}
+
+/* ----------------------------------------- */
+
+.feedImageContainer .bookmark-toast {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: var(--bg-tirtary);
+  width: 100%;
+  z-index: 1;
+  padding: 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0;
+  transition: 0.3s ease;
+}
+
+.feedImageContainer .bookmark-toast.active {
+  opacity: 1;
+}
+
+.feedImageContainer .bookmark-toast .toastMsg {
+  font-family: var(--font-heading);
+  color: var(--text-color-4);
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.feedImageContainer .bookmark-toast .view-saved {
+  color: var(--text-color-3);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.feedImageContainer .bookmark-toast .view-saved:hover {
+  color: var(--text-color-7);
 }

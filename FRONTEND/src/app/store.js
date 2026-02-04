@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice.js';
-import postReducer from '../features/posts/postSlice.js'
+import postReducer from '../features/posts/postSlice.js';
+import commentReducer from '../features/comment/commentSlice.js';
 
 // configure store with 
 const store = configureStore({
@@ -13,6 +14,9 @@ const store = configureStore({
 
         // post reducer
         post: postReducer,
+
+        // comment reducer
+        comment: commentReducer,
 
     },
 

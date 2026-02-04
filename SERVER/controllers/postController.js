@@ -193,6 +193,8 @@ export const getAllPosts = async (req, res, next) => {
             isFollowing, // is current user following
             isLiked, // is liked flag
             isBookmarked, // is post is bookmarked or not
+            bookmarkLoading: false, // UI loading (per post)
+            bookmarkStatus: null, // "saved" | "unsaved" (for message)
         };
 
     });
