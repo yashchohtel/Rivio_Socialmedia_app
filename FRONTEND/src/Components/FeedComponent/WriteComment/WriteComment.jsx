@@ -28,6 +28,9 @@ const WriteComment = () => {
 
     /* -------------------------------------- */
 
+
+    
+
     const [value, setValue] = useState("");
 
     return (
