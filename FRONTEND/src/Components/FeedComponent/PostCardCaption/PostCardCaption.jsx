@@ -2,7 +2,7 @@ import React from 'react'
 import './postCardCaption.css'
 import { MdVerified } from "react-icons/md";
 
-const PostCardCaption = ({ caption, user }) => {
+const PostCardCaption = ({ caption, user, componentType }) => {
 
     // state to store more caption toggle
     const [seeMoreCaption, setSeeMoreCaption] = React.useState(false);
@@ -14,6 +14,19 @@ const PostCardCaption = ({ caption, user }) => {
     const WORD_LIMIT = 15;
     const words = caption.trim().split(/\s+/);
     const shortCaption = words.slice(0, WORD_LIMIT).join(" ");
+
+    const renderCaptionWithHashtags = (text) => {
+        return text.split(" ").map((word, index) => {
+            if (word.startsWith("#")) {
+                return (
+                    <span key={index} className="hashtag">
+                        {word + " "}
+                    </span>
+                );
+            }
+            return word + " ";
+        });
+    };
 
     return (
         <>
@@ -27,28 +40,31 @@ const PostCardCaption = ({ caption, user }) => {
                         <p className="caption">
 
                             <span className="usernameAndVerified">
-
-                                {/* username */}
-                                <span className="username" >{username}</span >
-
-                                {/* verified batch */}
+                                <span className="username">{username}</span>
                                 {isVerified && (
                                     <span className="icon">
                                         <MdVerified />
                                     </span>
                                 )}
-
                             </span>
 
-                            {seeMoreCaption ? caption : shortCaption}
+                            {componentType === "postCard" ? (
 
-                            {caption.length > shortCaption.length && (
-                                <span
-                                    className="seeMore"
-                                    onClick={() => setSeeMoreCaption(!seeMoreCaption)}
-                                >
-                                    {seeMoreCaption ? "  ...less" : "  ...more"}
-                                </span>
+
+                                <>
+                                    {seeMoreCaption ? renderCaptionWithHashtags(caption) : renderCaptionWithHashtags(shortCaption)}
+
+                                    {caption.length > shortCaption.length && (
+                                        <span
+                                            className="seeMore"
+                                            onClick={() => setSeeMoreCaption(prev => !prev)}
+                                        >
+                                            {seeMoreCaption ? "  ...less" : "  ...more"}
+                                        </span>
+                                    )}
+                                </>
+                            ) : (
+                                renderCaptionWithHashtags(caption)
                             )}
 
                         </p>

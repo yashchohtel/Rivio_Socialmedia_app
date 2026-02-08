@@ -2,10 +2,10 @@ import { MdVerified } from "react-icons/md";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { timeAgo } from "../../../utility/postCardUtility";
 import { useNavigate } from "react-router-dom";
-import './postCardHeader.css'
+import './postCardHeader.css';
 
-const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing }) => {
-
+const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, openFeedActionOption, componentType }) => {
+    
     // initilize useNavigate 
     const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing }) =
                     </div>
 
                     {/* location */}
-                    {location && (
+                    {location && componentType === "postCard" && (
                         <div className="location">{location}</div>
                     )}
 
@@ -85,14 +85,16 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing }) =
                 )}
 
                 {/* option */}
-                <div className="option">
+                <div className="option"
+                    onClick={() => openFeedActionOption()}
+                >
                     <span className="icon">
                         <HiDotsHorizontal />
                     </span>
                 </div>
 
             </div>
-            
+
         </div>
     );
 };

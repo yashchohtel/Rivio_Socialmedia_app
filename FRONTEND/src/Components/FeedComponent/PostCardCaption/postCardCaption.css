@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 .captionBox .caption .usernameAndVerified .username {
@@ -41,4 +41,14 @@
 
 .captionBox .caption .seeMore:hover {
   color: var(--text-color-6);
+}
+
+.hashtag {
+  color: var(--text-color-3);
+  font-family: var(--font-heading);
+  transition: 0.2s ease;
+}
+
+.hashtag:hover {
+  text-decoration: underline;
 }

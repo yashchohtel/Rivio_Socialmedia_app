@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import './feed.css'
 import { useDispatch, useSelector } from 'react-redux';
 import PostCard from '../PostCard/PostCard';
@@ -7,6 +7,7 @@ import { loadFeed } from '../../../features/posts/postThunk';
 import { ImSpinner8 } from "react-icons/im";
 import FeedSkeleton from '../../Skeletons/FeedSkeleton/FeedSkeleton';
 import CommentModal from '../CommentModal/CommentModal';
+import FeedActionOptionModal from '../FeedActionOptionModal/FeedActionOptionModal';
 
 const Feed = () => {
 
@@ -15,9 +16,25 @@ const Feed = () => {
 
     // Get auth loading state from Redux store
     const { posts, feedLoading, hasMore, cursor, success, phase, message } = useSelector((state) => state.post);
-
+    
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
+
+    /* -------------------------------------- */
+
+    // state to make feed action option modal active
+    const [feedActionOptionModalActive, setFeedActionOptionModalActive] = useState(false);
+
+    // to open feed action option modal
+    const openFeedActionOption = useCallback(() => {
+        setFeedActionOptionModalActive(true);
+    }, [])
+
+
+    // to open feed action option modal
+    const closeFeedActionOption = useCallback(() => {
+        setFeedActionOptionModalActive(false);
+    }, [])
 
     /* -------------------------------------- */
 
@@ -80,6 +97,7 @@ const Feed = () => {
                 <PostCard
                     key={post._id} // unique key
                     post={post} // post data
+                    openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to post card
                 />
             ))}
 
@@ -87,6 +105,14 @@ const Feed = () => {
             {isCommentModalOpen && (
                 <CommentModal
                     activePostId={activePostId} // pass active post id to comment modal
+                    openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to comment modal
+                />
+            )}
+
+            {/* feed action option modal */}
+            {feedActionOptionModalActive && (
+                <FeedActionOptionModal
+                    closeFeedActionOption={closeFeedActionOption} // feed action option modal close handler
                 />
             )}
 

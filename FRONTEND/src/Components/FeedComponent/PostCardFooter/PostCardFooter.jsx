@@ -31,6 +31,7 @@ const PostCardFooter = (props) => {
                     <PostCardCaption
                         caption={caption}
                         user={user}
+                        componentType="postCard"
                     />
 
                 </div>

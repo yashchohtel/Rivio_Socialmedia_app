@@ -275,6 +275,8 @@
   font-family: var(--font-heading);
   color: var(--text-color-2);
   letter-spacing: 0.05rem;
+  width: 100%;
+  padding-right: 1rem;
 }
 
 .locationInput::placeholder {

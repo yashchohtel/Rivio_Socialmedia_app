@@ -12,7 +12,7 @@ import { openCommentModal } from "../../../features/comment/commentSlice";
 const PostCardFooterTop = (props) => {
 
     // destructure proops
-    const { postId, commentsCount, likesCount, sharesCount, isLiked, isBookmarked, handleBookmarkActive } = props;
+    const { postId, commentsCount, sharesCount, isLiked, likesCount, isBookmarked, handleBookmarkActive } = props;
 
     /* -------------------------------------- */
 
@@ -21,11 +21,11 @@ const PostCardFooterTop = (props) => {
 
     /* -------------------------------------- */
 
-    // like count of post
-    const [uiLikesCount, setUiLikesCount] = useState(likesCount);
-
     // state for stroing liked status
     const [uiIsLiked, setUiIsLiked] = useState(isLiked);
+
+    // like count of post
+    const [uiLikesCount, setUiLikesCount] = useState(likesCount);
 
     //  trigger animation
     const [triggerAnimation, setTriggerAnimation] = useState(false);
@@ -75,6 +75,11 @@ const PostCardFooterTop = (props) => {
     useEffect(() => {
         setUiIsBookMarked(isBookmarked);
     }, [isBookmarked]);
+
+    useEffect(() => {
+        setUiIsLiked(isLiked);
+        setUiLikesCount(likesCount);
+    }, [isLiked, likesCount]);
 
     /* -------------------------------------- */
 

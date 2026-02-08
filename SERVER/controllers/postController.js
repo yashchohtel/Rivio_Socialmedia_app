@@ -290,6 +290,7 @@ export const likePost = async (req, res, next) => {
     return res.status(200).json({
         success: true,
         message,
+        postId,
         liked: !alreadyLiked,
         likesCount: post.likes.length,
     });

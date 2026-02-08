@@ -1,0 +1,52 @@
+/* feed action overlay */
+.FeedActionOptionModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(0 0 0 / 0%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
+  cursor: pointer;
+}
+
+/* feed action option modal */
+.FeedActionOptionModal .feedActionOption {
+  background: var(--bg-four);
+  width: 30rem;
+  border-radius: 1rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* actino option */
+.FeedActionOptionModal .feedActionOption .actionOption {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+  font-size: 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--text-color-6);
+  width: 100%;
+  transition: 0.3s ease;
+}
+
+/* action option last element */
+.feedActionOption .actionOption:last-child {
+  border: none;
+}
+
+.FeedActionOptionModal .feedActionOption .actionOption:first-child:hover,
+.feedActionOption .actionOption:first-child {
+  color: var(--text-error-color);
+}
+
+.FeedActionOptionModal .feedActionOption .actionOption:hover {
+  background: var(--bg-six);
+  color: var(--text-color-2);
+}

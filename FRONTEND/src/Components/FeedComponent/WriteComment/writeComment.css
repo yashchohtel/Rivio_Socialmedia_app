@@ -1,0 +1,70 @@
+/* comment writing container  */
+.commentModal .commentsInfoCont .writeCommentCont {
+  padding: 1.5rem 1rem;
+  border-block: 0.5px solid var(--border-tirtay);
+}
+
+/* comment writin box */
+.writeCommentCont .writeCommentBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* comment writin box imoji open icon*/
+.writeCommentCont .writeCommentBox .imojiOpen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 3rem;
+  color: var(--text-color-1);
+}
+
+/* comment writin box - textarea*/
+
+.writeCommentBox .textAreaWrap {
+  background: #0000001f;
+  position: relative;
+  width: 80%;
+}
+
+.writeCommentBox .textAreaWrap .fakePlaceholder {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  padding: 1rem;
+  font-size: 1.7rem;
+  font-family: var(--font-heading);
+  color: var(--text-color-1);
+}
+
+.writeCommentBox .textAreaWrap .textArea {
+  resize: none;
+  width: 100%;
+  overflow-y: hidden;
+  line-height: 1.6;
+  min-height: 2.4rem;
+  max-height: 9rem;
+  padding: 1rem;
+
+  font-family: var(--font-heading);
+  color: var(--text-color-2);
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+/* Handle */
+.writeCommentBox .textAreaWrap .textArea::-webkit-scrollbar-thumb {
+  background: #555;
+  border: 2px solid var(--bg-secondary);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.writeCommentBox .textAreaWrap .textArea::-webkit-scrollbar-thumb:hover {
+  background: var(--border-tirtay);
+}
