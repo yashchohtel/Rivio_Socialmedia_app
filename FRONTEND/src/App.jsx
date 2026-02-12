@@ -13,6 +13,8 @@ import Explore from "./pages/Explore/Explore";
 import Profile from "./pages/Profile/Profile";
 import Message from "./pages/Message/Message";
 import SavePosts from "./pages/SavePosts/SavePosts";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
 
@@ -42,6 +44,18 @@ function App() {
 
   return (
     <>
+
+      {/* react toast container */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}          // ✅ 3 sec me band
+        hideProgressBar={true}    // ✅ progress bar remove
+        closeOnClick={true}
+        closeButton={true}        // ✅ cross button
+        pauseOnHover={true}
+        draggable={false}
+        theme="dark"
+      />
 
       {/* routes wrapper */}
       <Routes>

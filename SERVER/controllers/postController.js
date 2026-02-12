@@ -91,10 +91,37 @@ export const createPost = async (req, res, next) => {
             )
         ]);
 
+        // prepare data for response -------------
+
+        // populating post for user data
+        const populatedPost = await Post.findById(postResult._id).populate({
+            path: "user",
+            select: "username fullName profileImage isVerified isPrivate",
+        });
+
+        // formated response object
+        const formattedPost = {
+            ...populatedPost.toObject(),
+
+            // counts
+            likesCount: 0,
+            commentsCount: 0,
+            sharesCount: 0,
+
+            // flags
+            isOwnPost: true,
+            isFollowing: false,
+            isLiked: false,
+            isBookmarked: false,
+
+            bookmarkLoading: false,
+            bookmarkStatus: null,
+        };
+
         // send success response
         res.status(201).json({
             success: true,
-            postResult,
+            formattedPost,
         });
 
     } catch (error) {

@@ -52,7 +52,7 @@
 
 /* comments info container */
 .commentModal .commentsInfoCont {
-  background: var(--bg-secondary);
+  background: var(--bg-four);
   width: 50rem;
   display: flex;
   flex-direction: column;
@@ -76,9 +76,11 @@
 
 /* caption and comments container */
 .captionAndComments {
-  height: 70%;
+  height: 100%;
   overflow-y: auto;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 /* caption */
@@ -89,7 +91,14 @@
   font-weight: 400;
   letter-spacing: 0.01rem;
   word-spacing: 0.02rem;
-  margin-bottom: 1.5rem;
+}
+
+.captionAndComments .commentrule {
+  margin: 1.5rem auto;
+  height: 1.5px;
+  background: var(--border-tirtay);
+  width: 70%;
+  border-radius: 1rem;
 }
 
 /* comment box container */
@@ -120,4 +129,12 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem 1rem;
+}
+
+/* post card header styling for time only for comment info container */
+.commentInfoContHead .postCardHeader .userInfoDetail .userNameAndTime .time {
+  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--text-color-1);
 }

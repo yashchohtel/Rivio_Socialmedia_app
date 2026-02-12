@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // getting backend url from env
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -20,7 +21,7 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
 
         // form data to send file and text data
         const formData = new FormData();
-
+        
         // text fields
         formData.append("caption", postData.caption);
         formData.append("location", postData.location);
@@ -42,6 +43,13 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
 
         console.log(err);
 
+        const message = err.response?.data?.message || "Something went wrong";
+        
+        // toast message
+        toast(message, {
+            className: "custom-toast",
+        });
+
         // handle error
         return rejectWithValue(err.response?.data?.message || "Something went wrong");
 
@@ -53,6 +61,8 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
 export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { rejectWithValue }) => {
 
     try {
+
+        console.log("api called");
 
         // if cursor add cursor query to url
         const url = cursor ? `/api/posts/getAllPosts?cursor=${cursor}` : `/api/posts/getAllPosts`;
@@ -105,5 +115,5 @@ export const handlePostBookmark = createAsyncThunk("posts/handlePostBookmark", a
 
         return rejectWithValue(err.response?.data?.message || "Something went wrong");
     }
-    
+
 });

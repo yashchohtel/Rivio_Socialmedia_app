@@ -40,7 +40,7 @@ const imageFilter = (req, file, cb) => {
     if (allowed.includes(file.mimetype)) {
         cb(null, true); // accept file
     } else {
-        cb(new Error('Only images are allowed!'), false); // reject file
+        cb(new Error('Only images are allowed!', 400), false); // reject file
     }
 };
 

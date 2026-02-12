@@ -8,6 +8,7 @@ import { ImSpinner8 } from "react-icons/im";
 import FeedSkeleton from '../../Skeletons/FeedSkeleton/FeedSkeleton';
 import CommentModal from '../CommentModal/CommentModal';
 import FeedActionOptionModal from '../FeedActionOptionModal/FeedActionOptionModal';
+import { toast } from 'react-toastify';
 
 const Feed = () => {
 
@@ -16,7 +17,7 @@ const Feed = () => {
 
     // Get auth loading state from Redux store
     const { posts, feedLoading, hasMore, cursor, success, phase, message } = useSelector((state) => state.post);
-    
+
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
 
@@ -91,6 +92,17 @@ const Feed = () => {
                     <FeedSkeleton key={i} />
                 ))
             )}
+
+            {/* for testing */}
+            {/* <button
+                onClick={() =>
+                    toast("Designing toast preview message...", {
+                        className: "custom-toast",
+                    })
+                }
+            >
+                Show Dummy Toast
+            </button> */}
 
             {/* feed content */}
             {posts && posts.map((post) => (

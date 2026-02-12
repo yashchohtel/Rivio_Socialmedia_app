@@ -1,0 +1,11 @@
+z indexs :-
+
+1 => .swiper-wrapper { z-index: 1; } = image container feed
+2 => .sidebar { z-index: 3; } side baar main layout
+3 => .modalContainer { z-index: 2; } modal container (contains search and notification modal)
+4 => .commentModalOverLay { z-index: 3; } comment modal 
+5 => .createModal.overlay { z-index: 3; } create post modal
+6 => .pickerCloseOverlay {  z-index: 1; }
+7 => .writeCommentBox .emojiPickerCont {  z-index: 2; }
+8 => .discardOverlay { z-index: 4; }
+

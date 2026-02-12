@@ -5,6 +5,7 @@ import Stories from '../../Components/Story Component/Stories/Stories';
 import Feed from '../../Components/FeedComponent/Feed/Feed';
 
 const Home = () => {
+    
     return (
         <>
             {/* home page */}

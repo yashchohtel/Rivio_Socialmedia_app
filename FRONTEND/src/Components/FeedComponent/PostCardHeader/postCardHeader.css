@@ -108,8 +108,15 @@
   align-items: center;
   justify-content: center;
   height: 2.5rem;
-  width: 2.5rem;
+  width: 4rem;
   font-size: 2rem;
   color: var(--text-color-1);
   cursor: pointer;
+  transition: 0.2s ease;
+  border-radius: 1rem;
+}
+
+.postCardHeader .btnAndOptions .option .icon:hover {
+  background: var(--border-tirtay);
+  color: var(--text-color-2);
 }

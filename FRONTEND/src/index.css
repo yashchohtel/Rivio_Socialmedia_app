@@ -23,8 +23,8 @@
 
   /* border colors */
   --border-primary: #262626;
-  --border-secondary: #555555; 
-  --border-tirtay: #2e2e2e; 
+  --border-secondary: #555555;
+  --border-tirtay: #43434369;
 
   /* text color */
   --text-color-1: #a8a8a8;
@@ -35,7 +35,6 @@
   --text-color-6: #efefef;
   --text-color-7: #a2aaf1;
   --text-error-color: #ff4d4d;
-  
 
   /* buttons bg color */
   --btn-bg-primary: #4a5df9;
@@ -281,4 +280,18 @@ img {
   100% {
     transform: rotate(360deg);
   }
+}
+
+/* custom toasts designs */
+.custom-toast {
+  border-radius: 1rem !important;
+  padding: 14px 20px !important;
+  width: fit-content;
+  margin: 0 auto;
+  background: var(--bg-tirtary) !important;
+  color: var(--text-color-2);
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 1.5rem;
+  letter-spacing: 0.03rem;
 }

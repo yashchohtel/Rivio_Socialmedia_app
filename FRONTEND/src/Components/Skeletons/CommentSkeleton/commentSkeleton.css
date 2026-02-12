@@ -1,0 +1,56 @@
+.commentSkeleton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.commentSkeleton .avator {
+  height: 4rem;
+  width: 4rem;
+  background: red;
+  border-radius: 50%;
+}
+
+.commentSkeleton .infoLines {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.commentSkeleton .infoLines .infoLineOne,
+.commentSkeleton .infoLines .infoLineTwo {
+  background: red;
+  height: 1rem;
+  width: 25rem;
+  border-radius: 1rem;
+}
+
+.commentSkeleton .infoLines .infoLineTwo {
+  width: 20rem;
+}
+
+/* shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+/* apply shimmer */
+.commentSkeleton .avator,
+.commentSkeleton .infoLines .infoLineOne,
+.commentSkeleton .infoLines .infoLineTwo {
+  background: linear-gradient(
+    90deg,
+    var(--bg-six) 25%,
+    /* darker */ var(--bg-secondary) 37%,
+    /* slightly lighter */ var(--bg-six) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite;
+}

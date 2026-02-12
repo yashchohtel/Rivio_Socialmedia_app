@@ -9,6 +9,7 @@ import PostCardHeader from '../PostCardHeader/PostCardHeader';
 import PostCardFooterTop from '../PostCardFooterTop/PostCardFooterTop';
 import PostCardCaption from '../PostCardCaption/PostCardCaption';
 import WriteComment from '../WriteComment/WriteComment';
+import CommentBox from '../CommentBox/CommentBox';
 
 const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
@@ -89,8 +90,18 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 />
                             )}
 
+                            {/* rule */}
+                            {caption && (
+                                <div className="commentrule"></div>
+                            )}
+
                             {/* comment box container */}
-                            <div className="commentBoxContainer"></div>
+                            <div className="commentBoxContainer">
+
+                                {/* comment box container skeetons and actual comments*/}
+                                <CommentBox />
+
+                            </div>
 
                         </div>
 

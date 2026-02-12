@@ -22,7 +22,7 @@ const CreatePostModal = ({ closeModal }) => {
     const { user } = useSelector((state) => state.auth);
 
     // get post state from store
-    const { postLoading, success } = useSelector((state) => state.post);
+    const { postLoading, success, error } = useSelector((state) => state.post);
 
     // initialize use dispatch
     const dispatch = useDispatch();
@@ -141,12 +141,25 @@ const CreatePostModal = ({ closeModal }) => {
         if (success) {
             const timer = setTimeout(() => {
                 closeModal();
-                dispatch(clearMessages()); 
+                dispatch(clearMessages());
             }, 2000);
 
             return () => clearTimeout(timer);
         }
     }, [closeModal, success, dispatch]);
+
+    // state to redirect to select window if error
+    useEffect(() => {
+
+        if (error == "Only images are allowed!") {
+            console.log(true);
+            setWindowStep("select")
+        }
+
+        // clear message
+        dispatch(clearMessages());
+
+    }, [error])
 
     /* -------------------------------------- */
 

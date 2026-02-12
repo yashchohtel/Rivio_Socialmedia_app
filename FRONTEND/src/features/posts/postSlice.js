@@ -51,15 +51,23 @@ const postSlice = createSlice({
                 state.success = false;
             })
             .addCase(createPost.fulfilled, (state, action) => {
+
+                console.log(action.payload);
+
                 state.postLoading = false;
                 state.success = true;
                 state.message = action.payload?.message || "Post created successfully";
                 state.phase = "uploaded"
+
+                if (action.payload?.formattedPost) {
+                    state.posts.unshift(action.payload.formattedPost);
+                }
+
             })
             .addCase(createPost.rejected, (state, action) => {
                 state.postLoading = false;
                 state.success = false;
-                state.error = action.payload || "Post creation failed";
+                state.error = action.payload || "Post creation failed";                
             })
 
             // LOAD FEED
