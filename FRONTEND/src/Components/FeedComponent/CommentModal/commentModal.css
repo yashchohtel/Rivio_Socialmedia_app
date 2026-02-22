@@ -11,7 +11,6 @@
   justify-content: center;
   align-items: center;
   z-index: 3;
-  cursor: pointer;
 }
 
 /* modal close button */
@@ -22,6 +21,7 @@
   font-size: 2.5rem;
   color: var(--text-color-1);
   transition: 0.2s ease;
+  cursor: pointer;
 }
 
 .commentModalClose:hover {
@@ -52,7 +52,7 @@
 
 /* comments info container */
 .commentModal .commentsInfoCont {
-  background: var(--bg-four);
+  background: var(--bg-six);
   width: 50rem;
   display: flex;
   flex-direction: column;
@@ -81,6 +81,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  padding-top: 2rem;
 }
 
 /* caption */
@@ -101,10 +102,7 @@
   border-radius: 1rem;
 }
 
-/* comment box container */
-.captionAndComments .commentBoxContainer {
-  height: 3rem;
-}
+/* -------------------------- */
 
 /* Handle */
 .captionAndComments::-webkit-scrollbar-thumb {

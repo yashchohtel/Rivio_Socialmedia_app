@@ -7,12 +7,24 @@ import { MdBookmarkBorder } from "react-icons/md";
 import { GoMoon } from "react-icons/go";
 import { MdLogout } from "react-icons/md";
 import { IoArrowBackOutline } from "react-icons/io5";
-
+import { useDispatch } from 'react-redux';
+import { logoutUser } from '../../../features/auth/authThunk';
 
 const MoreOption = () => {
 
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
     // state to store moreOption view status
     const [viewSubMenu, setViewSubMenu] = useState(false)
+
+    /* -------------------------------------- */
+
+    // function to logout user
+    const handleLogout = () => {
+        // dispatch logout action
+        dispatch(logoutUser());
+    }
 
     return (
         <>
@@ -63,8 +75,11 @@ const MoreOption = () => {
                     {/* rule */}
                     <div className="rule"></div>
 
-                    {/* switch appearance */}
-                    <div className="moreOptionLink logout">
+                    {/* logout */}
+                    <div
+                        className="moreOptionLink logout"
+                        onClick={handleLogout}
+                    >
                         {/* icon */}
                         <span className="moreOptIcon"> <MdLogout /> </span>
                         {/* name */}
@@ -99,7 +114,7 @@ const MoreOption = () => {
 
                         <div className="toggle">
                             <label className="switch">
-                                <input type="checkbox" id="toggle"/>
+                                <input type="checkbox" id="toggle" />
                                 <span className="slider"></span>
                             </label>
                         </div>

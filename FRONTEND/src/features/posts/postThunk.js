@@ -62,15 +62,13 @@ export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { reje
 
     try {
 
-        console.log("api called");
-
         // if cursor add cursor query to url
         const url = cursor ? `/api/posts/getAllPosts?cursor=${cursor}` : `/api/posts/getAllPosts`;
 
         // calling api through axios instance
         const { data } = await api.get(url);
 
-        // backend se jo aata hai wahi return
+        // return data
         return data; // { posts, nextCursor, success }
 
     } catch (err) {

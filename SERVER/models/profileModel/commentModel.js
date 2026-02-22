@@ -54,7 +54,7 @@ const commentSchema = new mongoose.Schema({
             trim: true
         },
 
-        // array to store user ids who liked the comment
+        // array to store user ids who liked the reply
         likes: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"

@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 1rem;
 }
 
 /* comment writin box imoji open icon*/
@@ -26,6 +27,7 @@
   width: 2.5rem;
   font-size: 3rem;
   color: var(--text-color-1);
+  cursor: pointer;
 }
 
 .writeCommentCont .writeCommentBox .imojiOpen.active {
@@ -78,6 +80,7 @@
   letter-spacing: 0.03rem;
   color: var(--text-color-1);
   transition: 0.2s ease;
+  cursor: pointer;
 }
 
 .writeCommentBox .postCommentBtn.active {

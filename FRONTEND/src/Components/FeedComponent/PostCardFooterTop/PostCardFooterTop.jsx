@@ -66,7 +66,7 @@ const PostCardFooterTop = (props) => {
     /* -------------------------------------- */
 
     // function to handle comment click
-    const handleCoommentClick = () => {
+    const handleCommentClick = () => {
         dispatch(openCommentModal(postId));
     }
 
@@ -124,7 +124,7 @@ const PostCardFooterTop = (props) => {
                     {/* comment section */}
                     <div
                         className="commentSection iconCountCont"
-                        onClick={() => handleCoommentClick()}
+                        onClick={() => handleCommentClick()}
                     >
 
                         {/* icon */}
@@ -134,7 +134,7 @@ const PostCardFooterTop = (props) => {
 
                         {/* count */}
                         {commentsCount > 0 && (
-                            <span className="count">987</span>
+                            <span className="count">{commentsCount}</span>
                         )}
 
                     </div>
@@ -149,7 +149,7 @@ const PostCardFooterTop = (props) => {
 
                         {/* count */}
                         {sharesCount > 0 && (
-                            <span className="count">45</span>
+                            <span className="count">{sharesCount}</span>
                         )}
 
                     </div>

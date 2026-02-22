@@ -15,6 +15,7 @@ import Message from "./pages/Message/Message";
 import SavePosts from "./pages/SavePosts/SavePosts";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { socket } from "./socket/socket";
 
 function App() {
 
@@ -33,6 +34,29 @@ function App() {
 
   /* -------------------------------------- */
 
+  // Initialize socket connection
+  useEffect(() => {
+
+    // log when connected to the server
+    socket.on("connect", () => {
+      console.log("Connected to server:", socket.id);
+    });
+
+    // log when disconnected from the server
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+
+    // cleanup (important)
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+
+  }, []);
+
+  /* -------------------------------------- */
+
   // if data is loading return a loader
   if (authLoading) {
     return (
@@ -48,10 +72,10 @@ function App() {
       {/* react toast container */}
       <ToastContainer
         position="top-right"
-        autoClose={3000}          // ✅ 3 sec me band
-        hideProgressBar={true}    // ✅ progress bar remove
+        autoClose={3000}
+        hideProgressBar={true}
         closeOnClick={true}
-        closeButton={true}        // ✅ cross button
+        closeButton={true}
         pauseOnHover={true}
         draggable={false}
         theme="dark"
@@ -66,7 +90,7 @@ function App() {
         {/* Route for main layout page [protected] */}
         <Route path="/app" element={<ProtectedRoute>  <MainLayout /> </ProtectedRoute>}>
 
-          {/* main home page default */}
+          {/* main home page default - (and wrap home into KeepAlive to stop un mounting on page chage) */}
           <Route index element={<Home />} />
 
           {/* explore page */}

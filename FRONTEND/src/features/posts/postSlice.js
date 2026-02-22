@@ -34,6 +34,12 @@ const postSlice = createSlice({
             state.phase = null;
         },
 
+        // reducer function to clear book mark status
+        clearBookmarkStatus: (state, action) => {
+            const post = state.posts.find(p => p._id === action.payload);
+            if (post) post.bookmarkStatus = null;
+        }
+
     },
 
     // extrareducers to handle async actions
@@ -52,7 +58,7 @@ const postSlice = createSlice({
             })
             .addCase(createPost.fulfilled, (state, action) => {
 
-                console.log(action.payload);
+                // console.log(action.payload);
 
                 state.postLoading = false;
                 state.success = true;
@@ -67,7 +73,7 @@ const postSlice = createSlice({
             .addCase(createPost.rejected, (state, action) => {
                 state.postLoading = false;
                 state.success = false;
-                state.error = action.payload || "Post creation failed";                
+                state.error = action.payload || "Post creation failed";
             })
 
             // LOAD FEED
@@ -79,7 +85,7 @@ const postSlice = createSlice({
             })
             .addCase(loadFeed.fulfilled, (state, action) => {
 
-                console.log(action.payload);
+                // console.log(action.payload);
 
                 state.feedLoading = false;
                 state.success = true;
@@ -146,7 +152,7 @@ const postSlice = createSlice({
                 // extract postId and bookMarked
                 const { postId, bookmarked } = action.payload;
 
-                // fubd posts
+                // find posts
                 const post = state.posts.find(p => p._id === postId);
 
                 if (post) {
@@ -165,7 +171,7 @@ const postSlice = createSlice({
 });
 
 // export reducer function
-export const { clearMessages } = postSlice.actions;
+export const { clearMessages, clearBookmarkStatus } = postSlice.actions;
 
 // export postSlice reducer
 export default postSlice.reducer;

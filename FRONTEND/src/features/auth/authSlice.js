@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loadUser, loginUser, registerUser } from "./authThunk";
+import { loadUser, loginUser, logoutUser, registerUser } from "./authThunk";
 
 // initial state for auth slice
 const initialState = {
@@ -30,7 +30,6 @@ const authSlice = createSlice({
         },
 
     },
-
 
     // extrareducers to handle async actions
     extraReducers: (builder) => {
@@ -91,6 +90,23 @@ const authSlice = createSlice({
                 state.formLoading = false;
                 state.isAuthenticated = false;
                 state.user = null;
+                state.error = action.payload;
+            })
+
+            // logout user
+            .addCase(logoutUser.pending, (state) => {
+                state.formLoading = true;
+                state.error = null;
+                state.successMessage = null;
+            })
+            .addCase(logoutUser.fulfilled, (state, action) => {
+                state.formLoading = false;
+                state.isAuthenticated = false;
+                state.user = null;
+                state.successMessage = action.payload.message;
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.formLoading = false;
                 state.error = action.payload;
             });
 

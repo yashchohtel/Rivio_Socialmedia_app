@@ -4,7 +4,6 @@ import axios from "axios";
 // getting backend url from env
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-
 // thunk to load user data and auth state
 export const loadUser = createAsyncThunk('auth/loadUser', async (_, { rejectWithValue }) => {
 
@@ -71,6 +70,31 @@ export const loginUser = createAsyncThunk('auth/loginUser', async (formData, { r
 
         // send post request to login user
         const { data } = await axios.post(`${backendUrl}/api/users/loginUser`, formData, {
+            withCredentials: true,
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        // return success response
+        return data;
+
+    } catch (err) {
+
+        console.log(err);
+
+        // handle error
+        return rejectWithValue(err.response?.data?.message || "Something went wrong");
+
+    }
+
+});
+
+// thunk to logout user
+export const logoutUser = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
+
+    try {
+
+        // send post request to logout user
+        const { data } = await axios.post(`${backendUrl}/api/users/logoutUser`, {}, {
             withCredentials: true,
             headers: { 'Content-Type': 'application/json' }
         });

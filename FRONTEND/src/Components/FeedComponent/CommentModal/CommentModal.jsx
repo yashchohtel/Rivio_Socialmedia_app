@@ -10,6 +10,8 @@ import PostCardFooterTop from '../PostCardFooterTop/PostCardFooterTop';
 import PostCardCaption from '../PostCardCaption/PostCardCaption';
 import WriteComment from '../WriteComment/WriteComment';
 import CommentBox from '../CommentBox/CommentBox';
+import { useEffect } from 'react';
+import { getCommentsForPost } from '../../../features/comment/commentThunk';
 
 const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
@@ -42,6 +44,19 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
         setBookmarkActive(true);
     }, []);
 
+    /* -------------------------------------- */
+
+    // effect to load comments for active post id when comment modal opens
+    useEffect(() => {
+
+        if (activePostId) {
+
+            // dispatch get comments for post action
+            dispatch(getCommentsForPost(activePostId));
+
+        }
+
+    }, [activePostId]);
 
     /* -------------------------------------- */
 
@@ -99,7 +114,9 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                             <div className="commentBoxContainer">
 
                                 {/* comment box container skeetons and actual comments*/}
-                                <CommentBox />
+                                <CommentBox
+                                    activePostId={activePostId} // acctive post id for comment
+                                />
 
                             </div>
 
@@ -123,7 +140,11 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
                         {/* comment writing field */}
                         <div className="writeCommentCont">
-                            <WriteComment />
+
+                            <WriteComment
+                                postId={_id} // active post id for writing comment
+                            />
+
                         </div>
 
                     </div>
@@ -143,4 +164,5 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
     )
 }
 
-export default CommentModal;
+// export default CommentModal;
+export default React.memo(CommentModal);

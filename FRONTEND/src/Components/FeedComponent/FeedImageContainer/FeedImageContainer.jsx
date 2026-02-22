@@ -9,21 +9,32 @@ import { Pagination } from "swiper/modules";
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { clearBookmarkStatus } from '../../../features/posts/postSlice';
 
-const FeedImageContainer = ({ media, bookmarkStatus, bookmarkActive, setBookmarkActive, componentType }) => {
+const FeedImageContainer = ({ postId, media, bookmarkStatus, bookmarkActive, setBookmarkActive, componentType }) => {
 
-    // hide bok mark toast
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    // hide book mark toast
     useEffect(() => {
 
         // if component type not equal to post card retur
-        if(componentType !== "postCard") return
+        if (componentType !== "postCard") return
 
         if (!bookmarkStatus) return;
 
         setBookmarkActive(true);
 
         const timer = setTimeout(() => {
+
+            // set book mark active to false
             setBookmarkActive(false);
+
+            // reset bookmark status
+            dispatch(clearBookmarkStatus(postId));
+
         }, 2000);
 
         return () => clearTimeout(timer);

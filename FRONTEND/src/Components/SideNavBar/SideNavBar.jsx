@@ -22,6 +22,7 @@ const SideNavBar = (props) => {
 
     /* -------------------------------------- */
 
+    // getting user data from redux store
     const { user } = useSelector((state) => state.auth);
 
     /* -------------------------------------- */
@@ -152,7 +153,7 @@ const SideNavBar = (props) => {
                             className={`linkContainer profile ${activeItem === "profile" ? "active" : ""}`}
                         >
                             <span className="icon imageIcon">
-                                {user.profileImage ?
+                                {user?.profileImage ?
                                     <img src={user.profileImage} alt="profile" />
                                     :
                                     <img src="/images/userprofile.jpeg" alt="profile" />

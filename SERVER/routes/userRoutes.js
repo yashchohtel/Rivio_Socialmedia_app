@@ -30,7 +30,7 @@ userRouter.get('/getMyProfile', isUserAuth, catchAsyncError(getMyProfile));
 
 // Get user profile [get]
 userRouter.get('/getUserProfile/:id', isUserAuth, catchAsyncError(getUserProfile));
-// 'http://localhost:5000/api/users/getUserProfile/:id'
+// 'http://localhost:5000/api/users/getUserProfile/:id
 
 // Edit user profile [put]
 userRouter.put('/editProfile', isUserAuth, upload.single("profileImage"), catchAsyncError(editProfile));

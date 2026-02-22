@@ -50,7 +50,6 @@ const PostCardCaption = ({ caption, user, componentType }) => {
 
                             {componentType === "postCard" ? (
 
-
                                 <>
                                     {seeMoreCaption ? renderCaptionWithHashtags(caption) : renderCaptionWithHashtags(shortCaption)}
 
@@ -63,9 +62,11 @@ const PostCardCaption = ({ caption, user, componentType }) => {
                                         </span>
                                     )}
                                 </>
-                            ) : (
-                                renderCaptionWithHashtags(caption)
-                            )}
+                            ) :
+
+                            (renderCaptionWithHashtags(caption))
+
+                            }
 
                         </p>
                     </>

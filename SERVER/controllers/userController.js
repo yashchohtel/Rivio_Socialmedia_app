@@ -131,11 +131,28 @@ export const getMyProfile = async (req, res, next) => {
         return next(new ErrorHandler("User not found", 404));
     }
 
+    // send optimize user data as response
+    const userData = {
+        id: user._id,
+        fullName: user.fullName,
+        username: user.username,
+        email: user.email,
+        bio: user.bio || "",
+        profileImage: user.profileImage || null,
+        isVerified: user.isVerified,
+        isPrivate: user.isPrivate,
+
+        followersCount: user.followers?.length || 0,
+        followingCount: user.following?.length || 0,
+        postsCount: user.posts?.length || 0,
+        bookmarksCount: user.bookmarks?.length || 0,
+    };
+
     // send user profile as response
     res.status(200).json({
         success: true,
         message: "User profile fetched successfully",
-        user
+        user: userData
     });
 
 }
@@ -158,7 +175,7 @@ export const getUserProfile = async (req, res, next) => {
         success: true,
         user
     });
-    
+
 };
 
 // EDIT PROFILE 

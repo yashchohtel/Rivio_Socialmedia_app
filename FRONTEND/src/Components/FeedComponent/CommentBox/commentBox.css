@@ -1,0 +1,123 @@
+/* comment box */
+.commentBox {
+  width: 100%;
+}
+
+/* no comments message */
+.commentBox .noCommentsMessage {
+  margin: 2rem 0;
+  color: var(--text-color-1);
+  font-size: 2rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+/* comment item container */
+.CommentItemContainer {
+  width: 100%;
+}
+
+/* comment item ----------------------------------------------------- */
+
+/* comment item */
+.commentItem {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1.2rem;
+}
+
+/* comment item profile image */
+.commentItem .commentItemProfileImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* ----------- */
+
+/* comment item content */
+.commentItem .commentItemContent {
+  flex: 1;
+}
+
+/* comment item header */
+.commentItem .commentItemContent .commentItemHeader {
+  padding-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* commet and username container */
+.commentItemHeader .commentAndUsername {
+  margin-bottom: 1rem;
+}
+
+/* username */
+.commentItemHeader .commentAndUsername .username {
+  font-weight: 500;
+  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  color: var(--text-color-6);
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.commentItemHeader .commentAndUsername .username:hover {
+  text-decoration: underline;
+}
+
+/* comment */
+.commentItemHeader .commentAndUsername .comment {
+  color: var(--text-color-8);
+  font-family: var(--font-main);
+  font-weight: 400;
+  font-size: 1.4rem;
+}
+
+/* ----------- */
+
+/* comment likes */
+.commentItemHeader .commentItemLikes {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+}
+
+.commentItemHeader .commentItemLikes .icon {
+  color: var(--text-color-6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.commentItemHeader .commentItemLikes .icon:hover {
+  transform: scale(1.2);
+}
+
+/* ----------- */
+
+.commentItemContent .commentItemFooter {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: var(--text-color-1);
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.commentItemContent .commentItemFooter .replay {
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.commentItemContent .commentItemFooter .replay:hover {
+  transform: scale(1.1);
+}

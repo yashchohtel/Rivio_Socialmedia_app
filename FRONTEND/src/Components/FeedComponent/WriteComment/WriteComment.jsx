@@ -2,8 +2,21 @@ import React, { useEffect, useRef, useState } from 'react'
 import './writeComment.css'
 import { FaRegFaceSmileWink } from "react-icons/fa6";
 import EmojiPicker from '../../EmojiPicker/EmojiPicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCommentOptimistic } from '../../../features/comment/commentSlice';
+import { addComment } from '../../../features/comment/commentThunk';
 
-const WriteComment = () => {
+const WriteComment = ({ postId }) => {
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    /* -------------------------------------- */
+
+    // Get auth loading state from Redux store
+    const currentUser = useSelector((state) => state.auth.user);
+
+    /* -------------------------------------- */
 
     // refrence of textarea content
     const textareaRef = useRef(null);
@@ -38,23 +51,29 @@ const WriteComment = () => {
     const [value, setValue] = useState("");
 
     const handleEmojiSelect = (emoji) => {
+
+        // text area 
         const textarea = textareaRef.current;
+
+        // return if no text area
         if (!textarea) return;
 
+        // cursor posion start
         const start = textarea.selectionStart;
+
+        // cursor position end
         const end = textarea.selectionEnd;
 
-        const newValue =
-            value.slice(0, start) +
-            emoji +
-            value.slice(end);
+        const newValue = value.slice(0, start) + emoji + value.slice(end);
 
+        // set new value
         setValue(newValue);
+
+        handleInput()
 
         setTimeout(() => {
             textarea.focus();
-            textarea.selectionStart =
-                textarea.selectionEnd = start + emoji.length;
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
         }, 0);
     };
 
@@ -67,6 +86,40 @@ const WriteComment = () => {
     const handleEmojiPickOpenClose = () => {
         setIsEmojiPickerOpen(!isEmojiPickerOpen)
     }
+
+    /* -------------------------------------- */
+
+    // handle coment post
+    const handlePostComment = () => {
+
+        // return if value is empty or only spaces
+        if (!value.trim()) return;
+
+        // create temp comment for optimistic update
+        const tempComment = {
+            _id: "temp-" + Date.now(),
+            text: value,
+            createdAt: new Date().toISOString(),
+            user: currentUser,
+            isOptimistic: true
+        };
+
+        // STEP 1: optimistic update
+        dispatch(addCommentOptimistic({
+            postId: postId,
+            tempComment
+        }));
+
+        // STEP 2: backend call
+        dispatch(addComment({
+            postId: postId,
+            text: value
+        }));
+
+        // clear textarea value
+        setValue("");
+        
+    };
 
     /* -------------------------------------- */
 
@@ -128,11 +181,19 @@ const WriteComment = () => {
                 />
 
                 {/* post button */}
-                <button className={`postCommentBtn ${value.trim() ? "active" : ""}`} > POST </button>
+                <button
+                    className={`postCommentBtn ${value.trim() ? "active" : ""}`}
+                    onClick={handlePostComment}
+                >
+                    POST
+                </button>
 
             </div>
+
         </>
     )
 }
 
-export default WriteComment
+export default WriteComment;
+
+// Hello mike how are man 😅🤣😂😍😊🫠😃🙂🙂😃 this is me for no reason i'm here and now i want you to say something so please coprate me for that ok 😇

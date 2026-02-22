@@ -31,7 +31,6 @@ const Feed = () => {
         setFeedActionOptionModalActive(true);
     }, [])
 
-
     // to open feed action option modal
     const closeFeedActionOption = useCallback(() => {
         setFeedActionOptionModalActive(false);
@@ -45,25 +44,28 @@ const Feed = () => {
         // accesing contentOutlet(scrollable component) to implement infinite scroll feature
         const container = document.querySelector(".contentOutlet");
 
-        // if no container stop execution
-        if (!container) return;
+        // if no container | feed loading true | no has more - stop execution
+        if (!container || feedLoading || !hasMore) return;
 
         // handles scroll function
         const handleScroll = () => {
 
+            // getting all height related to the container
             const scrollTop = container.scrollTop;
             const clientHeight = container.clientHeight;
             const scrollHeight = container.scrollHeight;
 
-            // drigger dispatch when reaching to bottom
-            if (scrollTop + clientHeight >= scrollHeight - 200 && hasMore && !feedLoading) {
+            // call load feed if following condition are ture
+            if (container.scrollHeight > container.clientHeight && scrollTop + clientHeight >= scrollHeight - 50) {
                 dispatch(loadFeed(cursor));
             }
 
         };
 
+        // add scrool event listner to container
         container.addEventListener("scroll", handleScroll);
 
+        // remove event listner
         return () => {
             container.removeEventListener("scroll", handleScroll);
         };
@@ -92,17 +94,6 @@ const Feed = () => {
                     <FeedSkeleton key={i} />
                 ))
             )}
-
-            {/* for testing */}
-            {/* <button
-                onClick={() =>
-                    toast("Designing toast preview message...", {
-                        className: "custom-toast",
-                    })
-                }
-            >
-                Show Dummy Toast
-            </button> */}
 
             {/* feed content */}
             {posts && posts.map((post) => (
@@ -146,3 +137,15 @@ const Feed = () => {
 }
 
 export default Feed;
+
+
+{/* for testing */ }
+{/* <button
+    onClick={() =>
+        toast("Designing toast preview message...", {
+            className: "custom-toast",
+        })
+    }
+>
+    Show Dummy Toast
+</button> */}

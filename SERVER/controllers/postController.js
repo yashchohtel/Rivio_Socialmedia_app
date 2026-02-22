@@ -180,7 +180,7 @@ export const getAllPosts = async (req, res, next) => {
         .limit(postLimit)
         .populate({
             path: "user",
-            select: "username fullName profileImage isVerified isPrivate",
+            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks",
             match: {
                 $or: [
                     { isPrivate: false },
@@ -213,9 +213,28 @@ export const getAllPosts = async (req, res, next) => {
         // bookmark check
         const isBookmarked = currentUser.bookmarks?.some(id => id.toString() === post._id.toString());
 
+        // destructure user for optimized response (avoid sending unnecessary data)
+        const user = post.user;
+
+        // optimized user object for response
+        const optimizedUser = {
+            id: user._id,
+            username: user.username,
+            fullName: user.fullName,
+            profileImage: user.profileImage || null,
+            isVerified: user.isVerified,
+            isPrivate: user.isPrivate,
+
+            followersCount: user.followers?.length || 0,
+            followingCount: user.following?.length || 0,
+            postsCount: user.posts?.length || 0,
+            bookmarksCount: user.bookmarks?.length || 0,
+        };
+
         // return result
         return {
             ...post.toObject(),   // mongoose doc → plain object
+            user: optimizedUser, // populated and optimized user object
             isOwnPost, // is own post flag
             isFollowing, // is current user following
             isLiked, // is liked flag
@@ -342,7 +361,7 @@ export const commentOnPost = async (req, res, next) => {
     }
 
     // Find user
-    const user = await User.findById(userId).select("_id username profileImage");
+    const user = await User.findById(userId).select("username fullName profileImage email isVerified isPrivate followers following posts bookmarks");
     if (!user) return next(new ErrorHandler("User not found", 404));
 
     // Find post
@@ -352,8 +371,8 @@ export const commentOnPost = async (req, res, next) => {
     // Create new comment
     const comment = new Comment({
         post: postId,
+        user: userId,
         text: text.trim(),
-        user: userId
     });
 
     // Save comment to database
@@ -361,19 +380,154 @@ export const commentOnPost = async (req, res, next) => {
 
     // Add comment reference to post's comments array
     post.comments.push(savedComment._id);
+    post.commentsCount += 1;
     await post.save();
 
-    // Populate user info in response
-    await savedComment.populate("user", "username profileImage");
+    // optimize user data for response (avoid sending unnecessary data)
+    const optimizedUser = {
+        id: user._id,
+        username: user.username,
+        fullName: user.fullName,
+        profileImage: user.profileImage || null,
+        isVerified: user.isVerified,
+        isPrivate: user.isPrivate,
+
+        followersCount: user.followers?.length || 0,
+        followingCount: user.following?.length || 0,
+        postsCount: user.posts?.length || 0,
+        bookmarksCount: user.bookmarks?.length || 0,
+    };
+
+    // comment data to send in response (optimized)
+    const optimizedCommmentData = {
+        _id: savedComment._id, // comment id
+        post: postId, // post id
+        text: savedComment.text, // comment text
+        user: optimizedUser, // comment user (optimized)
+        likesCount: 0, // new comment
+        repliesCount: 0, // new comment
+        replies: [], // empty but structure maintained
+        createdAt: savedComment.createdAt, // timestamp of comment
+        updatedAt: savedComment.updatedAt  // timestamp of comment
+    };
 
     // Send success response
     return res.status(201).json({
         success: true,
         message: "Comment added successfully",
-        comment: savedComment
+        comment: optimizedCommmentData
     });
 
 };
+
+// GET COMMENTS OF POST
+export const getCommentsForPost = async (req, res, next) => {
+
+    // get postid
+    const postId = req.params.postId;
+
+    // validate post exists (optional but useful)
+    const post = await Post.findById(postId).select("_id");
+    if (!post) return next(new ErrorHandler("Post not found", 404));
+
+    // find the comment and populate user and replies' user data, sort by newest first
+    const comments = await Comment.find({ post: postId })
+        .sort({ createdAt: -1 })
+        .populate("user", "username fullName profileImage email isVerified isPrivate followers following posts bookmarks")
+        .populate({
+            path: "replies.repliedBy",
+            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
+        })
+        .populate({
+            path: "replies.repliedTo",
+            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
+        });
+
+    // map to a lighter payload: include counts and populated user objects
+    const mapped = comments.map((c) => {
+
+        // optimize user data for main comment user 
+        const optimizedUser = c.user ? {
+            id: c.user._id,
+            username: c.user.username,
+            fullName: c.user.fullName,
+            profileImage: c.user.profileImage || null,
+            isVerified: c.user.isVerified,
+            isPrivate: c.user.isPrivate,
+
+            followersCount: c.user.followers?.length || 0,
+            followingCount: c.user.following?.length || 0,
+            postsCount: c.user.posts?.length || 0,
+            bookmarksCount: c.user.bookmarks?.length || 0,
+        } : null;
+
+        return {
+
+            _id: c._id, // comment id
+            post: c.post, // post id
+            text: c.text, // comment text
+            user: optimizedUser, // comment user (optimized)
+            likesCount: Array.isArray(c.likes) ? c.likes.length : 0, // likes count of main comment
+            repliesCount: Array.isArray(c.replies) ? c.replies.length : 0, // replies count
+
+            replies: (c.replies || []).map(r => {
+
+                // optimize user data for reply's repliedBy user
+                const repliedBy = r.repliedBy ? {
+                    id: r.repliedBy._id,
+                    username: r.repliedBy.username,
+                    fullName: r.repliedBy.fullName,
+                    email: r.repliedBy?.email || null,
+                    profileImage: r.repliedBy.profileImage || null,
+                    isVerified: r.repliedBy.isVerified,
+                    isPrivate: r.repliedBy.isPrivate,
+
+                    followersCount: r.repliedBy.followers?.length || 0,
+                    followingCount: r.repliedBy.following?.length || 0,
+                    postsCount: r.repliedBy.posts?.length || 0,
+                    bookmarksCount: r.repliedBy.bookmarks?.length || 0,
+                } : null;
+
+                // optimize user data for reply's repliedTo user
+                const repliedTo = r.repliedTo ? {
+                    id: r.repliedTo._id,
+                    username: r.repliedTo.username,
+                    fullName: r.repliedTo.fullName,
+                    email: r.repliedTo?.email || null,
+                    profileImage: r.repliedTo.profileImage || null,
+                    isVerified: r.repliedTo.isVerified,
+                    isPrivate: r.repliedTo.isPrivate,
+
+                    followersCount: r.repliedTo.followers?.length || 0,
+                    followingCount: r.repliedTo.following?.length || 0,
+                    postsCount: r.repliedTo.posts?.length || 0,
+                    bookmarksCount: r.repliedTo.bookmarks?.length || 0,
+                } : null;
+
+                return {
+                    _id: r._id, // reply id
+                    repliedBy: repliedBy,
+                    repliedTo: repliedTo,
+                    text: r.text, // reply text
+                    likesCount: Array.isArray(r.likes) ? r.likes.length : 0, // likes count of reply
+                    createdAt: r.createdAt // timestamp of reply
+                };
+            }),
+
+            createdAt: c.createdAt, // timestamp of main comment
+            updatedAt: c.updatedAt // timestamp of main comment
+        };
+    });
+
+    // return response
+    return res.status(200).json({
+        success: true,
+        postId,
+        count: mapped.length,
+        comments: mapped
+    });
+
+}
 
 // REPLAY ON COMMENT
 export const replyOnComment = async (req, res, next) => {
@@ -436,53 +590,6 @@ export const replyOnComment = async (req, res, next) => {
     });
 
 };
-
-// GET COMMENTS OF POST
-export const getCommentsForPost = async (req, res, next) => {
-
-    // get postid
-    const postId = req.params.postId;
-
-    // validate post exists (optional but useful)
-    const post = await Post.findById(postId).select("_id");
-    if (!post) return next(new ErrorHandler("Post not found", 404));
-
-    const comments = await Comment.find({ post: postId })
-        .sort({ createdAt: -1 })
-        .populate("user", "username profileImage")
-        .populate({ path: "replies.repliedBy", select: "username profileImage" })
-        .populate({ path: "replies.repliedTo", select: "username profileImage" });
-
-    // map to a lighter payload: include counts and populated user objects
-    const mapped = comments.map((c) => ({
-        _id: c._id,
-        post: c.post,
-        text: c.text,
-        user: c.user, // populated { _id, username, profileImage }
-        likesCount: Array.isArray(c.likes) ? c.likes.length : 0,
-        repliesCount: Array.isArray(c.replies) ? c.replies.length : 0,
-        replies: (c.replies || []).map(r => ({
-            _id: r._id,
-            repliedBy: r.repliedBy,   // populated
-            repliedTo: r.repliedTo,   // populated
-            text: r.text,
-            likesCount: Array.isArray(r.likes) ? r.likes.length : 0,
-            createdAt: r.createdAt
-        })),
-        createdAt: c.createdAt,
-        updatedAt: c.updatedAt
-    }));
-
-    console.log(mapped);
-
-    // return response
-    return res.status(200).json({
-        success: true,
-        count: mapped.length,
-        comments: mapped
-    });
-
-}
 
 // LIKE COMMENT AND REPLY
 export const likeCommentAndReplay = async (req, res, next) => {

@@ -48,6 +48,7 @@ const PostCard = ({ post, openFeedActionOption }) => {
                     bookmarkStatus={bookmarkStatus}
                     setBookmarkActive={setBookmarkActive}
                     componentType="postCard"
+                    postId={_id}
                 />
 
                 {/* post bottom */}

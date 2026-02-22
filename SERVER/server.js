@@ -8,6 +8,9 @@ import postRouter from "./routes/postRoutes.js"; // Import post routes
 import userRouter from "./routes/userRoutes.js"; // Import user routes
 import chatRoutes from "./routes/chatsRoutes.js"; // Import chats routes
 import cors from "cors"; // Middleware to enable CORS (Cross-Origin Resource Sharing)
+import http from "http"; // Import Node.js HTTP module to create a server
+import { getIO } from "./socket/socket.js"; // Import function to get the Socket.IO instance
+import { initializeSocket } from "./socket/socket.js"; // Import function to initialize Socket.IO
 
 // -------------------- CONFIGURATION  -------------------- //
 
@@ -55,12 +58,20 @@ app.use("/api/chats", chatRoutes); // Use chatRoutes for handling chats-related 
 
 app.use(errorMiddleware); // Use error handling middleware
 
+// -------------------- SOCKET.IO SETUP -------------------- //
+
+// Create an HTTP server using the Express app
+const server = http.createServer(app);
+
+// Initialize Socket.IO with the HTTP server
+initializeSocket(server);
+
 // -------------------- SERVER -------------------- //
 
 // Port number for the server to listen on 
 const PORT = process.env.PORT || 4000;
 
 // Start the server and listen for requests
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
