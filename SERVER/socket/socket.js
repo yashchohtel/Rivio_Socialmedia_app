@@ -1,7 +1,7 @@
 import { Server } from "socket.io" // Import Socket.IO server class
 
 // Variable to hold the Socket.IO instance
-let io; 
+let io;
 
 export const initializeSocket = (server) => {
 
@@ -16,7 +16,7 @@ export const initializeSocket = (server) => {
 
     io.on("connection", (socket) => {
 
-        // Log when a new client connects
+        // Log when a new client connects 
         console.log("New client connected:", socket.id);
 
         // log when a client disconnects

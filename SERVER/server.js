@@ -8,8 +8,7 @@ import postRouter from "./routes/postRoutes.js"; // Import post routes
 import userRouter from "./routes/userRoutes.js"; // Import user routes
 import chatRoutes from "./routes/chatsRoutes.js"; // Import chats routes
 import cors from "cors"; // Middleware to enable CORS (Cross-Origin Resource Sharing)
-import http from "http"; // Import Node.js HTTP module to create a server
-import { getIO } from "./socket/socket.js"; // Import function to get the Socket.IO instance
+import { createServer } from "http"; // Import createServer function from HTTP module to create an HTTP server
 import { initializeSocket } from "./socket/socket.js"; // Import function to initialize Socket.IO
 
 // -------------------- CONFIGURATION  -------------------- //
@@ -61,7 +60,7 @@ app.use(errorMiddleware); // Use error handling middleware
 // -------------------- SOCKET.IO SETUP -------------------- //
 
 // Create an HTTP server using the Express app
-const server = http.createServer(app);
+const server = createServer(app);
 
 // Initialize Socket.IO with the HTTP server
 initializeSocket(server);
