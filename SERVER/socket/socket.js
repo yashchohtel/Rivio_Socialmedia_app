@@ -3,6 +3,10 @@ import { Server } from "socket.io" // Import Socket.IO server class
 // Variable to hold the Socket.IO instance
 let io;
 
+// Map to keep track of online users and their corresponding socket IDs
+const onlineUsers = new Map();
+
+// Function to initialize the Socket.IO server
 export const initializeSocket = (server) => {
 
     // Initialize Socket.IO server with CORS settings
@@ -14,10 +18,17 @@ export const initializeSocket = (server) => {
         },
     });
 
+    // Listen for new client connections to the Socket.IO server
     io.on("connection", (socket) => {
 
         // Log when a new client connects 
         console.log("New client connected:", socket.id);
+
+        // Listen for "register" event from the client to register the user and store their socket ID
+        socket.on("register", (userId) => {
+            onlineUsers.set(userId, socket.id);
+            console.log("User registered:", userId, socket.id);
+        });
 
         // log when a client disconnects
         socket.on("disconnect", () => {
@@ -31,10 +42,15 @@ export const initializeSocket = (server) => {
 // function to get the Socket.IO instance 
 export const getIO = () => {
 
-    if (!io) {
-        throw new Error("Socket.io not initialized")
-    }
+    // Throw an error if the Socket.IO instance has not been initialized yet
+    if (!io) throw new Error("Socket.io not initialized");
 
+    // Return the Socket.IO instance
     return io
 
 }
+
+// function to get the socket ID for a given user ID from the onlineUsers map
+export const getSocketId = (userId) => {
+    return onlineUsers.get(userId);
+};

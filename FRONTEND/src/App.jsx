@@ -25,7 +25,7 @@ function App() {
   const dispatch = useDispatch();
 
   // Get auth loading state from Redux store
-  const { authLoading } = useSelector((state) => state.auth);
+  const { authLoading , user } = useSelector((state) => state.auth);
 
   // effect to load user data
   useEffect(() => {
@@ -55,6 +55,15 @@ function App() {
 
   }, []);
 
+
+  // effect to register user with socket server
+  useEffect(() => {
+
+    if (user?.id) {
+      socket.emit("register", user.id);
+    }
+
+  }, [user]);
 
   /* -------------------------------------- */
 
