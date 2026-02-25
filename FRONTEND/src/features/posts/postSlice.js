@@ -38,6 +38,22 @@ const postSlice = createSlice({
         clearBookmarkStatus: (state, action) => {
             const post = state.posts.find(p => p._id === action.payload);
             if (post) post.bookmarkStatus = null;
+        },
+
+        // update post like count
+        updatePostLikes: (state, action) => {
+
+            // get postsid and likes likesCount from payload 
+            const { postId, likesCount } = action.payload;
+
+            // get post
+            const post = state.posts.find(p => p._id === postId);
+
+            // increase likes count
+            if (post) {
+                post.likesCount = likesCount;
+            }
+
         }
 
     },
@@ -112,17 +128,31 @@ const postSlice = createSlice({
             })
 
             // LIKE POST
-            .addCase(handlePostLike.pending, (state) => {
+            .addCase(handlePostLike.pending, (state, action) => {
 
-                // no loader - (optimistic UI already)
-                state.error = null;
+                console.log("pending runs")
+
+                // get posid from action meta argument
+                const postId = action.meta.arg;
+
+                // find post
+                const post = state.posts.find(p => p._id === postId);
+
+                // optimistic increase isLiked status and likesCount
+                if (post) {
+                    post.isLiked = !post.isLiked;
+                    post.likesCount += post.isLiked ? 1 : -1;
+                }
 
             })
             .addCase(handlePostLike.fulfilled, (state, action) => {
 
+                console.log("fullfilled runs")
+
                 // extract data from payload
                 const { postId, liked, likesCount } = action.payload;
 
+                console.log(liked);
                 // find the post which we are handlin like 
                 const post = state.posts.find(p => p._id === postId);
 
@@ -171,7 +201,7 @@ const postSlice = createSlice({
 });
 
 // export reducer function
-export const { clearMessages, clearBookmarkStatus } = postSlice.actions;
+export const { clearMessages, clearBookmarkStatus, updatePostLikes } = postSlice.actions;
 
 // export postSlice reducer
 export default postSlice.reducer;

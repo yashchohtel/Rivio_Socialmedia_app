@@ -6,6 +6,8 @@ import fs from "fs"; // Import file system module
 import cloudinary from "../config/cloudinary.js"; // Import Cloudinary configuration
 import mongoose from "mongoose"; // Import mongoose for ObjectId
 import { optimizeImage, uploadFileToCloudinary } from "../utils/postUplodUtils.js"; // Import image upload utilities
+import { sendNotification } from "../utils/sendNotification.js"; // Import function to send notifications
+import { getIO } from "../socket/socket.js";
 
 // CREATE POST
 export const createPost = async (req, res, next) => {
@@ -328,11 +330,29 @@ export const likePost = async (req, res, next) => {
         post.likesCount += 1; //update likes count
         message = "like";
 
+        // send notification to post owner if liker is not the owner of the post
+        if (!post.user.equals(userId)) {
+
+            // send notification using helper function
+            await sendNotification(post.user, userId, "POST_LIKE", post._id);
+
+        }
+
     }
 
     // save the post
     await post.save();
 
+    // get socket id 
+    const io = getIO();
+    
+    // emit post_like_update evebt
+    io.to(post._id.toString()).emit("post_like_update", {
+        postId: post._id,
+        likesCount: post.likesCount,
+    });
+
+    // return data
     return res.status(200).json({
         success: true,
         message,
@@ -829,4 +849,3 @@ export const bookMarkPost = async (req, res, next) => {
     });
 
 };
-

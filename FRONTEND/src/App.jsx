@@ -13,9 +13,10 @@ import Explore from "./pages/Explore/Explore";
 import Profile from "./pages/Profile/Profile";
 import Message from "./pages/Message/Message";
 import SavePosts from "./pages/SavePosts/SavePosts";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
+import { updatePostLikes } from "./features/posts/postSlice";
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
   const dispatch = useDispatch();
 
   // Get auth loading state from Redux store
-  const { authLoading , user } = useSelector((state) => state.auth);
+  const { authLoading, user } = useSelector((state) => state.auth);
 
   // effect to load user data
   useEffect(() => {
@@ -34,36 +35,56 @@ function App() {
 
   /* -------------------------------------- */
 
-  // Initialize socket connection
+  // effect to register user with socket server
   useEffect(() => {
 
-    // log when connected to the server
-    socket.on("connect", () => {
-      console.log("Connected to server:", socket.id);
-    });
+    const handleConnect = () => {
+      if (user?.id) {
+        socket.emit("register", user.id);
+      }
+    };
 
-    // log when disconnected from the server
-    socket.on("disconnect", () => {
-      console.log("Disconnected from server");
-    });
+    // run when socket connects/reconnects
+    socket.on("connect", handleConnect);
 
-    // cleanup (important)
+    // ALSO run immediately if already connected
+    if (socket.connected && user?.id) {
+      handleConnect();
+    }
+
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
+      socket.off("connect", handleConnect);
+    };
+
+  }, [user]);
+
+  /* -------------------------------------- */
+
+  // effect to show notifications received from socket server
+  useEffect(() => {
+
+    socket.on("notification", (notification) => {
+      // console.log("New notification:", notification);
+      toast.success("New notification received " + notification.type);
+    });
+
+    return () => {
+      socket.off("notification");
     };
 
   }, []);
 
+  /* -------------------------------------- */
 
-  // effect to register user with socket server
   useEffect(() => {
 
-    if (user?.id) {
-      socket.emit("register", user.id);
-    }
+    socket.on("post_like_update", ({ postId, likesCount }) => {
+      dispatch(updatePostLikes({ postId, likesCount }));
+    });
 
-  }, [user]);
+    return () => socket.off("post_like_update");
+
+  }, []);
 
   /* -------------------------------------- */
 

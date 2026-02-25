@@ -8,6 +8,7 @@ import { ImSpinner8 } from "react-icons/im";
 import FeedSkeleton from '../../Skeletons/FeedSkeleton/FeedSkeleton';
 import CommentModal from '../CommentModal/CommentModal';
 import FeedActionOptionModal from '../FeedActionOptionModal/FeedActionOptionModal';
+import { socket } from '../../../socket/socket';
 import { toast } from 'react-toastify';
 
 const Feed = () => {
@@ -83,6 +84,22 @@ const Feed = () => {
         }
 
     }, []);
+
+    /* -------------------------------------- */
+
+    // effect to emit join_post_room event
+    useEffect(() => {
+
+        if (!posts || posts.length === 0) return;
+
+        posts.forEach(post => {
+            socket.emit("join_post_room", post._id);
+        });
+
+    }, [posts]);
+
+    /* -------------------------------------- */
+
 
     return (
 

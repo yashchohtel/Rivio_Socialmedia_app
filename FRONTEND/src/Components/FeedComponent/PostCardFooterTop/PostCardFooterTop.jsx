@@ -24,20 +24,11 @@ const PostCardFooterTop = (props) => {
     // state for stroing liked status
     const [uiIsLiked, setUiIsLiked] = useState(isLiked);
 
-    // like count of post
-    const [uiLikesCount, setUiLikesCount] = useState(likesCount);
-
     //  trigger animation
     const [triggerAnimation, setTriggerAnimation] = useState(false);
 
     // handle like click
     const handleLikeClick = () => {
-
-        // set liked status inverse of previous state
-        setUiIsLiked(prev => !prev);
-
-        // set ui like count plus minus accordint to liked 
-        setUiLikesCount(prev => (uiIsLiked ? prev - 1 : prev + 1));
 
         // set trigger animation
         setTriggerAnimation(true);
@@ -78,7 +69,6 @@ const PostCardFooterTop = (props) => {
 
     useEffect(() => {
         setUiIsLiked(isLiked);
-        setUiLikesCount(likesCount);
     }, [isLiked, likesCount]);
 
     /* -------------------------------------- */
@@ -115,8 +105,8 @@ const PostCardFooterTop = (props) => {
                         </span>
 
                         {/* count */}
-                        {uiLikesCount > 0 && (
-                            <span className="count">{uiLikesCount}</span>
+                        {likesCount > 0 && (
+                            <span className="count">{likesCount}</span>
                         )}
 
                     </div>

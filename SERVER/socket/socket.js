@@ -24,11 +24,23 @@ export const initializeSocket = (server) => {
         // Log when a new client connects 
         console.log("New client connected:", socket.id);
 
+        /* -------------------------------------- */
+
         // Listen for "register" event from the client to register the user and store their socket ID
         socket.on("register", (userId) => {
             onlineUsers.set(userId, socket.id);
             console.log("User registered:", userId, socket.id);
         });
+
+        /* -------------------------------------- */
+
+        // user joins post room 
+        socket.on("join_post_room", (postId) => {
+            socket.join(postId.toString());
+            console.log("Socket joined room:", postId, socket.id);
+        });
+
+        /* -------------------------------------- */
 
         // log when a client disconnects
         socket.on("disconnect", () => {
@@ -52,5 +64,5 @@ export const getIO = () => {
 
 // function to get the socket ID for a given user ID from the onlineUsers map
 export const getSocketId = (userId) => {
-    return onlineUsers.get(userId);
+    return onlineUsers.get(userId.toString());
 };
