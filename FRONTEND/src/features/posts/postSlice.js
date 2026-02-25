@@ -130,8 +130,6 @@ const postSlice = createSlice({
             // LIKE POST
             .addCase(handlePostLike.pending, (state, action) => {
 
-                console.log("pending runs")
-
                 // get posid from action meta argument
                 const postId = action.meta.arg;
 
@@ -147,12 +145,9 @@ const postSlice = createSlice({
             })
             .addCase(handlePostLike.fulfilled, (state, action) => {
 
-                console.log("fullfilled runs")
-
                 // extract data from payload
                 const { postId, liked, likesCount } = action.payload;
 
-                console.log(liked);
                 // find the post which we are handlin like 
                 const post = state.posts.find(p => p._id === postId);
 
