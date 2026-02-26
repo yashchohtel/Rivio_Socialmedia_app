@@ -87,14 +87,33 @@ const Feed = () => {
 
     /* -------------------------------------- */
 
-    // effect to emit join_post_room event
+    // effect to create a post room to instently get the fresh data
     useEffect(() => {
 
-        if (!posts || posts.length === 0) return;
+        // join room function
+        const joinRooms = () => {
 
-        posts.forEach(post => {
-            socket.emit("join_post_room", post._id);
-        });
+            // proceed if posts avilable
+            if (!posts || posts.length === 0) return;
+
+            // emit event for each post users load
+            posts.forEach(post => {
+                socket.emit("join_post_room", post._id);
+            });
+
+        };
+
+        // run on connect/reconnect
+        socket.on("connect", joinRooms);
+
+        // also run immediately if already connected
+        if (socket.connected) {
+            joinRooms();
+        }
+
+        return () => {
+            socket.off("connect", joinRooms);
+        };
 
     }, [posts]);
 

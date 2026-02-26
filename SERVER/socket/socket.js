@@ -37,7 +37,6 @@ export const initializeSocket = (server) => {
         // user joins post room 
         socket.on("join_post_room", (postId) => {
             socket.join(postId.toString());
-            console.log("Socket joined room:", postId, socket.id);
         });
 
         /* -------------------------------------- */

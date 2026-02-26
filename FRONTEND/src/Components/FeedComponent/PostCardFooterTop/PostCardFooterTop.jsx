@@ -67,6 +67,7 @@ const PostCardFooterTop = (props) => {
         setUiIsBookMarked(isBookmarked);
     }, [isBookmarked]);
 
+    // effect to setUiIsLiked on isLiked field change
     useEffect(() => {
         setUiIsLiked(isLiked);
     }, [isLiked, likesCount]);

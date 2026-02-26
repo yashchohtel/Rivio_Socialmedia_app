@@ -7,12 +7,14 @@ export const sendNotification = async (recipientId, senderId, type, postId = nul
 
     try {
 
+        // console.log("create noti")
         // log("recipientId: " + recipientId);
         // log("senderId: " + senderId);
         // log("type: " + type)
         // log("postId: " + postId)
         // log("commentId: " + commentId)
         // log("replyId: " + replyId)
+        // console.log("____________________")
 
         // Create a new notification document in the database
         const notification = await Notification.create({
@@ -35,6 +37,37 @@ export const sendNotification = async (recipientId, senderId, type, postId = nul
 
     } catch (error) {
         console.error("Error sending notification:", error);
+    }
+
+}
+
+// function to delete notification if the action is reversed
+export const deleteNotification = async (recipientId, senderId, type, postId = null, commentId = null, replyId = null) => {
+
+    try {
+
+        // console.log("delete noti")
+        // log("recipientId: " + recipientId);
+        // log("senderId: " + senderId);
+        // log("type: " + type)
+        // log("postId: " + postId)
+        // log("commentId: " + commentId)
+        // log("replyId: " + replyId)
+        // console.log("____________________")
+
+        await Notification.findOneAndDelete({
+            recipient: recipientId,
+            sender: senderId,
+            type,
+            post: postId,
+            comment: commentId,
+            reply: replyId,
+        });
+
+    } catch (error) {
+
+        console.error("Error deleting notification:", error);
+
     }
 
 }

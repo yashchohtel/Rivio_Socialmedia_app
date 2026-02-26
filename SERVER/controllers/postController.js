@@ -6,7 +6,7 @@ import fs from "fs"; // Import file system module
 import cloudinary from "../config/cloudinary.js"; // Import Cloudinary configuration
 import mongoose from "mongoose"; // Import mongoose for ObjectId
 import { optimizeImage, uploadFileToCloudinary } from "../utils/postUplodUtils.js"; // Import image upload utilities
-import { sendNotification } from "../utils/sendNotification.js"; // Import function to send notifications
+import { deleteNotification, sendNotification } from "../utils/notificationHelper.js"; // Import function to send notifications
 import { getIO } from "../socket/socket.js";
 
 // CREATE POST
@@ -323,6 +323,14 @@ export const likePost = async (req, res, next) => {
         post.likesCount -= 1; // update likes count
         message = "unlike";
 
+        // delete notification 
+        await deleteNotification(
+            post.user,      // recipient
+            userId,         // sender
+            "POST_LIKE",    // type
+            post._id        // postId
+        );
+
     } else {
 
         // like, add user id to likes
@@ -334,7 +342,12 @@ export const likePost = async (req, res, next) => {
         if (!post.user.equals(userId)) {
 
             // send notification using helper function
-            await sendNotification(post.user, userId, "POST_LIKE", post._id);
+            await sendNotification(
+                post.user,   // recipient
+                userId,      // sender
+                "POST_LIKE", // type
+                post._id     // postId
+            );
 
         }
 
@@ -345,7 +358,7 @@ export const likePost = async (req, res, next) => {
 
     // get socket id 
     const io = getIO();
-    
+
     // emit post_like_update evebt
     io.to(post._id.toString()).emit("post_like_update", {
         postId: post._id,

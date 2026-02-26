@@ -76,6 +76,7 @@ function App() {
 
   /* -------------------------------------- */
 
+  // effect to emit post_like_update on visible users feed
   useEffect(() => {
 
     socket.on("post_like_update", ({ postId, likesCount }) => {
