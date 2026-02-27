@@ -195,5 +195,3 @@ const WriteComment = ({ postId }) => {
 }
 
 export default WriteComment;
-
-// Hello mike how are man 😅🤣😂😍😊🫠😃🙂🙂😃 this is me for no reason i'm here and now i want you to say something so please coprate me for that ok 😇

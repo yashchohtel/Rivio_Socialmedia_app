@@ -64,8 +64,14 @@ function App() {
   useEffect(() => {
 
     socket.on("notification", (notification) => {
+      
       // console.log("New notification:", notification);
-      toast.success("New notification received " + notification.type);
+
+      // toast notification
+      toast(`New notification ${notification.type}`, {
+        className: "custom-toast",
+      })
+
     });
 
     return () => {

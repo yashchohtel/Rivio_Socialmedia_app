@@ -23,6 +23,8 @@ export const getCommentsForPost = createAsyncThunk("comments/getCommentsForPost"
         // send request to get comments for post
         const { data } = await api.get(`/api/posts/getCommentsForPost/${postId}`);
 
+        console.log(data);
+        
         // return comments data
         return data;
 

@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { getCommentsForPost } from '../../../features/comment/commentThunk';
 
 const CommentModal = ({ activePostId, openFeedActionOption }) => {
-
+    
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 

@@ -42,7 +42,7 @@ const commentSlice = createSlice({
             state.isCommentModalOpen = false;
         },
 
-        // add optimistic add
+        // add optimistic comment
         addCommentOptimistic: (state, action) => {
 
             // destructure payload
@@ -72,7 +72,10 @@ const commentSlice = createSlice({
 
             // GET COMMENTS FOR POST
             .addCase(getCommentsForPost.pending, (state) => {
+
+                // start comment loading
                 state.commentLoading = true;
+
             })
             .addCase(getCommentsForPost.fulfilled, (state, action) => {
 
@@ -80,7 +83,7 @@ const commentSlice = createSlice({
                 state.commentLoading = false;
 
                 // destructure payload
-                const { postId, comments, count } = action.payload;
+                const { postId, count, comments } = action.payload;
 
                 // update commentsByPostId with new comments - only store if comments exist
                 if (count > 0) {
@@ -102,7 +105,7 @@ const commentSlice = createSlice({
                 const comment = action.payload.comment;
 
                 console.log(comment);
-                
+
                 // get postId from comment data
                 const postId = comment.post; // correct postId access
 
