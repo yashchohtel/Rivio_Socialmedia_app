@@ -13,8 +13,8 @@ const CommentBox = ({ activePostId }) => {
   const comments = useSelector(state => state.comment.commentsByPostId[activePostId]?.comments) || [];
 
   const {commentsByPostId} = useSelector(state => state.comment);
-  console.log(commentLoading)
-  console.log(commentsByPostId);
+  // console.log(commentLoading)
+  // console.log(commentsByPostId);
   
   return (
 
