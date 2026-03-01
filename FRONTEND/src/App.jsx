@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
 import { updatePostLikes } from "./features/posts/postSlice";
+import { addCommentFromSocket } from "./features/comment/commentSlice";
 
 function App() {
 
@@ -64,13 +65,21 @@ function App() {
   useEffect(() => {
 
     socket.on("notification", (notification) => {
-      
-      // console.log("New notification:", notification);
 
-      // toast notification
-      toast(`New notification ${notification.type}`, {
-        className: "custom-toast",
-      })
+      // when a user likes a post
+      if (notification.type === "POST_LIKE") {
+
+        // toast notification
+        toast(`New notification ${notification.type}`, {
+          className: "custom-toast",
+        })
+
+      } else if (notification.type === "POST_COMMENT") {
+        // toast notification
+        toast(`New notification ${notification.type}`, {
+          className: "custom-toast",
+        })
+      }
 
     });
 
@@ -90,6 +99,17 @@ function App() {
     });
 
     return () => socket.off("post_like_update");
+
+  }, []);
+
+  // effect to emit post_comment_update on visible users feed
+  useEffect(() => {
+
+    socket.on("post_comment_update", ({ postId, comment }) => {
+      dispatch(addCommentFromSocket({ postId, comment }));
+    });
+
+    return () => socket.off("post_comment_update");
 
   }, []);
 

@@ -43,10 +43,10 @@ export const addComment = createAsyncThunk("comment/addComment", async ({ postId
 
     try {
 
-        // http://localhost:5000/api/posts/commentOnPost/:targetPostId
-
         // send post request to add comment for post
         const response = await api.post(`/api/posts/commentOnPost/${postId}`, { text });
+
+        console.log(response)
 
         // return postId and comment data to update the store 
         return { postId, comment: response.data.comment };

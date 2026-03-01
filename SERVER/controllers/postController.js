@@ -163,13 +163,6 @@ export const getAllPosts = async (req, res, next) => {
     const currentUser = await User.findById(userId).select("followers following bookmarks");
     if (!currentUser) return next(new ErrorHandler("User not found", 404));
 
-    // array of allowed users id's
-    const allowedUserIds = [
-        userId,
-        ...(currentUser.following || []),
-        ...(currentUser.followers || [])
-    ];
-
     // cursor condition
     const cursorCondition = cursor ? { createdAt: { $lt: new Date(cursor) } } : {};
 
@@ -180,19 +173,27 @@ export const getAllPosts = async (req, res, next) => {
     const posts = await Post.find(cursorCondition)
         .sort({ createdAt: -1 })
         .limit(postLimit)
-        .populate({
-            path: "user",
-            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks",
-            match: {
-                $or: [
-                    { isPrivate: false },
-                    { _id: { $in: allowedUserIds } }
-                ]
-            }
-        });
+        .populate({ path: "user", select: "username fullName profileImage isVerified isPrivate followers following posts bookmarks" });
 
-    // filter: public OR allowed
-    const visiblePosts = posts.filter(post => post.user);
+    // Apply visibility filter
+    const visiblePosts = posts.filter(post => {
+
+        // if post has a user
+        if (!post.user) return false;
+
+        // Public account
+        if (!post.user.isPrivate) return true;
+
+        // Own post
+        if (post.user._id.toString() === userId.toString()) return true;
+
+        // Private but following
+        return currentUser.following?.some(
+            id => id.toString() === post.user._id.toString()
+        );
+
+    });
+
 
     // posts array with isFollwing (current user followin owner of post) flag.
     const postsWithExtraData = visiblePosts.map(post => {
@@ -247,11 +248,11 @@ export const getAllPosts = async (req, res, next) => {
 
     });
 
-    // next cursor (last post)
-    const nextCursor = visiblePosts.length > 0 ? visiblePosts[visiblePosts.length - 1].createdAt : null;
-
     // hasMore flag to show DB has more posts or not
-    const hasMore = visiblePosts.length === postLimit;
+    const hasMore = posts.length === postLimit;
+
+    // next cursor (last post)
+    const nextCursor = posts.length > 0 ? posts[posts.length - 1].createdAt : null;
 
     // send response
     return res.status(200).json({
@@ -444,6 +445,28 @@ export const commentOnPost = async (req, res, next) => {
         updatedAt: savedComment.updatedAt  // timestamp of comment
     };
 
+    // send real time comment data update event
+    const io = getIO();
+
+    // emit event
+    io.to(postId.toString()).emit("post_comment_update", {
+        postId,
+        comment: optimizedCommmentData
+    });
+
+    // send notification to the post owner of comment (Don't notify if user comments on own post)
+    if (post.user.toString() !== userId.toString()) {
+
+        await sendNotification(
+            post.user, // recipient (post owner)
+            userId,    // sender (commenter)
+            "POST_COMMENT", // type
+            postId, // posdId
+            savedComment._id // comment id
+        );
+
+    }
+
     // Send success response
     return res.status(201).json({
         success: true,
@@ -456,14 +479,14 @@ export const commentOnPost = async (req, res, next) => {
 // GET COMMENTS OF POST
 export const getCommentsForPost = async (req, res, next) => {
 
-    // get postid
+    // get postId
     const postId = req.params.postId;
 
     // validate post exists (optional but useful)
     const post = await Post.findById(postId).select("_id");
     if (!post) return next(new ErrorHandler("Post not found", 404));
 
-    // find the comment and populate user and replies' user data, sort by newest first
+    // find the comment and populate user and replies user data, sort by newest first
     const comments = await Comment.find({ post: postId })
         .sort({ createdAt: -1 })
         .populate("user", "username fullName profileImage email isVerified isPrivate followers following posts bookmarks")
@@ -475,6 +498,8 @@ export const getCommentsForPost = async (req, res, next) => {
             path: "replies.repliedTo",
             select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
         });
+
+    // console.log(comments)
 
     // map to a lighter payload: include counts and populated user objects
     const mapped = comments.map((c) => {

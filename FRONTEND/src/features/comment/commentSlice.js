@@ -60,7 +60,33 @@ const commentSlice = createSlice({
 
             // increment comment count for the post
             state.commentsByPostId[postId].count += 1;
+
         },
+
+        // add real time comment data from socket
+        addCommentFromSocket: (state, action) => {
+
+            // extract postId and comment from payload
+            const { postId, comment } = action.payload;
+
+            // ensure post exists in state
+            if (!state.commentsByPostId[postId]) {
+                state.commentsByPostId[postId] = {
+                    comments: [],
+                    count: 0
+                };
+            }
+
+            // prevent duplicate if current user already added optimistically
+            const exists = state.commentsByPostId[postId].comments.some((c) => {
+                c._id === comment._id
+            });
+
+            if (!exists) {
+                state.commentsByPostId[postId].comments.unshift(comment);
+                state.commentsByPostId[postId].count += 1;
+            }
+        }
 
     },
 
@@ -107,7 +133,7 @@ const commentSlice = createSlice({
                 console.log(comment);
 
                 // get postId from comment data
-                const postId = comment.post; // correct postId access
+                const postId = comment.post;
 
                 // get comments for the post from state
                 const postComments = state.commentsByPostId[postId];
@@ -134,10 +160,9 @@ const commentSlice = createSlice({
                 if (!postComments) return;
 
                 // optimistic comment remove
-                postComments.comments =
-                    postComments.comments.filter(
-                        (c) => c.isOptimistic !== true
-                    );
+                postComments.comments = postComments.comments.filter(
+                    (c) => c.isOptimistic !== true
+                );
 
                 // decrement comment count for the post
                 postComments.count -= 1;
@@ -148,7 +173,7 @@ const commentSlice = createSlice({
 });
 
 // export reducer function
-export const { openCommentModal, closeCommentModal, addCommentOptimistic } = commentSlice.actions;
+export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket } = commentSlice.actions;
 
 // export commentSlice reducer
 export default commentSlice.reducer;

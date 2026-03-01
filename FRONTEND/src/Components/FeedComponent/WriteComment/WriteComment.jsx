@@ -50,6 +50,7 @@ const WriteComment = ({ postId }) => {
     // state to store comment value
     const [value, setValue] = useState("");
 
+    // handle emoji select function
     const handleEmojiSelect = (emoji) => {
 
         // text area 

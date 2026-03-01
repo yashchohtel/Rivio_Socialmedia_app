@@ -21,10 +21,7 @@ const Feed = () => {
 
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
-
-    console.log(activePostId + " active post id for comment");
-    console.log(isCommentModalOpen);
-
+    
     /* -------------------------------------- */
 
     // state to make feed action option modal active
