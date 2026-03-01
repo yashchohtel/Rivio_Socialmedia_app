@@ -79,7 +79,7 @@ const commentSlice = createSlice({
 
             // prevent duplicate if current user already added optimistically
             const exists = state.commentsByPostId[postId].comments.some((c) => {
-                c._id === comment._id
+                return c._id.toString() === comment._id.toString();
             });
 
             if (!exists) {
@@ -130,8 +130,6 @@ const commentSlice = createSlice({
                 // get comment from payload
                 const comment = action.payload.comment;
 
-                console.log(comment);
-
                 // get postId from comment data
                 const postId = comment.post;
 
@@ -148,6 +146,7 @@ const commentSlice = createSlice({
                 if (index !== -1) {
                     postComments.comments[index] = comment;
                 }
+
 
             })
             .addCase(addComment.rejected, (state, action) => {

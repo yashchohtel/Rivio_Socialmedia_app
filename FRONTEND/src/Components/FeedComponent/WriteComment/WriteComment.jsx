@@ -5,6 +5,7 @@ import EmojiPicker from '../../EmojiPicker/EmojiPicker';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCommentOptimistic } from '../../../features/comment/commentSlice';
 import { addComment } from '../../../features/comment/commentThunk';
+import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
 const WriteComment = ({ postId }) => {
 
@@ -111,7 +112,13 @@ const WriteComment = ({ postId }) => {
             tempComment
         }));
 
-        // STEP 2: backend call
+        // STEP 2: increase comment count optimisticly
+        dispatch(updatePostCommentsCount({
+            postId,
+            incrementBy: 1
+        }));
+
+        // STEP 3: backend call
         dispatch(addComment({
             postId: postId,
             text: value
@@ -119,7 +126,7 @@ const WriteComment = ({ postId }) => {
 
         // clear textarea value
         setValue("");
-        
+
     };
 
     /* -------------------------------------- */

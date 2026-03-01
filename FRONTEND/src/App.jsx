@@ -16,7 +16,7 @@ import SavePosts from "./pages/SavePosts/SavePosts";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
-import { updatePostLikes } from "./features/posts/postSlice";
+import { updatePostCommentsCount, updatePostLikes } from "./features/posts/postSlice";
 import { addCommentFromSocket } from "./features/comment/commentSlice";
 
 function App() {
@@ -106,7 +106,17 @@ function App() {
   useEffect(() => {
 
     socket.on("post_comment_update", ({ postId, comment }) => {
+
+      // update comment expect sender (sender updated by optimistic)
       dispatch(addCommentFromSocket({ postId, comment }));
+
+      // update comment count expect sender (sender updated by optimistic)
+      dispatch(updatePostCommentsCount({
+        postId,
+        incrementBy: 1
+      }));
+
+
     });
 
     return () => socket.off("post_comment_update");

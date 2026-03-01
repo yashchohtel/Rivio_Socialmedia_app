@@ -7,7 +7,7 @@ import cloudinary from "../config/cloudinary.js"; // Import Cloudinary configura
 import mongoose from "mongoose"; // Import mongoose for ObjectId
 import { optimizeImage, uploadFileToCloudinary } from "../utils/postUplodUtils.js"; // Import image upload utilities
 import { deleteNotification, sendNotification } from "../utils/notificationHelper.js"; // Import function to send notifications
-import { getIO } from "../socket/socket.js";
+import { getIO, getSocketId } from "../socket/socket.js";
 
 // CREATE POST
 export const createPost = async (req, res, next) => {
@@ -447,12 +447,18 @@ export const commentOnPost = async (req, res, next) => {
 
     // send real time comment data update event
     const io = getIO();
-
-    // emit event
-    io.to(postId.toString()).emit("post_comment_update", {
-        postId,
-        comment: optimizedCommmentData
-    });
+    
+    // sender socketId
+    const socketId = getSocketId(userId);
+    console.log(socketId);
+    
+    // emit event to update post comments except the sender (current user)
+    io.to(postId.toString())
+        .except(socketId)   // 🔥 sender ko exclude karo
+        .emit("post_comment_update", {
+            postId,
+            comment: optimizedCommmentData
+        });
 
     // send notification to the post owner of comment (Don't notify if user comments on own post)
     if (post.user.toString() !== userId.toString()) {

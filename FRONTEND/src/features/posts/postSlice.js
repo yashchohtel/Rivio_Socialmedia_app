@@ -54,6 +54,21 @@ const postSlice = createSlice({
                 post.likesCount = likesCount;
             }
 
+        },
+
+        // update post comment count
+        updatePostCommentsCount: (state, action) => {
+
+            // get postId and incrementdBy
+            const { postId, incrementBy } = action.payload;
+
+            // find post
+            const post = state.posts.find(p => p._id === postId);
+
+            // increase comments count
+            if (post) {
+                post.commentsCount += incrementBy;
+            }
         }
 
     },
@@ -196,7 +211,7 @@ const postSlice = createSlice({
 });
 
 // export reducer function
-export const { clearMessages, clearBookmarkStatus, updatePostLikes } = postSlice.actions;
+export const { clearMessages, clearBookmarkStatus, updatePostLikes, updatePostCommentsCount } = postSlice.actions;
 
 // export postSlice reducer
 export default postSlice.reducer;

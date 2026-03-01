@@ -22,8 +22,6 @@ export const getCommentsForPost = createAsyncThunk("comments/getCommentsForPost"
 
         // send request to get comments for post
         const { data } = await api.get(`/api/posts/getCommentsForPost/${postId}`);
-
-        console.log(data);
         
         // return comments data
         return data;
@@ -45,8 +43,6 @@ export const addComment = createAsyncThunk("comment/addComment", async ({ postId
 
         // send post request to add comment for post
         const response = await api.post(`/api/posts/commentOnPost/${postId}`, { text });
-
-        console.log(response)
 
         // return postId and comment data to update the store 
         return { postId, comment: response.data.comment };
