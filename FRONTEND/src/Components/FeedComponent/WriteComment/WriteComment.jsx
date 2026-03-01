@@ -122,7 +122,13 @@ const WriteComment = ({ postId }) => {
         dispatch(addComment({
             postId: postId,
             text: value
-        }));
+        })).unwrap().catch(() => {
+            // If API fails → revert count
+            dispatch(updatePostCommentsCount({
+                postId,
+                incrementBy: -1
+            }));
+        });
 
         // clear textarea value
         setValue("");
