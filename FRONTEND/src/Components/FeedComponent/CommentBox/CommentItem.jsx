@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useState } from 'react'
 import './commentBox.css'
 import { useNavigate } from 'react-router-dom';
 import { timeAgo } from '../../../utility/postCardUtility';
@@ -9,15 +9,15 @@ import { GoHeartFill } from "react-icons/go";
 
 const CommentItem = ({ comment }) => {
 
-    // console.log(comment);
-    
+    console.log(comment);
+
     // use navigate to navigate to user profile page on click of username or profile image
     const navigate = useNavigate();
 
     /* -------------------------------------- */
 
     // destructure comment data
-    const { user, text, createdAt, likesCount } = comment;
+    const { user, text, createdAt, likesCount, repliesCount } = comment;
 
     // destructure user data
     const { _id, profileImage, username } = user;
@@ -31,7 +31,18 @@ const CommentItem = ({ comment }) => {
 
     /* -------------------------------------- */
 
+    // state to show hide comments replies 
+    const [showHideReplies, setShowHideReplies] = useState(false);
+
+    // function to show hide comments replies
+    const handleShowHideReplies = () => {
+        setShowHideReplies(!showHideReplies)
+    }
+
+    /* -------------------------------------- */
+
     return (
+
         <>
 
             {/* comment item */}
@@ -85,6 +96,34 @@ const CommentItem = ({ comment }) => {
                         <span className="replay">Replay</span>
 
                     </div>
+
+                    {/* comment replies */}
+                    {showHideReplies && (
+
+                        <div className="repliesContainer">
+
+                        </div>
+
+                    )}
+
+                    {/* view close replay button */}
+                    {repliesCount > 0 && (
+
+                        <div className="viewReplayBtn"
+                            onClick={handleShowHideReplies}
+                        >
+
+                            {/* rule */}
+                            <div className="line"></div>
+
+                            {/* button text */}
+                            <p className="btnText">
+                                {showHideReplies ? "Hide replies" : `View replies (${repliesCount})`}
+                            </p>
+                            
+                        </div>
+
+                    )}
 
                 </div>
 

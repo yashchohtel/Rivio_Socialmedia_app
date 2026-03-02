@@ -47,7 +47,6 @@
 
 /* comment item header */
 .commentItem .commentItemContent .commentItemHeader {
-  padding-top: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,4 +119,40 @@
 
 .commentItemContent .commentItemFooter .replay:hover {
   transform: scale(1.1);
+}
+
+/* comment item replay ----------------------------------------------------- */
+
+/* replies container */
+.commentItem .repliesContainer {
+  width: 100%;
+  height: 10rem;
+  background-color: #373737;
+  margin-block: 1.5rem;
+  border-radius: 1rem;
+}
+
+/* view comments replay button */
+.commentItem .viewReplayBtn {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+/* view comments line */
+.commentItem .viewReplayBtn .line {
+  height: 1.6px;
+  width: 5rem;
+  background-color: var(--bg-seven);
+  border-radius: 1rem;
+}
+
+/* button text */
+.commentItem .viewReplayBtn .btnText {
+  font-size: 1.3rem;
+  color: var(--text-color-1);
+  letter-spacing: 0.03rem;
+  font-weight: 500;
 }
