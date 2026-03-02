@@ -447,11 +447,11 @@ export const commentOnPost = async (req, res, next) => {
 
     // send real time comment data update event
     const io = getIO();
-    
+
     // sender socketId
     const socketId = getSocketId(userId);
     console.log(socketId);
-    
+
     // emit event to update post comments except the sender (current user)
     io.to(postId.toString())
         .except(socketId)   // 🔥 sender ko exclude karo
@@ -504,8 +504,6 @@ export const getCommentsForPost = async (req, res, next) => {
             path: "replies.repliedTo",
             select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
         });
-
-    // console.log(comments)
 
     // map to a lighter payload: include counts and populated user objects
     const mapped = comments.map((c) => {
@@ -606,11 +604,11 @@ export const replyOnComment = async (req, res, next) => {
     const { repliedTo, text } = req.body;
 
     // Validate user - repliedBy
-    const user = await User.findById(userId).select("_id username profileImage");
+    const user = await User.findById(userId).select("username fullName profileImage email isVerified isPrivate followers following posts bookmarks");
     if (!user) return next(new ErrorHandler("User not found", 404));
 
     // Validate user - repliedTo
-    const repliedToUser = await User.findById(repliedTo).select("_id username profileImage");
+    const repliedToUser = await User.findById(repliedTo).select("username fullName profileImage email isVerified isPrivate followers following posts bookmarks");
     if (!repliedToUser) return next(new ErrorHandler("The user you're replying to does not exist", 404));
 
     // Validate reply text
@@ -637,20 +635,59 @@ export const replyOnComment = async (req, res, next) => {
     // Get the newly added reply (last element)
     const newReply = comment.replies[comment.replies.length - 1];
 
-    // Populate repliedBy & repliedTo fields
-    await comment.populate([
-        { path: "replies.repliedBy", select: "username profileImage" },
-        { path: "replies.repliedTo", select: "username profileImage" }
-    ]);
-
     // getting populed replay
     const populatedReply = comment.replies.id(newReply._id); // get the fully populated reply
+
+    // optimized reply object
+    const optimizedReply = {
+
+        // replay document id
+        _id: newReply._id,
+
+        // optimized replied by user data
+        repliedBy: {
+            id: user._id,
+            username: user.username,
+            fullName: user.fullName,
+            email: user.email || null,
+            profileImage: user.profileImage || null,
+            isVerified: user.isVerified,
+            isPrivate: user.isPrivate,
+
+            followersCount: user.followers?.length || 0,
+            followingCount: user.following?.length || 0,
+            postsCount: user.posts?.length || 0,
+            bookmarksCount: user.bookmarks?.length || 0,
+        },
+
+        // optimized replied to user data
+        repliedTo: {
+            id: repliedToUser._id,
+            username: repliedToUser.username,
+            fullName: repliedToUser.fullName,
+            email: repliedToUser.email || null,
+            profileImage: repliedToUser.profileImage || null,
+            isVerified: repliedToUser.isVerified,
+            isPrivate: repliedToUser.isPrivate,
+
+            followersCount: repliedToUser.followers?.length || 0,
+            followingCount: repliedToUser.following?.length || 0,
+            postsCount: repliedToUser.posts?.length || 0,
+            bookmarksCount: repliedToUser.bookmarks?.length || 0,
+        },
+
+        text: text.trim(), // replay text
+        likesCount: 0, // like count (zero because new)
+        createdAt: newReply.createdAt // created at timestamp
+    };
 
     // Success response
     return res.status(201).json({
         success: true,
         message: "Reply added successfully",
-        reply: populatedReply
+        postId: comment.post,
+        commentId: comment._id,
+        reply: optimizedReply
     });
 
 };

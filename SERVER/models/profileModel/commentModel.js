@@ -72,3 +72,10 @@ const commentSchema = new mongoose.Schema({
 const Comment = mongoose.model("Comment", commentSchema); // Creating a comment model
 
 export default Comment; // Export the comment model
+
+// 68ef53fd7db91ec90b2001b8 - yash
+// 68f9d5ae277d8c92e6f295ef - priya sharma
+// 68f9d5ae277d8c92e6f295f2 - amit kumar
+
+// 69a501782837ad9ea27a2a4c - My Fav WWE Superstart
+// 69a5019a2837ad9ea27a2a59 - The Greatest Champion of all Time

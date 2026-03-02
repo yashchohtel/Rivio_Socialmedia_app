@@ -12,7 +12,7 @@ const CommentBox = ({ activePostId }) => {
   // get active post id and comment modal open status from redux store
   const comments = useSelector(state => state.comment.commentsByPostId[activePostId]?.comments) || [];
 
-  // console.log(comments)
+  console.log(comments)
   
   return (
 
