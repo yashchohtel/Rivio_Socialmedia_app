@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import './commentBox.css'
 import { useNavigate } from 'react-router-dom';
 import { timeAgo } from '../../../utility/postCardUtility';
-
 import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
+import ReplayItem from './ReplayItem';
 
 const CommentItem = ({ comment }) => {
 
-    console.log(comment);
+    // console.log(comment);
 
     // use navigate to navigate to user profile page on click of username or profile image
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ const CommentItem = ({ comment }) => {
     /* -------------------------------------- */
 
     // destructure comment data
-    const { user, text, createdAt, likesCount, repliesCount } = comment;
+    const { user, text, createdAt, likesCount, repliesCount, replies } = comment;
 
     // destructure user data
     const { _id, profileImage, username } = user;
@@ -93,16 +93,21 @@ const CommentItem = ({ comment }) => {
                         <span className="like">45 Like</span>
 
                         {/* replay */}
-                        <span className="replay">Replay</span>
+                        <span className="replay">Reply</span>
 
                     </div>
 
                     {/* comment replies */}
-                    {showHideReplies && (
+                    {showHideReplies && replies?.length > 0 && (
 
-                        <div className="repliesContainer">
+                        // replies container
+                        <ul className="repliesContainer">
 
-                        </div>
+                            {replies.map(reply => (
+                                <ReplayItem key={reply._id} reply={reply} />
+                            ))}
+                            
+                        </ul>
 
                     )}
 
@@ -120,7 +125,7 @@ const CommentItem = ({ comment }) => {
                             <p className="btnText">
                                 {showHideReplies ? "Hide replies" : `View replies (${repliesCount})`}
                             </p>
-                            
+
                         </div>
 
                     )}
@@ -131,7 +136,7 @@ const CommentItem = ({ comment }) => {
 
         </>
     )
-}
+};
 
 // export default CommentItem          
 export default React.memo(CommentItem);
