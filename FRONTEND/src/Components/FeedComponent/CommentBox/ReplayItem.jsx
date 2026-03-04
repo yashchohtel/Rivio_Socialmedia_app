@@ -5,7 +5,7 @@ import { timeAgo } from '../../../utility/postCardUtility';
 
 const ReplayItem = ({ reply }) => {
 
-  console.log(reply)
+  // console.log(reply)
 
   // destructure reply data
   const { _id, text, likesCount, createdAt, repliedBy, repliedTo, } = reply;
@@ -64,7 +64,9 @@ const ReplayItem = ({ reply }) => {
             <span className="timeAgo">{timeAgo(createdAt)}</span>
 
             {/* like */}
-            <span className="like">45 Like</span>
+            {likesCount > 0 && (
+              <span className="like">{likesCount}</span>
+            )}
 
             {/* replay */}
             <span className="replay">Reply</span>

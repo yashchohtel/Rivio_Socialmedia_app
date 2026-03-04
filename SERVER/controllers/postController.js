@@ -450,11 +450,10 @@ export const commentOnPost = async (req, res, next) => {
 
     // sender socketId
     const socketId = getSocketId(userId);
-    console.log(socketId);
 
     // emit event to update post comments except the sender (current user)
     io.to(postId.toString())
-        .except(socketId)   // 🔥 sender ko exclude karo
+        .except(socketId)   // exclude te sender (current user) for post comments update
         .emit("post_comment_update", {
             postId,
             comment: optimizedCommmentData

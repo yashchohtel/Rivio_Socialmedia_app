@@ -119,15 +119,14 @@ const WriteComment = ({ postId }) => {
         }));
 
         // STEP 3: backend call
-        dispatch(addComment({
-            postId: postId,
-            text: value
-        })).unwrap().catch(() => {
+        dispatch(addComment({ postId: postId, text: value })).unwrap().catch(() => {
+
             // If API fails → revert count
             dispatch(updatePostCommentsCount({
                 postId,
                 incrementBy: -1
             }));
+            
         });
 
         // clear textarea value

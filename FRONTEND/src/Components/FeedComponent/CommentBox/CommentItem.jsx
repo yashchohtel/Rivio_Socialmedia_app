@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import './commentBox.css'
 import { useNavigate } from 'react-router-dom';
@@ -90,7 +89,9 @@ const CommentItem = ({ comment }) => {
                         <span className="timeAgo">{timeAgo(createdAt)}</span>
 
                         {/* like */}
-                        <span className="like">45 Like</span>
+                        {likesCount > 0 && (
+                            <span className="like">{likesCount}</span>
+                        )}
 
                         {/* replay */}
                         <span className="replay">Reply</span>
@@ -106,7 +107,7 @@ const CommentItem = ({ comment }) => {
                             {replies.map(reply => (
                                 <ReplayItem key={reply._id} reply={reply} />
                             ))}
-                            
+
                         </ul>
 
                     )}
