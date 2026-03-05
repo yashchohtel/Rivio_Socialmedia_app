@@ -929,13 +929,3 @@ export const bookMarkPost = async (req, res, next) => {
     });
 
 };
-
-
-
-
-
-
-
-
-
-

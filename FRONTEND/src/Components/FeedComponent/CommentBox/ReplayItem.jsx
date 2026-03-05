@@ -1,22 +1,40 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import './commentBox.css'
 import { GoHeart } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
 
-const ReplayItem = ({ reply }) => {
+const ReplayItem = ({ reply, setReplyContext, commentId }) => {
 
-  // console.log(reply)
+  // console.log(reply)  
 
   // destructure reply data
-  const { _id, text, likesCount, createdAt, repliedBy, repliedTo, } = reply;
+  const { _id: replyId, text, likesCount, createdAt, repliedBy, repliedTo, } = reply;
 
   // replied by user data
+  const repliedByUserId = repliedBy?.id;
   const repliedByUsername = repliedBy?.username;
   const repliedByProfileImage = repliedBy?.profileImage;
 
   // replied to user data
+  const repliedToUserId = repliedTo?.id;
   const repliedToUsername = repliedTo?.username;
-  // const repliedToProfileImage = repliedTo?.profileImage;
+  const repliedToProfileImage = repliedTo?.profileImage;
+
+  /* -------------------------------------- */
+
+  // function to set replay ontext
+  const setReplayContext = () => {
+
+    setReplyContext({
+      commentId: commentId,   // comment replay
+      repliedToUserData: repliedBy, // replied to user data
+      replyId: replyId,  // reply id (only for reply on reply)
+    })
+
+  };
+
+  /* -------------------------------------- */
 
   return (
 
@@ -69,7 +87,11 @@ const ReplayItem = ({ reply }) => {
             )}
 
             {/* replay */}
-            <span className="replay">Reply</span>
+            <span className="replay"
+              onClick={setReplayContext}
+            >
+              Reply
+            </span>
 
           </div>
 

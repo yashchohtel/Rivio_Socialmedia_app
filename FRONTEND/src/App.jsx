@@ -111,11 +111,7 @@ function App() {
       dispatch(addCommentFromSocket({ postId, comment }));
 
       // update comment count expect sender (sender updated by optimistic)
-      dispatch(updatePostCommentsCount({
-        postId,
-        incrementBy: 1
-      }));
-
+      dispatch(updatePostCommentsCount({ postId, incrementBy: 1 }));
 
     });
 

@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 import { getCommentsForPost } from '../../../features/comment/commentThunk';
 
 const CommentModal = ({ activePostId, openFeedActionOption }) => {
-    
+
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
@@ -31,7 +31,17 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
     // function to close comment modal
     const handleCloseModal = () => {
+
+        // close modal
         dispatch(closeCommentModal());
+
+        // set reply context to null
+        setReplyContext({
+            commentId: null,
+            repliedToUserId: null,
+            replyToUsername: null,
+            replyId: null
+        });
     }
 
     /* -------------------------------------- */
@@ -43,6 +53,15 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
     const handleBookmarkActive = useCallback(() => {
         setBookmarkActive(true);
     }, []);
+
+    /* -------------------------------------- */
+
+    // state to store replay content usefull for replay feature getting data from comment box and sending it to write comment 
+    const [replyContext, setReplyContext] = useState({
+        commentId: null,      // comment replay
+        repliedToUserData: null, // replied to user data
+        replyId: null,        // reply id (only for reply on reply)
+    });
 
     /* -------------------------------------- */
 
@@ -116,6 +135,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 {/* comment box container skeetons and actual comments*/}
                                 <CommentBox
                                     activePostId={activePostId} // acctive post id for comment
+                                    setReplyContext={setReplyContext} // to set replay context
                                 />
 
                             </div>
@@ -143,6 +163,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
                             <WriteComment
                                 postId={_id} // active post id for writing comment
+                                replyContext={replyContext} // replay context to reply on comments
                             />
 
                         </div>

@@ -22,7 +22,7 @@ export const getCommentsForPost = createAsyncThunk("comments/getCommentsForPost"
 
         // send request to get comments for post
         const { data } = await api.get(`/api/posts/getCommentsForPost/${postId}`);
-        
+
         // return comments data
         return data;
 
@@ -56,3 +56,10 @@ export const addComment = createAsyncThunk("comment/addComment", async ({ postId
     }
 
 });
+
+// thunk to add replay on comment
+export const addReply = createAsyncThunk("comments/addReply", async () => {
+
+    
+
+})

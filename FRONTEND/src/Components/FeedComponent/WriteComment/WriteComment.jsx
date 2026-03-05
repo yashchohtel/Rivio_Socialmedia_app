@@ -7,14 +7,16 @@ import { addCommentOptimistic } from '../../../features/comment/commentSlice';
 import { addComment } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
-const WriteComment = ({ postId }) => {
+const WriteComment = ({ postId, replyContext }) => {
+
+    // console.log(replyContext);
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
     /* -------------------------------------- */
 
-    // Get auth loading state from Redux store
+    // Get user state from Redux store
     const currentUser = useSelector((state) => state.auth.user);
 
     /* -------------------------------------- */
@@ -97,37 +99,65 @@ const WriteComment = ({ postId }) => {
         // return if value is empty or only spaces
         if (!value.trim()) return;
 
-        // create temp comment for optimistic update
-        const tempComment = {
-            _id: "temp-" + Date.now(),
-            text: value,
-            createdAt: new Date().toISOString(),
-            user: currentUser,
-            isOptimistic: true
-        };
+        // check reply or comment (context has commentId - replay | else main comment)
+        if (!replyContext?.commentId) {
 
-        // STEP 1: optimistic update
-        dispatch(addCommentOptimistic({
-            postId: postId,
-            tempComment
-        }));
+            // create temp comment for optimistic update
+            const tempComment = {
+                _id: "temp-" + Date.now(),
+                text: value,
+                createdAt: new Date().toISOString(),
+                user: currentUser,
+                isOptimistic: true
+            };
 
-        // STEP 2: increase comment count optimisticly
-        dispatch(updatePostCommentsCount({
-            postId,
-            incrementBy: 1
-        }));
+            // STEP 1: optimistic update
+            dispatch(addCommentOptimistic({
+                postId: postId,
+                tempComment
+            }));
 
-        // STEP 3: backend call
-        dispatch(addComment({ postId: postId, text: value })).unwrap().catch(() => {
-
-            // If API fails → revert count
+            // STEP 2: increase comment count optimisticly
             dispatch(updatePostCommentsCount({
                 postId,
-                incrementBy: -1
+                incrementBy: 1
             }));
+
+            // STEP 3: backend call
+            dispatch(addComment({ postId: postId, text: value })).unwrap().catch(() => {
+
+                // If API fails → revert count
+                dispatch(updatePostCommentsCount({
+                    postId,
+                    incrementBy: -1
+                }));
+
+            });
+
+        } else {
+
+            // text to send to backend as replay text
+            var textToSend = value;
+
+            // remove @username from text value to send only text
+            if (replyContext?.repliedToUserData?.username) {
+                textToSend = value.replace(`@${replyContext?.repliedToUserData?.username}`, "").trim();
+            }
+
+            // create temperory reply object
+            const tempReply = {
+                _id: "temp-" + Date.now(), // temp id
+                text: textToSend, // reply text
+                createdAt: new Date().toISOString(), // created at date
+                likesCount: 0, // like count 
+                repliedBy: currentUser, // replied by user data (current user)
+                repliedTo: replyContext?.repliedToUserData, // replied to user data (whom reply is made)
+                isOptimistic: true
+            };
+
+            console.log(tempReply);
             
-        });
+        }
 
         // clear textarea value
         setValue("");
@@ -151,6 +181,16 @@ const WriteComment = ({ postId }) => {
             el.style.overflowY = "hidden";
         }
     }, [value]);
+
+    // effect to show replyToUsername on text area when reply button clicked
+    useEffect(() => {
+
+        if (replyContext?.repliedToUserData?.username) {
+            setValue(`@${replyContext?.repliedToUserData?.username} `);
+            textareaRef.current?.focus();
+        }
+
+    }, [replyContext]);
 
     return (
         <>

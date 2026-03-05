@@ -6,7 +6,7 @@ import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 import ReplayItem from './ReplayItem';
 
-const CommentItem = ({ comment }) => {
+const CommentItem = ({ comment, setReplyContext }) => {
 
     // console.log(comment);
 
@@ -16,10 +16,10 @@ const CommentItem = ({ comment }) => {
     /* -------------------------------------- */
 
     // destructure comment data
-    const { user, text, createdAt, likesCount, repliesCount, replies } = comment;
+    const { _id: commentId, user, text, createdAt, likesCount, repliesCount, replies } = comment;
 
     // destructure user data
-    const { _id, profileImage, username } = user;
+    const { id: userId, profileImage, username } = user;
 
     /* -------------------------------------- */
 
@@ -40,6 +40,18 @@ const CommentItem = ({ comment }) => {
 
     /* -------------------------------------- */
 
+    // function to set replay ontext
+    const setReplayContext = () => {
+
+        setReplyContext({
+            commentId: commentId, // main comment id
+            repliedToUserData: user, // replied to user data
+        })
+
+    }
+
+    /* -------------------------------------- */
+
     return (
 
         <>
@@ -49,7 +61,7 @@ const CommentItem = ({ comment }) => {
 
                 {/* comment item profile image */}
                 <div className="commentItemProfileImg"
-                    onClick={() => navigateToProfile(_id)}
+                    onClick={() => navigateToProfile(userId)}
                 >
                     <img src={profileImage || "/images/userprofile.jpeg"} alt="profile" />
                 </div>
@@ -65,7 +77,7 @@ const CommentItem = ({ comment }) => {
 
                             {/* username */}
                             <span className="username"
-                                onClick={() => navigateToProfile(_id)}
+                                onClick={() => navigateToProfile(userId)}
                             >
                                 {username}
                             </span>
@@ -94,7 +106,11 @@ const CommentItem = ({ comment }) => {
                         )}
 
                         {/* replay */}
-                        <span className="replay">Reply</span>
+                        <span className="replay"
+                            onClick={setReplayContext}
+                        >
+                            Reply
+                        </span>
 
                     </div>
 
@@ -105,7 +121,12 @@ const CommentItem = ({ comment }) => {
                         <ul className="repliesContainer">
 
                             {replies.map(reply => (
-                                <ReplayItem key={reply._id} reply={reply} />
+                                <ReplayItem
+                                    key={reply._id} // key
+                                    reply={reply} // replay data
+                                    commentId={commentId} // main comment id
+                                    setReplyContext={setReplyContext} // to set replay context 
+                                />
                             ))}
 
                         </ul>
