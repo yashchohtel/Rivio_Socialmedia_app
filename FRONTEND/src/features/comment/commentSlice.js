@@ -86,7 +86,12 @@ const commentSlice = createSlice({
                 state.commentsByPostId[postId].comments.unshift(comment);
                 state.commentsByPostId[postId].count += 1;
             }
-        }
+        },
+
+        // add comment's reply optimistic
+
+
+        
 
     },
 
