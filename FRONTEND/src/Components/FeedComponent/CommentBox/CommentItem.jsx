@@ -38,6 +38,11 @@ const CommentItem = ({ comment, setReplyContext }) => {
         setShowHideReplies(!showHideReplies)
     }
 
+    // open comment replies
+    const openCommentReplies = () => {
+        setShowHideReplies(true);
+    }
+
     /* -------------------------------------- */
 
     // function to set replay ontext
@@ -107,7 +112,11 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
                         {/* replay */}
                         <span className="replay"
-                            onClick={setReplayContext}
+                            onClick={() => {
+                                setReplayContext()
+                                openCommentReplies()
+                            }} 
+
                         >
                             Reply
                         </span>

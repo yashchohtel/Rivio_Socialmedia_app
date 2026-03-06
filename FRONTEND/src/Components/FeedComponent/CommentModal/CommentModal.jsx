@@ -62,7 +62,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
         repliedToUserData: null, // replied to user data
         replyId: null,        // reply id (only for reply on reply)
     });
-
+    
     /* -------------------------------------- */
 
     // effect to load comments for active post id when comment modal opens
@@ -164,6 +164,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                             <WriteComment
                                 postId={_id} // active post id for writing comment
                                 replyContext={replyContext} // replay context to reply on comments
+                                setReplyContext={setReplyContext} // set reply context
                             />
 
                         </div>

@@ -58,8 +58,23 @@ export const addComment = createAsyncThunk("comment/addComment", async ({ postId
 });
 
 // thunk to add replay on comment
-export const addReply = createAsyncThunk("comments/addReply", async () => {
+export const replyOnComment = createAsyncThunk("comment/replyOnComment", async ({ commentId, repliedTo, text }, thunkAPI) => {
 
-    
+    try {
 
-})
+        // send post request to comment on the post
+        const response = await api.post(`/api/posts/replyOnComment/${commentId}`, { repliedTo, text });
+
+        // return data of response
+        return response.data;
+
+    } catch (error) {
+
+        // error handle
+        toast.error(error.response?.data?.message || "Failed to add reply");
+
+        return thunkAPI.rejectWithValue(error.response?.data);
+
+    }
+
+});

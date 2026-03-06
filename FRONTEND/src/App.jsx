@@ -17,7 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
 import { updatePostCommentsCount, updatePostLikes } from "./features/posts/postSlice";
-import { addCommentFromSocket } from "./features/comment/commentSlice";
+import { addCommentFromSocket, addReplyFromSocket } from "./features/comment/commentSlice";
 
 function App() {
 
@@ -116,6 +116,23 @@ function App() {
     });
 
     return () => socket.off("post_comment_update");
+
+  }, []);
+
+  // effect to emit comment_reply_update on visible users feed
+  useEffect(() => {
+
+    socket.on("comment_reply_update", ({ postId, commentId, reply }) => {
+
+      // update comment expect sender (sender updated by optimistic)
+      dispatch(addReplyFromSocket({ postId, commentId, reply }));
+
+      // update comment count expect sender (sender updated by optimistic)
+      dispatch(updatePostCommentsCount({ postId, incrementBy: 1 }));
+
+    });
+
+    return () => socket.off("comment_reply_update");
 
   }, []);
 

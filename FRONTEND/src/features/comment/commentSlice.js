@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, getCommentsForPost } from "./commentThunk";
+import { addComment, getCommentsForPost, replyOnComment } from "./commentThunk";
 
 // initial state for comment slice
 const initialState = {
@@ -89,9 +89,54 @@ const commentSlice = createSlice({
         },
 
         // add comment's reply optimistic
+        addReplyOptimistic: (state, action) => {
 
+            // destructure action.paylod data
+            const { postId, commentId, tempReply } = action.payload
 
-        
+            // get post's comments by post id
+            const postComments = state.commentsByPostId[postId];
+            if (!postComments) return;
+
+            // find target comment
+            const comment = postComments.comments.find(c => c._id === commentId);
+            if (!comment) return;
+
+            // ensure comment's have replies array
+            if (!comment.replies) comment.replies = [];
+
+            // add comment on top of replies
+            comment.replies.unshift(tempReply);
+
+            // increase replies count
+            comment.repliesCount += 1;
+
+        },
+
+        // add reply from socket
+        addReplyFromSocket: (state, action) => {
+            
+            // extract data from action payload
+            const { postId, commentId, reply } = action.payload;
+
+            // find post comments
+            const postComments = state.commentsByPostId[postId];
+            if (!postComments) return;
+
+            // find posts
+            const comment = postComments.comments.find(c => c._id === commentId);
+            if (!comment) return;
+
+            // find replie exist or not
+            const exists = comment.replies.some(r => r._id === reply._id);
+
+            // if not exists add replies
+            if (!exists) {
+                comment.replies.unshift(reply);
+                comment.repliesCount += 1;
+            }
+
+        }
 
     },
 
@@ -172,12 +217,56 @@ const commentSlice = createSlice({
                 postComments.count -= 1;
 
             })
+
+            // ADD REPLY
+            .addCase(replyOnComment.fulfilled, (state, action) => {
+
+                // extract data from payload
+                const { postId, commentId, reply } = action.payload;
+
+                // find comments of post
+                const postComments = state.commentsByPostId[postId];
+                if (!postComments) return;
+
+                // find target comment
+                const comment = postComments.comments.find((c) => c._id === commentId);
+                if (!comment) return;
+
+                // find optimistic reply
+                const index = comment.replies.findIndex(r => r.isOptimistic);
+
+                // replace real reply with optimistic reply
+                if (index !== -1) {
+                    comment.replies[index] = reply;
+                }
+
+            })
+            .addCase(replyOnComment.rejected, (state, action) => {
+
+                // get datafrom meta argument
+                const { postId, commentId } = action.meta.arg;
+
+                // find post comment
+                const postComments = state.commentsByPostId[postId];
+                if (!postComments) return;
+
+                // find comment
+                const comment = postComments.comments.find((c) => c._id === commentId);
+                if (!comment) return;
+
+                // remove optimistic reply
+                comment.replies = comment.replies.filter(r => !r.isOptimistic);
+
+                // decrement replies count 
+                comment.repliesCount -= 1;
+
+            })
     },
 
 });
 
 // export reducer function
-export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket } = commentSlice.actions;
+export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket } = commentSlice.actions;
 
 // export commentSlice reducer
 export default commentSlice.reducer;

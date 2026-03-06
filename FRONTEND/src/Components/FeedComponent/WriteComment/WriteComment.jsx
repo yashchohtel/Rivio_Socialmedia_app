@@ -3,13 +3,11 @@ import './writeComment.css'
 import { FaRegFaceSmileWink } from "react-icons/fa6";
 import EmojiPicker from '../../EmojiPicker/EmojiPicker';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCommentOptimistic } from '../../../features/comment/commentSlice';
-import { addComment } from '../../../features/comment/commentThunk';
+import { addCommentOptimistic, addReplyOptimistic } from '../../../features/comment/commentSlice';
+import { addComment, replyOnComment } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
-const WriteComment = ({ postId, replyContext }) => {
-
-    // console.log(replyContext);
+const WriteComment = ({ postId, replyContext, setReplyContext }) => {
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
@@ -155,12 +153,46 @@ const WriteComment = ({ postId, replyContext }) => {
                 isOptimistic: true
             };
 
-            console.log(tempReply);
-            
+            // STEP 1: optimistic update
+            dispatch(addReplyOptimistic({
+                postId: postId,
+                commentId: replyContext?.commentId,
+                tempReply
+            }));
+
+            // STEP 2: increase comment count optimisticly
+            dispatch(updatePostCommentsCount({
+                postId,
+                incrementBy: 1
+            }));
+
+            // STEP 3: backend call
+            dispatch(replyOnComment({
+                commentId: replyContext.commentId,
+                repliedTo: replyContext.repliedToUserData.id,
+                text: textToSend
+            })
+            ).unwrap().catch(() => {
+
+                // If API fails → revert count
+                dispatch(updatePostCommentsCount({
+                    postId,
+                    incrementBy: -1
+                }));
+
+            });
+
         }
 
         // clear textarea value
         setValue("");
+
+        // set setReplyContext to null for all value
+        setReplyContext({
+            commentId: null, // comment replay
+            repliedToUserData: null, // replied to user data
+            replyId: null, // reply id (only for reply on reply)
+        })
 
     };
 

@@ -194,7 +194,6 @@ export const getAllPosts = async (req, res, next) => {
 
     });
 
-
     // posts array with isFollwing (current user followin owner of post) flag.
     const postsWithExtraData = visiblePosts.map(post => {
 
@@ -234,9 +233,24 @@ export const getAllPosts = async (req, res, next) => {
             bookmarksCount: user.bookmarks?.length || 0,
         };
 
+        // only required post data
+        const requiredPostData = {
+
+            _id: post._id, // postId
+            caption: post.caption, // caption
+            media: post.media, // media
+            location: post.location, // location
+            createdAt: post.createdAt, // createdAt
+
+            likesCount: post.likesCount, // likes count
+            commentsCount: post.commentsCount, // comment count
+            sharesCount: post.sharesCount, // share count
+
+        }
+
         // return result
         return {
-            ...post.toObject(),   // mongoose doc → plain object
+            ...requiredPostData, // post data
             user: optimizedUser, // populated and optimized user object
             isOwnPost, // is own post flag
             isFollowing, // is current user following
@@ -452,19 +466,17 @@ export const commentOnPost = async (req, res, next) => {
     const socketId = getSocketId(userId);
 
     // emit event to update post comments except the sender (current user)
-    io.to(postId.toString())
-        .except(socketId)   // exclude te sender (current user) for post comments update
-        .emit("post_comment_update", {
-            postId,
-            comment: optimizedCommmentData
-        });
+    io.to(postId.toString()).except(socketId).emit("post_comment_update", {
+        postId,
+        comment: optimizedCommmentData
+    });
 
     // send notification to the post owner of comment (Don't notify if user comments on own post)
     if (post.user.toString() !== userId.toString()) {
 
         await sendNotification(
             post.user, // recipient (post owner)
-            userId,    // sender (commenter)
+            userId,  // sender (commenter)
             "POST_COMMENT", // type
             postId, // posdId
             savedComment._id // comment id
@@ -578,6 +590,7 @@ export const getCommentsForPost = async (req, res, next) => {
             createdAt: c.createdAt, // timestamp of main comment
             updatedAt: c.updatedAt // timestamp of main comment
         };
+
     });
 
     // return response
@@ -631,11 +644,13 @@ export const replyOnComment = async (req, res, next) => {
     comment.replies.push(reply);
     await comment.save();
 
+    // increase comment count on post document (replies also count as comment)
+    const post = await Post.findById(comment.post);
+    post.commentsCount += 1;
+    await post.save();
+
     // Get the newly added reply (last element)
     const newReply = comment.replies[comment.replies.length - 1];
-
-    // getting populed replay
-    const populatedReply = comment.replies.id(newReply._id); // get the fully populated reply
 
     // optimized reply object
     const optimizedReply = {
@@ -679,6 +694,53 @@ export const replyOnComment = async (req, res, next) => {
         likesCount: 0, // like count (zero because new)
         createdAt: newReply.createdAt // created at timestamp
     };
+
+    // send real time comment data update event
+    const io = getIO();
+
+    // sender socketId
+    const socketId = getSocketId(userId);
+
+    // emit event to update post comments reply except the sender (current user)
+    io.to(comment.post.toString()).except(socketId).emit("comment_reply_update", {
+        postId: comment.post,
+        commentId: comment._id,
+        reply: optimizedReply
+    });
+
+    // notification system
+    const commentOwnerId = comment.user?.toString();
+    const repliedToId = repliedToUser._id.toString();
+    const senderId = userId.toString();
+
+    // 1. Notify repliedTo user
+    if (senderId !== repliedToId) {
+
+        await sendNotification(
+            repliedToId,
+            senderId,
+            "COMMENT_REPLY",
+            comment.post,
+            comment._id,
+            newReply._id
+        );
+
+    }
+
+    // 2. Notify comment owner (avoid duplicate & self notification)
+    if (commentOwnerId && commentOwnerId !== senderId && commentOwnerId !== repliedToId) {
+
+        await sendNotification(
+            commentOwnerId,
+            senderId,
+            "COMMENT_REPLY",
+            comment.post,
+            comment._id,
+            newReply._id
+        );
+
+    }
+
 
     // Success response
     return res.status(201).json({
