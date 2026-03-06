@@ -9,6 +9,8 @@ import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
 const WriteComment = ({ postId, replyContext, setReplyContext }) => {
 
+    console.log(replyContext);
+    
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 

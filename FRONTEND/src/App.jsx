@@ -68,13 +68,21 @@ function App() {
 
       // when a user likes a post
       if (notification.type === "POST_LIKE") {
-
         // toast notification
         toast(`New notification ${notification.type}`, {
           className: "custom-toast",
         })
 
-      } else if (notification.type === "POST_COMMENT") {
+      }
+
+      if (notification.type === "POST_COMMENT") {
+        // toast notification
+        toast(`New notification ${notification.type}`, {
+          className: "custom-toast",
+        })
+      }
+
+      if (notification.type === "COMMENT_REPLY") {
         // toast notification
         toast(`New notification ${notification.type}`, {
           className: "custom-toast",
