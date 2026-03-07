@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { loadUser } from "./features/auth/authThunk";
 import ProtectedRoute from "./Components/protectedRoutes/ProtectedRoute";
 import PublicRoute from "./Components/protectedRoutes/PublicRoute";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { PiSpinnerGapBold } from "react-icons/pi";
 import MainLayout from "./layout/MainLayout";
 import Explore from "./pages/Explore/Explore";
