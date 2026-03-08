@@ -51,6 +51,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 2rem;
 }
 
 /* commet and username container */
@@ -96,11 +97,12 @@
   align-items: center;
   gap: 0.3rem;
   cursor: pointer;
+  align-self: start;
 }
 
 .commentItemHeader .commentItemLikes .icon {
   color: var(--text-color-6);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   cursor: pointer;
   transition: 0.2s ease;
 }
