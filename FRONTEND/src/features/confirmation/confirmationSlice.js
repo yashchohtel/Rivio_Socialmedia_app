@@ -20,14 +20,21 @@ const confirmSlice = createSlice({
     reducers: {
 
         // open confirm modal
-        openConfirmModal: (state, action) => {
+        openDeleteConfirmModal: (state, action) => {
+
+            // open modal
             state.isOpen = true;
+
+            // set message
             state.message = action.payload.message;
+
+            // set meta data
             state.meta = action.payload.meta;
+            
         },
 
         // close confirm modal
-        closeConfirmModal: (state) => {
+        closeDeleteConfirmModal: (state) => {
             state.isOpen = false;
             state.message = "";
             state.meta = {};
@@ -38,5 +45,5 @@ const confirmSlice = createSlice({
 });
 
 // export slice actions
-export const { openConfirmModal, closeConfirmModal } = confirmSlice.actions;
+export const { openDeleteConfirmModal, closeDeleteConfirmModal } = confirmSlice.actions;
 export default confirmSlice.reducer;

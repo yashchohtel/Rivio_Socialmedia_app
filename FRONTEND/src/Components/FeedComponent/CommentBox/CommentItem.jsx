@@ -6,11 +6,17 @@ import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 import ReplayItem from './ReplayItem';
 import { MdVerified } from 'react-icons/md';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice.js';
 
 const CommentItem = ({ comment, setReplyContext }) => {
 
     // console.log(comment);
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    /* -------------------------------------- */
 
     // use navigate to navigate to user profile page on click of username or profile image
     const navigate = useNavigate();
@@ -18,12 +24,12 @@ const CommentItem = ({ comment, setReplyContext }) => {
     /* -------------------------------------- */
 
     // Get auth loading state from Redux store
-    const loggedInUserId  = useSelector((state) => state.auth?.user?.id);
-    
+    const loggedInUserId = useSelector((state) => state.auth?.user?.id);
+
     /* -------------------------------------- */
 
     // destructure comment data
-    const { _id: commentId, user, text, createdAt, likesCount, repliesCount, replies } = comment;
+    const { _id: commentId, user, text, createdAt, likesCount, repliesCount, replies, post: postId } = comment;
 
     // destructure user data
     const { id: userId, profileImage, username, isVerified } = user;
@@ -59,6 +65,19 @@ const CommentItem = ({ comment, setReplyContext }) => {
             commentId: commentId, // main comment id
             repliedToUserData: user, // replied to user data
         })
+
+    }
+
+    /* -------------------------------------- */
+
+    // handle comment delete clik 
+    const handleCommentDeleteClick = () => {
+
+        // dispatchh open delete confirmation modal
+        dispatch(openDeleteConfirmModal({
+            message: "Are you sure you want to delete this comment?",
+            mmeta: { commentId, postId }
+        }));
 
     }
 
@@ -138,7 +157,14 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
                         {/* comment delete button */}
                         {loggedInUserId === userId && (
-                            <span className="deleteButton">Delete</span>
+
+                            <span
+                                className="deleteButton"
+                                onClick={() => handleCommentDeleteClick()}
+                            >
+                                Delete
+                            </span>
+
                         )}
 
 
