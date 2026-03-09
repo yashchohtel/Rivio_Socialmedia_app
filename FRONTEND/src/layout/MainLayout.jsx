@@ -117,6 +117,11 @@ const MainLayout = () => {
 
     /* -------------------------------------- */
 
+    // global delete confirmation
+    
+
+    /* -------------------------------------- */
+
     // effect to check pathname and set sidebar collapse and actie item status
     useEffect(() => {
         if (location.pathname.includes("message")) {

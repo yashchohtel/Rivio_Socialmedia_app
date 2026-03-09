@@ -1,0 +1,13 @@
+.deleteConfirmationOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  inset: 0;
+  background: rgb(0 0 0 / 0%);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
