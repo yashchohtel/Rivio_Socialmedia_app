@@ -19,9 +19,6 @@
 
 /* comment item ----------------------------------------------------- */
 
-
-
-
 /* comment item and reply item*/
 .commentItem {
   margin-bottom: 2rem;
@@ -70,10 +67,19 @@
   color: var(--text-color-6);
   margin-right: 0.5rem;
   cursor: pointer;
+  display: inline-flex;
+  gap: 0.5rem;
 }
 
 .commentItemHeader .commentAndUsername .username:hover {
   text-decoration: underline;
+}
+
+/* verify batch */
+.commentItemHeader .commentAndUsername .icon {
+  color: var(--text-color-3);
+  font-weight: 500;
+  font-size: 1.5rem;
 }
 
 /* replied to username */

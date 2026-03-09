@@ -93,7 +93,7 @@ const commentSlice = createSlice({
 
             // destructure action.paylod data
             const { postId, commentId, tempReply } = action.payload
-
+            
             // get post's comments by post id
             const postComments = state.commentsByPostId[postId];
             if (!postComments) return;
@@ -106,7 +106,7 @@ const commentSlice = createSlice({
             if (!comment.replies) comment.replies = [];
 
             // add comment on top of replies
-            comment.replies.unshift(tempReply);
+            comment.replies.push(tempReply);
 
             // increase replies count
             comment.repliesCount += 1;
@@ -132,7 +132,7 @@ const commentSlice = createSlice({
 
             // if not exists add replies
             if (!exists) {
-                comment.replies.unshift(reply);
+                comment.replies.push(reply);
                 comment.repliesCount += 1;
             }
 

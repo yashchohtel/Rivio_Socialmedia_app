@@ -3,6 +3,7 @@ import React from 'react'
 import './commentBox.css'
 import { GoHeart } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
+import { MdVerified } from 'react-icons/md';
 
 const ReplayItem = ({ reply, setReplyContext, commentId }) => {
 
@@ -15,6 +16,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId }) => {
   const repliedByUserId = repliedBy?.id;
   const repliedByUsername = repliedBy?.username;
   const repliedByProfileImage = repliedBy?.profileImage;
+  const repliedByIsVerified = repliedBy?.isVerified;
 
   // replied to user data
   const repliedToUserId = repliedTo?.id;
@@ -58,7 +60,19 @@ const ReplayItem = ({ reply, setReplyContext, commentId }) => {
             <h4 className="commentAndUsername">
 
               {/* username */}
-              <span className="username"> {repliedByUsername} </span>
+              <span className="username">
+
+                {repliedByUsername}
+
+                {/* verified batch */}
+                {repliedByIsVerified && (
+                  <span className="icon">
+                    <MdVerified />
+                  </span>
+                )}
+
+              </span>
+
 
               {/* replied to usernam */}
               <span className="username repliedToUsername"> @{repliedToUsername} </span>

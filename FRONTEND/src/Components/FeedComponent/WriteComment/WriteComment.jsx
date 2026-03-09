@@ -8,8 +8,6 @@ import { addComment, replyOnComment } from '../../../features/comment/commentThu
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
 const WriteComment = ({ postId, replyContext, setReplyContext }) => {
-
-    console.log(replyContext);
     
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
@@ -144,6 +142,9 @@ const WriteComment = ({ postId, replyContext, setReplyContext }) => {
                 textToSend = value.replace(`@${replyContext?.repliedToUserData?.username}`, "").trim();
             }
 
+            // return if text to send is empty
+            if(!textToSend) return;
+
             // create temperory reply object
             const tempReply = {
                 _id: "temp-" + Date.now(), // temp id
@@ -159,6 +160,7 @@ const WriteComment = ({ postId, replyContext, setReplyContext }) => {
             dispatch(addReplyOptimistic({
                 postId: postId,
                 commentId: replyContext?.commentId,
+                replyId: replyContext?.replyId,
                 tempReply
             }));
 

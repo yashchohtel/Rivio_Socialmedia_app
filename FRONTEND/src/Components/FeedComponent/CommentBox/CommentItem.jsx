@@ -5,6 +5,8 @@ import { timeAgo } from '../../../utility/postCardUtility';
 import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 import ReplayItem from './ReplayItem';
+import { MdVerified } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 
 const CommentItem = ({ comment, setReplyContext }) => {
 
@@ -15,11 +17,16 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
     /* -------------------------------------- */
 
+    // Get auth loading state from Redux store
+    const loggedInUserId  = useSelector((state) => state.auth?.user?.id);
+    
+    /* -------------------------------------- */
+
     // destructure comment data
     const { _id: commentId, user, text, createdAt, likesCount, repliesCount, replies } = comment;
 
     // destructure user data
-    const { id: userId, profileImage, username } = user;
+    const { id: userId, profileImage, username, isVerified } = user;
 
     /* -------------------------------------- */
 
@@ -85,6 +92,14 @@ const CommentItem = ({ comment, setReplyContext }) => {
                                 onClick={() => navigateToProfile(userId)}
                             >
                                 {username}
+
+                                {/* verified batch */}
+                                {isVerified && (
+                                    <span className="icon">
+                                        <MdVerified />
+                                    </span>
+                                )}
+
                             </span>
 
                             {/* comment */}
@@ -115,11 +130,17 @@ const CommentItem = ({ comment, setReplyContext }) => {
                             onClick={() => {
                                 setReplayContext()
                                 openCommentReplies()
-                            }} 
+                            }}
 
                         >
                             Reply
                         </span>
+
+                        {/* comment delete button */}
+                        {loggedInUserId === userId && (
+                            <span className="deleteButton">Delete</span>
+                        )}
+
 
                     </div>
 
