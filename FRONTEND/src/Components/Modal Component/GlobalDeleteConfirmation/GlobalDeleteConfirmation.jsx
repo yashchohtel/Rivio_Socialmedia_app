@@ -41,7 +41,7 @@ const GlobalDeleteConfirmation = () => {
         // close modal
         handleModalClose();
 
-    };
+    }      
 
     return (
 
