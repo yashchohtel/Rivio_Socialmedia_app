@@ -18,6 +18,7 @@
   --bg-black: #000000;
   --bg-red: #ff3040;
 
+
   /* hovers color */
   --hover-primary: #25282c;
   --hover-secondary: #3a3f45;
@@ -37,6 +38,7 @@
   --text-color-7: #a2aaf1;
   --text-color-8:  #e6e6e6;
   --text-error-color: #ff4d4d;
+  --text-error-color-lite: #ff6262;
 
   /* buttons bg color */
   --btn-bg-primary: #4a5df9;

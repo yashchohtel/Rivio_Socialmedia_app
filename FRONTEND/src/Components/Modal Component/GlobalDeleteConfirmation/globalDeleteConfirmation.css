@@ -11,3 +11,52 @@
   justify-content: center;
   z-index: 5;
 }
+
+/* confirmation box */
+.confirmaitonbox {
+  width: 55rem;
+  background: var(--bg-four);
+  border-radius: 2rem;
+  text-align: center;
+  box-shadow: var(--transition-fast);
+}
+
+/* title */
+.confirmaitonbox h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-block: 1.4rem;
+  text-transform: capitalize;
+  font-family: var(--font-heading);
+  color: var(--text-color-2);
+}
+
+/* Divider line */
+.confirmaitonbox .divider {
+  height: 1.5px;
+  background: var(--border-tirtay);
+  width: 100%;
+}
+
+/* Buttons */
+.confirmaitonbox button {
+  width: 100%;
+  padding: 1.5rem;
+  border: none;
+  background: transparent;
+  font-size: 1.4rem;
+  cursor: pointer;
+  font-family: var(--font-heading);
+}
+
+/* Red discard button */
+.confirmaitonbox .discardBtn {
+  color: var(--text-error-color);
+  font-weight: 600;
+}
+
+/* Cancel button */
+.confirmaitonbox .cancelBtn {
+  color: var(--text-color-2);
+  font-weight: 500;
+}

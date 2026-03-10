@@ -5,6 +5,7 @@ import SideNavBar from '../Components/SideNavBar/SideNavBar';
 import SearchModal from '../Components/Modal Component/SearchModal/SearchModal';
 import NotificationModal from '../Components/Modal Component/NotificationModal/NotificationModal';
 import CreatePostModal from '../Components/Modal Component/CreatePostModal/CreatePostModal';
+import GlobalDeleteConfirmation from '../Components/Modal Component/GlobalDeleteConfirmation/GlobalDeleteConfirmation';
 
 const MainLayout = () => {
 
@@ -118,7 +119,7 @@ const MainLayout = () => {
     /* -------------------------------------- */
 
     // global delete confirmation
-    
+
 
     /* -------------------------------------- */
 
@@ -185,6 +186,9 @@ const MainLayout = () => {
                 <div className="contentOutlet" >
                     <Outlet />
                 </div>
+
+                {/* delete confirmaton modal */}
+                <GlobalDeleteConfirmation />
 
             </div>
 

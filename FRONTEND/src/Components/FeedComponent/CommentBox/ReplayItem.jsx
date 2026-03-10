@@ -5,7 +5,7 @@ import { GoHeart } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
 import { MdVerified } from 'react-icons/md';
 
-const ReplayItem = ({ reply, setReplyContext, commentId }) => {
+const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, loggedInUserId, postId }) => {
 
   // console.log(reply)  
 
@@ -106,6 +106,18 @@ const ReplayItem = ({ reply, setReplyContext, commentId }) => {
             >
               Reply
             </span>
+
+            {/* comment delete button */}
+            {loggedInUserId === repliedByUserId && (
+
+              <span
+                className="deleteButton"
+                onClick={() => handleDeleteClick({ action: "deleteReply", commentId, postId, replyId })}
+              >
+                Delete
+              </span>
+
+            )}
 
           </div>
 

@@ -7,7 +7,7 @@ import { GoHeartFill } from "react-icons/go";
 import ReplayItem from './ReplayItem';
 import { MdVerified } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
-import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice.js';
+import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
 
 const CommentItem = ({ comment, setReplyContext }) => {
 
@@ -71,15 +71,12 @@ const CommentItem = ({ comment, setReplyContext }) => {
     /* -------------------------------------- */
 
     // handle comment delete clik 
-    const handleCommentDeleteClick = () => {
-
-        // dispatchh open delete confirmation modal
+    const handleDeleteClick = (meta) => {
         dispatch(openDeleteConfirmModal({
-            message: "Are you sure you want to delete this comment?",
-            mmeta: { commentId, postId }
+            message: `delete this ${meta.replyId ? "reply" : "comment"}?`,
+            meta
         }));
-
-    }
+    };
 
     /* -------------------------------------- */
 
@@ -160,7 +157,7 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
                             <span
                                 className="deleteButton"
-                                onClick={() => handleCommentDeleteClick()}
+                                onClick={() => handleDeleteClick({ action: "deleteComment", commentId, postId })}
                             >
                                 Delete
                             </span>
@@ -182,6 +179,9 @@ const CommentItem = ({ comment, setReplyContext }) => {
                                     reply={reply} // replay data
                                     commentId={commentId} // main comment id
                                     setReplyContext={setReplyContext} // to set replay context 
+                                    handleDeleteClick={handleDeleteClick} // to delete reply
+                                    loggedInUserId={loggedInUserId} // logged in user id
+                                    postId={postId} // postID
                                 />
                             ))}
 

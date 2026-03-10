@@ -138,6 +138,8 @@ const commentSlice = createSlice({
 
         }
 
+        // delete comment optimistic
+
     },
 
     // extrareducers to handle async actions

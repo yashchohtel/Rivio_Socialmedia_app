@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // initial state
 const initialState = {
-    isOpen: false,
-    message: "",
-    meta: {},
+    isOpen: false, // global delete confirmation modal open/close state
+    message: "", // message for modal
+    meta: {}, // meta for delete action
 };
 
 // create confirm slice
@@ -35,8 +35,14 @@ const confirmSlice = createSlice({
 
         // close confirm modal
         closeDeleteConfirmModal: (state) => {
+
+            // close modal
             state.isOpen = false;
+
+            // clar message
             state.message = "";
+
+            // clear meta data
             state.meta = {};
         },
 

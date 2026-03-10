@@ -2,6 +2,7 @@ import React from 'react'
 import "./discardModal.css"
 
 const DiscardModal = ({ closeDiscardModal, handleDiscardClick }) => {
+    
     return (
         <>
             {/* discard overlay */}
