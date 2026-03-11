@@ -2,6 +2,7 @@ import React from 'react'
 import './globalDeleteConfirmation.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { closeDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
+import { deleteCommentOptimistic } from '../../../features/comment/commentSlice';
 
 const GlobalDeleteConfirmation = () => {
 
@@ -13,9 +14,13 @@ const GlobalDeleteConfirmation = () => {
     // get confirm data form confirm state
     const { isOpen, message, meta, } = useSelector((state) => state.confirm);
 
-    // console.log(message);
-    // console.log(meta);
+    // comment to be deleted (save to resotre if api fails)
+    const deletedComment = useSelector((state) =>
+        meta?.postId ? state.comment.commentsByPostId[meta.postId]?.comments.find(c => c._id === meta.commentId) : null
+    );
 
+    console.log(deletedComment);
+    
     /* -------------------------------------- */
 
     // jab tak isOpen false hai, kuch render mat karo
@@ -31,17 +36,19 @@ const GlobalDeleteConfirmation = () => {
     /* -------------------------------------- */
 
     const handleConfirm = () => {
-        
-        // delete comment
-        if(meta.action === "deleteComment"){
-            console.log("delete cooment");
-        }
 
+        // delete comment
+        if (meta.action === "deleteComment") {
+
+            // delete comment optimisticaly
+            dispatch(deleteCommentOptimistic({ postId: meta.postId, commentId: meta.commentId }));
+
+        }
 
         // close modal
         handleModalClose();
 
-    }      
+    }
 
     return (
 

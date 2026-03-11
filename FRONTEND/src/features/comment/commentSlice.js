@@ -93,7 +93,7 @@ const commentSlice = createSlice({
 
             // destructure action.paylod data
             const { postId, commentId, tempReply } = action.payload
-            
+
             // get post's comments by post id
             const postComments = state.commentsByPostId[postId];
             if (!postComments) return;
@@ -115,7 +115,7 @@ const commentSlice = createSlice({
 
         // add reply from socket
         addReplyFromSocket: (state, action) => {
-            
+
             // extract data from action payload
             const { postId, commentId, reply } = action.payload;
 
@@ -136,9 +136,23 @@ const commentSlice = createSlice({
                 comment.repliesCount += 1;
             }
 
-        }
+        },
 
         // delete comment optimistic
+        deleteCommentOptimistic: (state, action) => {
+
+            // destructure payload
+            const { postId, commentId } = action.payload;
+
+            console.log(postId, commentId);
+
+            // find comments 
+            const comments = state.commentsByPostId[postId].comments;
+
+            // remove comment from state
+            state.commentsByPostId[postId].comments = comments.filter(c => c._id !== commentId);
+
+        }
 
     },
 
@@ -268,7 +282,7 @@ const commentSlice = createSlice({
 });
 
 // export reducer function
-export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket } = commentSlice.actions;
+export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket, deleteCommentOptimistic } = commentSlice.actions;
 
 // export commentSlice reducer
 export default commentSlice.reducer;

@@ -62,7 +62,7 @@
 /* username */
 .commentItemHeader .commentAndUsername .username {
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-family: var(--font-heading);
   color: var(--text-color-6);
   margin-right: 0.5rem;
@@ -93,7 +93,7 @@
 /* comment */
 .commentItemHeader .commentAndUsername .comment {
   color: var(--text-color-8);
-  font-family: var(--font-main);
+  font-family: var(--font-heading);
   font-weight: 400;
   font-size: 1.4rem;
 }

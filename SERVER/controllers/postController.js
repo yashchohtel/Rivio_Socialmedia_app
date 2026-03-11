@@ -890,11 +890,13 @@ export const deleteCommentOrReply = async (req, res, next) => {
         );
     }
 
+    // return response
     return res.status(200).json({
         success: true,
         message: "Comment deleted successfully",
         commentId
     });
+
 };
 
 // DELETE POST
