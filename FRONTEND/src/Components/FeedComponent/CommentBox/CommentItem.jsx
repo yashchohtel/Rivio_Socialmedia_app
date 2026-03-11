@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import './commentBox.css'
 import { useNavigate } from 'react-router-dom';
@@ -190,22 +191,13 @@ const CommentItem = ({ comment, setReplyContext }) => {
                     )}
 
                     {/* view close replay button */}
-                    {repliesCount > 0 && (
-
-                        <div className="viewReplayBtn"
-                            onClick={handleShowHideReplies}
-                        >
-
-                            {/* rule */}
+                    {replies?.length > 0 && (
+                        <div className="viewReplayBtn" onClick={handleShowHideReplies}>
                             <div className="line"></div>
-
-                            {/* button text */}
                             <p className="btnText">
-                                {showHideReplies ? "Hide replies" : `View replies (${repliesCount})`}
+                                {showHideReplies ? "Hide replies" : `View replies (${replies?.length})`}
                             </p>
-
                         </div>
-
                     )}
 
                 </div>
@@ -218,3 +210,21 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
 // export default CommentItem          
 export default React.memo(CommentItem);
+
+// {repliesCount > 0 && (
+
+//     <div className="viewReplayBtn"
+//         onClick={handleShowHideReplies}
+//     >
+
+//         {/* rule */}
+//         <div className="line"></div>
+
+//         {/* button text */}
+//         <p className="btnText">
+//             {showHideReplies ? "Hide replies" : `View replies (${repliesCount})`}
+//         </p>
+
+//     </div>
+
+// )}

@@ -845,7 +845,7 @@ export const deleteCommentOrReply = async (req, res, next) => {
     if (replyId) {
 
         // find the comment that contains this reply
-        const comment = await Comment.findOne({ _id: commentId, "replies._id": replyId }).select("replies");
+        const comment = await Comment.findOne({ _id: commentId, "replies._id": replyId }).select("post replies");
         if (!comment) return next(new ErrorHandler("Comment or reply not found", 404));
 
         const reply = comment.replies.id(replyId);
@@ -856,10 +856,16 @@ export const deleteCommentOrReply = async (req, res, next) => {
             return next(new ErrorHandler("Not authorized to delete this reply", 403));
         }
 
-        // remove the reply
+        // remove the replie from the comment
         await Comment.updateOne(
             { _id: commentId },
             { $pull: { replies: { _id: replyId } } }
+        );
+
+        // decrement comment count of the post by 1 if replie is deleted
+        await Post.updateOne(
+            { _id: comment.post },
+            { $inc: { commentsCount: -1 } }
         );
 
         return res.status(200).json({
@@ -868,10 +874,11 @@ export const deleteCommentOrReply = async (req, res, next) => {
             commentId,
             replyId
         });
+        
     }
 
     // Delete a main comment
-    const comment = await Comment.findById(commentId).select("user post");
+    const comment = await Comment.findById(commentId).select("user post replies");
     if (!comment) return next(new ErrorHandler("Comment not found", 404));
 
     // only the comment owner can delete the comment
@@ -882,12 +889,18 @@ export const deleteCommentOrReply = async (req, res, next) => {
     // delete the comment document
     await Comment.deleteOne({ _id: commentId });
 
-    // remove comment reference from the post's comments array (if you store it)
+    // remove comment reference from the post's comments array and decrement comments count by 1 + length of replies 
+
+    // repies count
+    const repliesCount = comment.replies.length;
+
     if (comment.post) {
+
         await Post.updateOne(
             { _id: comment.post },
-            { $pull: { comments: commentId } }
+            { $pull: { comments: commentId }, $inc: { commentsCount: -(1 + repliesCount) } }
         );
+
     }
 
     // return response

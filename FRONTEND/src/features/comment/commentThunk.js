@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -16,7 +16,7 @@ const api = axios.create({
 });
 
 // thunk to get comments for post
-export const getCommentsForPost = createAsyncThunk("comments/getCommentsForPost", async (postId, { rejectWithValue }) => {
+export const getCommentsForPost = createAsyncThunk("comment/getCommentsForPost", async (postId, { rejectWithValue }) => {
 
     try {
 
@@ -37,7 +37,7 @@ export const getCommentsForPost = createAsyncThunk("comments/getCommentsForPost"
 });
 
 // thunk to add comment for post
-export const addComment = createAsyncThunk("comment/addComment", async ({ postId, text }, thunkAPI) => {
+export const addComment = createAsyncThunk("comment/addComment", async ({ postId, text }, { rejectWithValue }) => {
 
     try {
 
@@ -51,14 +51,14 @@ export const addComment = createAsyncThunk("comment/addComment", async ({ postId
 
         toast.error(error.response?.data?.message || "Failed to add comment");
 
-        return thunkAPI.rejectWithValue(error.response?.data);
+        return rejectWithValue(error.response?.data);
 
     }
 
 });
 
 // thunk to add replay on comment
-export const replyOnComment = createAsyncThunk("comment/replyOnComment", async ({ commentId, repliedTo, text }, thunkAPI) => {
+export const replyOnComment = createAsyncThunk("comment/replyOnComment", async ({ commentId, repliedTo, text }, { rejectWithValue }) => {
 
     try {
 
@@ -73,8 +73,52 @@ export const replyOnComment = createAsyncThunk("comment/replyOnComment", async (
         // error handle
         toast.error(error.response?.data?.message || "Failed to add reply");
 
-        return thunkAPI.rejectWithValue(error.response?.data);
+        return rejectWithValue(error.response?.data);
 
     }
 
 });
+
+// thunk to delete comment of post
+export const deleteComment = createAsyncThunk("comment/DeleteComment", async ({ commentId, postId, deletedComment }, { rejectWithValue }) => {
+
+    try {
+
+        // send delete request
+        const response = await api.delete(`/api/posts/DeleteComment/${commentId}`);
+
+        // return data of response
+        return response.data;
+
+    } catch (error) {
+
+        // error handle
+        toast.error(error.response?.data?.message || "Failed to delete comment");
+
+        return rejectWithValue({ error: error.response?.data, commentId, postId, deletedComment });
+
+    }
+
+});
+
+// thunk to delete replie of the comment
+export const deleteReply = createAsyncThunk("comment/deleteReply", async ({ commentId, replyId, postId, deletedReply }, { rejectWithValue }) => {
+
+    try {
+
+        // send delete request
+        const response = await api.delete(`/api/posts/DeleteComment/${commentId}/${replyId}`);
+
+        // return data of response
+        return response.data;
+
+    } catch (error) {
+
+        // error handle
+        toast.error(error.response?.data?.message || "Failed to delete reply");
+
+        return rejectWithValue({ commentId, postId, deletedReply });
+
+    }
+}
+);

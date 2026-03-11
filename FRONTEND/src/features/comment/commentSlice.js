@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, getCommentsForPost, replyOnComment } from "./commentThunk";
+import { addComment, deleteComment, deleteReply, getCommentsForPost, replyOnComment } from "./commentThunk";
 
 // initial state for comment slice
 const initialState = {
@@ -138,22 +138,6 @@ const commentSlice = createSlice({
 
         },
 
-        // delete comment optimistic
-        deleteCommentOptimistic: (state, action) => {
-
-            // destructure payload
-            const { postId, commentId } = action.payload;
-
-            console.log(postId, commentId);
-
-            // find comments 
-            const comments = state.commentsByPostId[postId].comments;
-
-            // remove comment from state
-            state.commentsByPostId[postId].comments = comments.filter(c => c._id !== commentId);
-
-        }
-
     },
 
     // extrareducers to handle async actions
@@ -276,6 +260,58 @@ const commentSlice = createSlice({
                 // decrement replies count 
                 comment.repliesCount -= 1;
 
+            })
+
+            // DELETE COMMENT
+            .addCase(deleteComment.pending, (state, action) => {
+
+                // destructure payload
+                const { postId, commentId } = action.meta.arg;;
+
+                // find comments 
+                const comments = state.commentsByPostId[postId].comments;
+
+                // remove comment from state
+                state.commentsByPostId[postId].comments = comments.filter(c => c._id !== commentId);
+            })
+            .addCase(deleteComment.rejected, (state, action) => {
+
+                // destructer action payload
+                const { postId, deletedComment } = action.payload;
+
+                // rollback — insert comment if failed
+                state.commentsByPostId[postId].comments.unshift(deletedComment);
+                state.commentsByPostId[postId].count += 1;
+
+            })
+
+            // DELETE COMMENT REPLIE
+            .addCase(deleteReply.pending, (state, action) => {
+
+                // extra data from meta.arg
+                const { commentId, replyId, postId } = action.meta.arg;
+
+                // find comment
+                const comment = state.commentsByPostId[postId]?.comments.find(c => c._id === commentId);
+
+                // remove replie
+                if (comment) {
+                    comment.replies = comment.replies.filter(r => r._id !== replyId);
+                }
+
+            })
+            .addCase(deleteReply.rejected, (state, action) => {
+
+                // extract data from payload
+                const { commentId, postId, deletedReply } = action.payload;
+
+                // find comment
+                const comment = state.commentsByPostId[postId]?.comments.find(c => c._id === commentId);
+
+                // roll back if api fials
+                if (comment) {
+                    comment.replies.push(deletedReply);
+                }
             })
     },
 

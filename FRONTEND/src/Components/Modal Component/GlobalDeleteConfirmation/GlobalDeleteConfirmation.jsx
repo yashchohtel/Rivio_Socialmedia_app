@@ -2,7 +2,8 @@ import React from 'react'
 import './globalDeleteConfirmation.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { closeDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
-import { deleteCommentOptimistic } from '../../../features/comment/commentSlice';
+import { deleteComment, deleteReply } from '../../../features/comment/commentThunk';
+import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
 const GlobalDeleteConfirmation = () => {
 
@@ -19,8 +20,12 @@ const GlobalDeleteConfirmation = () => {
         meta?.postId ? state.comment.commentsByPostId[meta.postId]?.comments.find(c => c._id === meta.commentId) : null
     );
 
-    console.log(deletedComment);
-    
+    // reply to be deleted (save to resotre if api fails)
+    const deletedReply = useSelector((state) => meta?.postId && meta?.commentId && meta?.replyId
+        ? state.comment.commentsByPostId[meta.postId]?.comments.find(c => c._id === meta.commentId)?.replies?.find(r => r._id === meta.replyId)
+        : null
+    );
+
     /* -------------------------------------- */
 
     // jab tak isOpen false hai, kuch render mat karo
@@ -40,8 +45,27 @@ const GlobalDeleteConfirmation = () => {
         // delete comment
         if (meta.action === "deleteComment") {
 
-            // delete comment optimisticaly
-            dispatch(deleteCommentOptimistic({ postId: meta.postId, commentId: meta.commentId }));
+            // ecrement comment count optimisticlly
+            const totalRepliesCount = 1 + (deletedComment?.replies?.length || 0);
+            dispatch(updatePostCommentsCount({ postId: meta.postId, incrementBy: -totalRepliesCount }));
+
+            // delete comment from database
+            dispatch(deleteComment({ commentId: meta.commentId, postId: meta.postId, deletedComment })).unwrap().catch(() => {
+                dispatch(updatePostCommentsCount({ postId: meta.postId, incrementBy: totalRepliesCount }));
+            });;
+
+        }
+
+        // delete reply
+        if (meta.action === "deleteReply") {
+
+            // update comment count on replie deletion
+            dispatch(updatePostCommentsCount({ postId: meta.postId, incrementBy: -1 }));
+
+            // dispatch delete replay
+            dispatch(deleteReply({ commentId: meta.commentId, replyId: meta.replyId, postId: meta.postId, deletedReply })).unwrap().catch(() => {
+                dispatch(updatePostCommentsCount({ postId: meta.postId, incrementBy: 1 }));
+            });
 
         }
 
