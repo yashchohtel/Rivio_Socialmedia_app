@@ -139,7 +139,7 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
                         {/* like */}
                         {likesCount > 0 && (
-                            <span className="like">{likesCount}</span>
+                            <span className="like">{likesCount} {likesCount === 1 ? "like" : "likes"}</span>
                         )}
 
                         {/* replay */}
@@ -164,7 +164,6 @@ const CommentItem = ({ comment, setReplyContext }) => {
                             </span>
 
                         )}
-
 
                     </div>
 

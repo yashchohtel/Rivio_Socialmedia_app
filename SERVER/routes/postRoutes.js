@@ -53,7 +53,7 @@ postRouter.delete('/deletePost/:postId', isUserAuth, upload.array("postImage", 1
 // 'http://localhost:5000/api/posts/deletePost/:postId'
 
 // Get posts comments [GET]
-postRouter.get('/getCommentsForPost/:postId', catchAsyncError(getCommentsForPost));
+postRouter.get('/getCommentsForPost/:postId', isUserAuth, catchAsyncError(getCommentsForPost));
 // 'http://localhost:5000/api/posts/getCommentsForPost/:postId'
 
 // Bookmark posts [PATCH]

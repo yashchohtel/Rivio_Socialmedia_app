@@ -17,11 +17,11 @@ const Feed = () => {
     const dispatch = useDispatch();
 
     // Get auth loading state from Redux store
-    const { posts, feedLoading, hasMore, cursor, success, phase, message } = useSelector((state) => state.post);
+    const { posts, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
 
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
-    
+
     /* -------------------------------------- */
 
     // state to make feed action option modal active
@@ -57,7 +57,7 @@ const Feed = () => {
             const scrollHeight = container.scrollHeight;
 
             // call load feed if following condition are ture
-            if (container.scrollHeight > container.clientHeight && scrollTop + clientHeight >= scrollHeight - 50) {
+            if (container.scrollHeight > container.clientHeight && scrollTop + clientHeight >= scrollHeight - 100) {
                 dispatch(loadFeed(cursor));
             }
 

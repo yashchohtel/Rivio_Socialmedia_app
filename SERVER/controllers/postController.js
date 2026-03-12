@@ -496,6 +496,9 @@ export const commentOnPost = async (req, res, next) => {
 // GET COMMENTS OF POST
 export const getCommentsForPost = async (req, res, next) => {
 
+    // Extract user ID from request
+    const userId = req.user.id;
+
     // get postId
     const postId = req.params.postId;
 
@@ -534,14 +537,18 @@ export const getCommentsForPost = async (req, res, next) => {
             bookmarksCount: c.user.bookmarks?.length || 0,
         } : null;
 
+        // is comment liked by the current user
+        const isCommentLikedByMe = c.likes?.some(id => id.toString() === userId);
+
         return {
 
             _id: c._id, // comment id
             post: c.post, // post id
             text: c.text, // comment text
             user: optimizedUser, // comment user (optimized)
-            likesCount: Array.isArray(c.likes) ? c.likes.length : 0, // likes count of main comment
             repliesCount: Array.isArray(c.replies) ? c.replies.length : 0, // replies count
+            likesCount: Array.isArray(c.likes) ? c.likes.length : 0, // likes count of main comment
+            isLikedByMe: isCommentLikedByMe, // comment like/not liked flag
 
             replies: (c.replies || []).map(r => {
 
@@ -577,13 +584,18 @@ export const getCommentsForPost = async (req, res, next) => {
                     bookmarksCount: r.repliedTo.bookmarks?.length || 0,
                 } : null;
 
+                // is comment liked by the current user 
+                const isReplyLikedByMe = r.likes?.some(id => id.toString() === userId.toString());
+
                 return {
                     _id: r._id, // reply id
                     repliedBy: repliedBy,
                     repliedTo: repliedTo,
                     text: r.text, // reply text
                     likesCount: Array.isArray(r.likes) ? r.likes.length : 0, // likes count of reply
-                    createdAt: r.createdAt // timestamp of reply
+                    isLikedByMe: isReplyLikedByMe, // reply like/not liked flag
+                    createdAt: r.createdAt, // timestamp of reply
+
                 };
             }),
 
@@ -775,17 +787,21 @@ export const likeCommentAndReplay = async (req, res, next) => {
         const alreadyLiked = reply.likes.some(l => l.toString() === userId);
 
         if (alreadyLiked) {
+
             // unlike: pull userId from replies.$.likes
             await Comment.updateOne(
                 { _id: commentId, "replies._id": replyId },
                 { $pull: { "replies.$.likes": userId } }
             );
+
         } else {
+
             // like: addToSet userId into replies.$.likes
             await Comment.updateOne(
                 { _id: commentId, "replies._id": replyId },
                 { $addToSet: { "replies.$.likes": userId } }
             );
+
         }
 
         // fetch fresh like count for that reply
@@ -793,6 +809,7 @@ export const likeCommentAndReplay = async (req, res, next) => {
             .select("replies._id replies.likes");
         const freshReply = fresh.replies.id(replyId);
 
+        // return response
         return res.status(200).json({
             success: true,
             type: "reply",
@@ -807,22 +824,31 @@ export const likeCommentAndReplay = async (req, res, next) => {
     const comment = await Comment.findById(commentId).select("likes");
     if (!comment) return next(new ErrorHandler("Comment not found", 404));
 
+    // is already liked
     const alreadyLiked = comment.likes.some(l => l.toString() === userId);
 
     if (alreadyLiked) {
+
+        // unlike comment
         await Comment.updateOne(
             { _id: commentId },
             { $pull: { likes: userId } }
         );
+
     } else {
+
+        // like comment
         await Comment.updateOne(
             { _id: commentId },
             { $addToSet: { likes: userId } }
         );
+
     }
 
     // fresh count
     const freshComment = await Comment.findById(commentId).select("likes");
+
+    // return response
     return res.status(200).json({
         success: true,
         type: "comment",
@@ -830,6 +856,7 @@ export const likeCommentAndReplay = async (req, res, next) => {
         likesCount: freshComment.likes.length,
         commentId
     });
+
 }
 
 // DELETE COMMENT AND REPLY
@@ -874,7 +901,7 @@ export const deleteCommentOrReply = async (req, res, next) => {
             commentId,
             replyId
         });
-        
+
     }
 
     // Delete a main comment

@@ -97,7 +97,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
 
             {/* like */}
             {likesCount > 0 && (
-              <span className="like">{likesCount}</span>
+              <span className="like">{likesCount} {likesCount === 1 ? "like" : "likes"}</span>
             )}
 
             {/* replay */}
