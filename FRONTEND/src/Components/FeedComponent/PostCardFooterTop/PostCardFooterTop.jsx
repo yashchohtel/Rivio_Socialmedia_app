@@ -112,6 +112,8 @@ const PostCardFooterTop = (props) => {
 
                     </div>
 
+                    
+
                     {/* comment section */}
                     <div
                         className="commentSection iconCountCont"
