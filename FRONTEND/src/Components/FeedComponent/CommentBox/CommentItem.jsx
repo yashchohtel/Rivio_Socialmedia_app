@@ -81,6 +81,13 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
     /* -------------------------------------- */
 
+    // function to handle comment like click
+    const handleCommentLikeClick = {
+        
+    }
+
+    /* -------------------------------------- */
+
     return (
 
         <>

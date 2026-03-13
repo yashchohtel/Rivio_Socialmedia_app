@@ -36,9 +36,6 @@ const PostCardFooterTop = (props) => {
         // dispatch handle post like thunk
         dispatch(handlePostLike(postId));
 
-
-        
-
     };
 
     /* -------------------------------------- */
