@@ -142,21 +142,18 @@ const CommentItem = ({ comment, setReplyContext }) => {
                         {/* comment likes */}
                         <div className="commentItemLikeIcon"
                             onClick={() => handleCommentLikeClick()}
+                            onAnimationEnd={() => setTriggerAnimation(false)}
                         >
 
                             {/* heart outline */}
                             <span
-                                className={`heartOutline ${isLikedByMe ? "" : "active"} ${triggerAnimation ? "animate" : ""}`}
-                                onAnimationEnd={() => setTriggerAnimation(false)}
-                            >
+                                className={`heartOutline ${isLikedByMe ? "" : "active"} ${triggerAnimation ? "animate" : ""}`}>
                                 <GoHeart />
                             </span>
 
                             {/* heart filled */}
                             <span
-                                className={`heartFilled ${isLikedByMe ? "active" : ""} ${triggerAnimation ? "animate" : ""}`}
-                                onAnimationEnd={() => setTriggerAnimation(false)}
-                            >
+                                className={`heartFilled ${isLikedByMe ? "active" : ""} ${triggerAnimation ? "animate" : ""}`}>
                                 <GoHeartFill />
                             </span>
 
