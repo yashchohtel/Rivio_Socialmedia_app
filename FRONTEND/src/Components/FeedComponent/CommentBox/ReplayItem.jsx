@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useState } from 'react'
 import './commentBox.css'
-import { GoHeart } from 'react-icons/go';
+import { GoHeart, GoHeartFill } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
 import { MdVerified } from 'react-icons/md';
 
@@ -10,7 +10,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
   // console.log(reply)  
 
   // destructure reply data
-  const { _id: replyId, text, likesCount, createdAt, repliedBy, repliedTo, } = reply;
+  const { _id: replyId, text, likesCount, isLikedByMe, createdAt, repliedBy, repliedTo, } = reply;
 
   // replied by user data
   const repliedByUserId = repliedBy?.id;
@@ -35,6 +35,19 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
     })
 
   };
+
+  /* -------------------------------------- */
+
+  //  trigger animation
+  const [triggerAnimation, setTriggerAnimation] = useState(false);
+
+  // function to handle comment like click
+  const handleReplyLikeClick = () => {
+
+    // set trigger animation
+    setTriggerAnimation(true);
+
+  }
 
   /* -------------------------------------- */
 
@@ -83,8 +96,22 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
             </h4>
 
             {/* comment likes */}
-            <div className="commentItemLikes">
-              <span className="icon"><GoHeart /></span>
+            <div className="commentItemLikeIcon"
+              onClick={() => handleReplyLikeClick()}
+            >
+
+              {/* heart outline */}
+              <span
+                className={`heartOutline ${isLikedByMe ? "" : "active"} ${triggerAnimation ? "animate" : ""}`}>
+                <GoHeart />
+              </span>
+
+              {/* heart filled */}
+              <span
+                className={`heartFilled ${isLikedByMe ? "active" : ""} ${triggerAnimation ? "animate" : ""}`}>
+                <GoHeartFill />
+              </span>
+
             </div>
 
           </div>

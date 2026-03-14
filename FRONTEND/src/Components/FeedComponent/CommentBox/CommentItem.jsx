@@ -30,7 +30,7 @@ const CommentItem = ({ comment, setReplyContext }) => {
     /* -------------------------------------- */
 
     // destructure comment data
-    const { _id: commentId, user, text, createdAt, likesCount, repliesCount, replies, post: postId } = comment;
+    const { _id: commentId, user, text, createdAt, likesCount, isLikedByMe, repliesCount, replies, post: postId } = comment;
 
     // destructure user data
     const { id: userId, profileImage, username, isVerified } = user;
@@ -81,9 +81,17 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
     /* -------------------------------------- */
 
+    //  trigger animation
+    const [triggerAnimation, setTriggerAnimation] = useState(false);
+
+    console.log(triggerAnimation);
+
     // function to handle comment like click
-    const handleCommentLikeClick = {
-        
+    const handleCommentLikeClick = () => {
+
+        // set trigger animation
+        setTriggerAnimation(true);
+
     }
 
     /* -------------------------------------- */
@@ -132,8 +140,26 @@ const CommentItem = ({ comment, setReplyContext }) => {
                         </h4>
 
                         {/* comment likes */}
-                        <div className="commentItemLikes">
-                            <span className="icon"><GoHeart /></span>
+                        <div className="commentItemLikeIcon"
+                            onClick={() => handleCommentLikeClick()}
+                        >
+
+                            {/* heart outline */}
+                            <span
+                                className={`heartOutline ${isLikedByMe ? "" : "active"} ${triggerAnimation ? "animate" : ""}`}
+                                onAnimationEnd={() => setTriggerAnimation(false)}
+                            >
+                                <GoHeart />
+                            </span>
+
+                            {/* heart filled */}
+                            <span
+                                className={`heartFilled ${isLikedByMe ? "active" : ""} ${triggerAnimation ? "animate" : ""}`}
+                                onAnimationEnd={() => setTriggerAnimation(false)}
+                            >
+                                <GoHeartFill />
+                            </span>
+
                         </div>
 
                     </div>
@@ -216,21 +242,3 @@ const CommentItem = ({ comment, setReplyContext }) => {
 
 // export default CommentItem          
 export default React.memo(CommentItem);
-
-// {repliesCount > 0 && (
-
-//     <div className="viewReplayBtn"
-//         onClick={handleShowHideReplies}
-//     >
-
-//         {/* rule */}
-//         <div className="line"></div>
-
-//         {/* button text */}
-//         <p className="btnText">
-//             {showHideReplies ? "Hide replies" : `View replies (${repliesCount})`}
-//         </p>
-
-//     </div>
-
-// )}
