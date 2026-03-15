@@ -5,6 +5,7 @@ import { GoHeart, GoHeartFill } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
 import { MdVerified } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { likeUnlikeReply } from '../../../features/comment/commentThunk';
 
 const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, loggedInUserId, postId }) => {
 
@@ -54,7 +55,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
     setTriggerAnimation(true);
 
     // like unlike comment
-    // dispatch(likeUnlikeComment({postId, commentId, replyId}))
+    dispatch(likeUnlikeReply({ postId, commentId, replyId }))
 
   }
 
