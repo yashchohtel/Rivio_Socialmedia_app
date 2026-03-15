@@ -9,7 +9,7 @@ import ReplayItem from './ReplayItem';
 import { MdVerified } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
-import { likeUnlikeComment } from '../../../features/comment/commentSlice';
+import { likeUnlikeComment } from '../../../features/comment/commentThunk';
 
 const CommentItem = ({ comment, setReplyContext }) => {
 

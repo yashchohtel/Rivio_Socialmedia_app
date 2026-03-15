@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addComment, deleteComment, deleteReply, getCommentsForPost, replyOnComment } from "./commentThunk";
+import { addComment, deleteComment, deleteReply, getCommentsForPost, likeUnlikeComment, likeUnlikeReply, replyOnComment } from "./commentThunk";
 
 // initial state for comment slice
 const initialState = {
@@ -137,43 +137,6 @@ const commentSlice = createSlice({
             }
 
         },
-
-        // like unlike comment
-        likeUnlikeComment: (state, action) => {
-
-            // extract data from action payload
-            const { postId, commentId, replyId } = action.payload;
-
-            // find post comments
-            const postComments = state.commentsByPostId[postId]?.comments;
-            if (!postComments) return;
-
-            // find actual comment
-            const comment = postComments.find(c => c._id === commentId);
-            if (!comment) return;
-
-            // reply like
-            if (replyId) {
-
-                // find reply 
-                const reply = comment.replies.find(r => r._id === replyId);
-                if (!reply) return;
-
-                // like unlike
-                reply.isLikedByMe = !reply.isLikedByMe;
-
-                // increase like count
-                reply.likesCount += reply.isLikedByMe ? 1 : -1;
-
-                // close function
-                return;
-            }
-
-            // comment like
-            comment.isLikedByMe = !comment.isLikedByMe;
-            comment.likesCount += comment.isLikedByMe ? 1 : -1;
-
-        }
 
     },
 
@@ -350,12 +313,127 @@ const commentSlice = createSlice({
                     comment.replies.push(deletedReply);
                 }
             })
+
+            // LIKE UNLIKE COMMENT
+            .addCase(likeUnlikeComment.pending, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId } = action.meta.arg;
+
+                // find comment form post
+                const comments = state.commentsByPostId[postId]?.comments;
+                if (!comments) return;
+
+                // find actual comment
+                const comment = comments.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // optimistic like/unlike or increase/decrease likes count
+                comment.isLikedByMe = !comment.isLikedByMe;
+                comment.likesCount += comment.isLikedByMe ? 1 : -1;
+            })
+            .addCase(likeUnlikeComment.fulfilled, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId } = action.meta.arg;
+
+                // find comment form post
+                const comments = state.commentsByPostId[postId]?.comments;
+                if (!comments) return;
+
+                // find actual comment
+                const comment = comments.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // extract data form action payload 
+                const { liked, likesCount } = action.payload
+
+                // replace with real data
+                comment.isLikedByMe = liked;
+                comment.likesCount = likesCount;
+
+            })
+            .addCase(likeUnlikeComment.rejected, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId } = action.meta.arg;
+
+                // find comments from post
+                const comments = state.commentsByPostId[postId]?.comments;
+                if (!comments) return;
+
+                // find actual comment
+                const comment = comments.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // rollback
+                comment.isLikedByMe = !comment.isLikedByMe;
+                comment.likesCount += comment.isLikedByMe ? 1 : -1;
+            })
+
+            // LIKE UNLIKE COMMENT REPLY
+            .addCase(likeUnlikeReply.pending, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId, replyId } = action.meta.arg;
+
+                // find comment from postId and comment ID
+                const comment = state.commentsByPostId[postId]?.comments?.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // find reply
+                const reply = comment.replies.find(r => r._id === replyId);
+                if (!reply) return;
+
+                // optimistic flip
+                reply.isLikedByMe = !reply.isLikedByMe;
+                reply.likesCount += reply.isLikedByMe ? 1 : -1;
+
+            })
+            .addCase(likeUnlikeReply.fulfilled, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId, replyId } = action.meta.arg;
+
+                // find comment from postId and comment ID
+                const comment = state.commentsByPostId[postId]?.comments?.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // find reply
+                const reply = comment.replies.find(r => r._id === replyId);
+                if (!reply) return;
+
+                // extract data form action payload 
+                const { liked, likesCount } = action.payload
+
+                // sync with server
+                reply.isLikedByMe = liked;
+                reply.likesCount = likesCount;
+
+            })
+            .addCase(likeUnlikeReply.rejected, (state, action) => {
+
+                // extract data from meta arg
+                const { postId, commentId, replyId } = action.meta.arg;
+
+                // find comment
+                const comment = state.commentsByPostId[postId]?.comments?.find(c => c._id === commentId);
+                if (!comment) return;
+
+                // find reply
+                const reply = comment.replies.find(r => r._id === replyId);
+                if (!reply) return;
+
+                // rollback
+                reply.isLikedByMe = !reply.isLikedByMe;
+                reply.likesCount += reply.isLikedByMe ? 1 : -1;
+            })
     },
 
 });
 
 // export reducer function
-export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket, deleteCommentOptimistic, likeUnlikeComment } = commentSlice.actions;
+export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket, deleteCommentOptimistic } = commentSlice.actions;
 
 // export commentSlice reducer
 export default commentSlice.reducer;
