@@ -9,6 +9,7 @@ import ReplayItem from './ReplayItem';
 import { MdVerified } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
+import { likeUnlikeComment } from '../../../features/comment/commentSlice';
 
 const CommentItem = ({ comment, setReplyContext }) => {
 
@@ -84,13 +85,14 @@ const CommentItem = ({ comment, setReplyContext }) => {
     //  trigger animation
     const [triggerAnimation, setTriggerAnimation] = useState(false);
 
-    console.log(triggerAnimation);
-
     // function to handle comment like click
     const handleCommentLikeClick = () => {
 
         // set trigger animation
         setTriggerAnimation(true);
+
+        // like unlike comment
+        dispatch(likeUnlikeComment({postId, commentId}))
 
     }
 

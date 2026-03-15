@@ -120,5 +120,29 @@ export const deleteReply = createAsyncThunk("comment/deleteReply", async ({ comm
         return rejectWithValue({ commentId, postId, deletedReply });
 
     }
-}
-);
+
+});
+
+// thunk to like unlike comment
+export const likeUnlikeComment = createAsyncThunk("comment/likeUnlikeComment", async ({ postId, commentId }, { rejectWithValue }) => {
+
+    try {
+
+        // http://localhost:5000/api/posts/likeComments/:commentId
+
+        // send likeUnlike comment request
+        const response = await api.patch(`/api/posts/likeComments/${commentId}`);
+
+        // return data of response
+        return response.data;
+
+
+    } catch (error) {
+
+        // error handle
+        toast.error(error.response?.data?.message || "Failed to like/unlike comment");
+        return rejectWithValue(error.response?.data?.message || "Failed to like/unlike comment");
+
+    }
+
+}) 

@@ -4,10 +4,17 @@ import './commentBox.css'
 import { GoHeart, GoHeartFill } from 'react-icons/go';
 import { timeAgo } from '../../../utility/postCardUtility';
 import { MdVerified } from 'react-icons/md';
+import { likeUnlikeComment } from '../../../features/comment/commentSlice';
+import { useDispatch } from 'react-redux';
 
 const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, loggedInUserId, postId }) => {
 
   // console.log(reply)  
+
+  // configure dispatch use to dispatch actions
+  const dispatch = useDispatch();
+
+  /* -------------------------------------- */
 
   // destructure reply data
   const { _id: replyId, text, likesCount, isLikedByMe, createdAt, repliedBy, repliedTo, } = reply;
@@ -46,6 +53,9 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
 
     // set trigger animation
     setTriggerAnimation(true);
+
+    // like unlike comment
+    dispatch(likeUnlikeComment({postId, commentId, replyId}))
 
   }
 
@@ -98,6 +108,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
             {/* comment likes */}
             <div className="commentItemLikeIcon"
               onClick={() => handleReplyLikeClick()}
+              onAnimationEnd={() => setTriggerAnimation(false)}
             >
 
               {/* heart outline */}

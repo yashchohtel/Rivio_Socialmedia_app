@@ -138,6 +138,43 @@ const commentSlice = createSlice({
 
         },
 
+        // like unlike comment
+        likeUnlikeComment: (state, action) => {
+
+            // extract data from action payload
+            const { postId, commentId, replyId } = action.payload;
+
+            // find post comments
+            const postComments = state.commentsByPostId[postId]?.comments;
+            if (!postComments) return;
+
+            // find actual comment
+            const comment = postComments.find(c => c._id === commentId);
+            if (!comment) return;
+
+            // reply like
+            if (replyId) {
+
+                // find reply 
+                const reply = comment.replies.find(r => r._id === replyId);
+                if (!reply) return;
+
+                // like unlike
+                reply.isLikedByMe = !reply.isLikedByMe;
+
+                // increase like count
+                reply.likesCount += reply.isLikedByMe ? 1 : -1;
+
+                // close function
+                return;
+            }
+
+            // comment like
+            comment.isLikedByMe = !comment.isLikedByMe;
+            comment.likesCount += comment.isLikedByMe ? 1 : -1;
+
+        }
+
     },
 
     // extrareducers to handle async actions
@@ -318,7 +355,7 @@ const commentSlice = createSlice({
 });
 
 // export reducer function
-export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket, deleteCommentOptimistic } = commentSlice.actions;
+export const { openCommentModal, closeCommentModal, addCommentOptimistic, addCommentFromSocket, addReplyOptimistic, addReplyFromSocket, deleteCommentOptimistic, likeUnlikeComment } = commentSlice.actions;
 
 // export commentSlice reducer
 export default commentSlice.reducer;
