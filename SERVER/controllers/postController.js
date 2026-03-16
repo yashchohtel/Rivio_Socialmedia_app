@@ -493,128 +493,6 @@ export const commentOnPost = async (req, res, next) => {
 
 };
 
-// GET COMMENTS OF POST
-export const getCommentsForPost = async (req, res, next) => {
-
-    // Extract user ID from request
-    const userId = req.user.id;
-
-    // get postId
-    const postId = req.params.postId;
-
-    // validate post exists (optional but useful)
-    const post = await Post.findById(postId).select("_id");
-    if (!post) return next(new ErrorHandler("Post not found", 404));
-
-    // find the comment and populate user and replies user data, sort by newest first
-    const comments = await Comment.find({ post: postId })
-        .sort({ createdAt: -1 })
-        .populate("user", "username fullName profileImage email isVerified isPrivate followers following posts bookmarks")
-        .populate({
-            path: "replies.repliedBy",
-            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
-        })
-        .populate({
-            path: "replies.repliedTo",
-            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
-        });
-
-    // map to a lighter payload: include counts and populated user objects
-    const mapped = comments.map((c) => {
-
-        // optimize user data for main comment user 
-        const optimizedUser = c.user ? {
-            id: c.user._id,
-            username: c.user.username,
-            fullName: c.user.fullName,
-            profileImage: c.user.profileImage || null,
-            isVerified: c.user.isVerified,
-            isPrivate: c.user.isPrivate,
-
-            followersCount: c.user.followers?.length || 0,
-            followingCount: c.user.following?.length || 0,
-            postsCount: c.user.posts?.length || 0,
-            bookmarksCount: c.user.bookmarks?.length || 0,
-        } : null;
-
-        // is comment liked by the current user
-        const isCommentLikedByMe = c.likes?.some(id => id.toString() === userId);
-
-        return {
-
-            _id: c._id, // comment id
-            post: c.post, // post id
-            text: c.text, // comment text
-            user: optimizedUser, // comment user (optimized)
-            repliesCount: Array.isArray(c.replies) ? c.replies.length : 0, // replies count
-            likesCount: Array.isArray(c.likes) ? c.likes.length : 0, // likes count of main comment
-            isLikedByMe: isCommentLikedByMe, // comment like/not liked flag
-
-            replies: (c.replies || []).map(r => {
-
-                // optimize user data for reply's repliedBy user
-                const repliedBy = r.repliedBy ? {
-                    id: r.repliedBy._id,
-                    username: r.repliedBy.username,
-                    fullName: r.repliedBy.fullName,
-                    email: r.repliedBy?.email || null,
-                    profileImage: r.repliedBy.profileImage || null,
-                    isVerified: r.repliedBy.isVerified,
-                    isPrivate: r.repliedBy.isPrivate,
-
-                    followersCount: r.repliedBy.followers?.length || 0,
-                    followingCount: r.repliedBy.following?.length || 0,
-                    postsCount: r.repliedBy.posts?.length || 0,
-                    bookmarksCount: r.repliedBy.bookmarks?.length || 0,
-                } : null;
-
-                // optimize user data for reply's repliedTo user
-                const repliedTo = r.repliedTo ? {
-                    id: r.repliedTo._id,
-                    username: r.repliedTo.username,
-                    fullName: r.repliedTo.fullName,
-                    email: r.repliedTo?.email || null,
-                    profileImage: r.repliedTo.profileImage || null,
-                    isVerified: r.repliedTo.isVerified,
-                    isPrivate: r.repliedTo.isPrivate,
-
-                    followersCount: r.repliedTo.followers?.length || 0,
-                    followingCount: r.repliedTo.following?.length || 0,
-                    postsCount: r.repliedTo.posts?.length || 0,
-                    bookmarksCount: r.repliedTo.bookmarks?.length || 0,
-                } : null;
-
-                // is comment liked by the current user 
-                const isReplyLikedByMe = r.likes?.some(id => id.toString() === userId.toString());
-
-                return {
-                    _id: r._id, // reply id
-                    repliedBy: repliedBy,
-                    repliedTo: repliedTo,
-                    text: r.text, // reply text
-                    likesCount: Array.isArray(r.likes) ? r.likes.length : 0, // likes count of reply
-                    isLikedByMe: isReplyLikedByMe, // reply like/not liked flag
-                    createdAt: r.createdAt, // timestamp of reply
-
-                };
-            }),
-
-            createdAt: c.createdAt, // timestamp of main comment
-            updatedAt: c.updatedAt // timestamp of main comment
-        };
-
-    });
-
-    // return response
-    return res.status(200).json({
-        success: true,
-        postId,
-        count: mapped.length,
-        comments: mapped
-    });
-
-}
-
 // REPLAY ON COMMENT
 export const replyOnComment = async (req, res, next) => {
 
@@ -809,6 +687,8 @@ export const likeCommentAndReplay = async (req, res, next) => {
             .select("replies._id replies.likes");
         const freshReply = fresh.replies.id(replyId);
 
+        // send notification
+
         // return response
         return res.status(200).json({
             success: true,
@@ -822,7 +702,7 @@ export const likeCommentAndReplay = async (req, res, next) => {
     }
 
     // Otherwise operate on the main comment 
-    const comment = await Comment.findById(commentId).select("likes");
+    const comment = await Comment.findById(commentId).select("likes user post");
     if (!comment) return next(new ErrorHandler("Comment not found", 404));
 
     // is already liked
@@ -844,6 +724,19 @@ export const likeCommentAndReplay = async (req, res, next) => {
             { $addToSet: { likes: userId } }
         );
 
+        // send notification to the comment owner
+        if (comment.user.toString() !== userId.toString()) {
+
+            await sendNotification(
+                comment.user, // recipient (comment owner)
+                userId,  // who like's the comment
+                "COMMENT_LIKE", // type
+                comment.post, // posdId
+                comment._id // comment id 
+            );
+
+        }
+
     }
 
     // fresh count
@@ -858,7 +751,129 @@ export const likeCommentAndReplay = async (req, res, next) => {
         commentId
     });
 
-}
+};
+
+// GET COMMENTS OF POST
+export const getCommentsForPost = async (req, res, next) => {
+
+    // Extract user ID from request
+    const userId = req.user.id;
+
+    // get postId
+    const postId = req.params.postId;
+
+    // validate post exists (optional but useful)
+    const post = await Post.findById(postId).select("_id");
+    if (!post) return next(new ErrorHandler("Post not found", 404));
+
+    // find the comment and populate user and replies user data, sort by newest first
+    const comments = await Comment.find({ post: postId })
+        .sort({ createdAt: -1 })
+        .populate("user", "username fullName profileImage email isVerified isPrivate followers following posts bookmarks")
+        .populate({
+            path: "replies.repliedBy",
+            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
+        })
+        .populate({
+            path: "replies.repliedTo",
+            select: "username fullName profileImage email isVerified isPrivate followers following posts bookmarks"
+        });
+
+    // map to a lighter payload: include counts and populated user objects
+    const mapped = comments.map((c) => {
+
+        // optimize user data for main comment user 
+        const optimizedUser = c.user ? {
+            id: c.user._id,
+            username: c.user.username,
+            fullName: c.user.fullName,
+            profileImage: c.user.profileImage || null,
+            isVerified: c.user.isVerified,
+            isPrivate: c.user.isPrivate,
+
+            followersCount: c.user.followers?.length || 0,
+            followingCount: c.user.following?.length || 0,
+            postsCount: c.user.posts?.length || 0,
+            bookmarksCount: c.user.bookmarks?.length || 0,
+        } : null;
+
+        // is comment liked by the current user
+        const isCommentLikedByMe = c.likes?.some(id => id.toString() === userId);
+
+        return {
+
+            _id: c._id, // comment id
+            post: c.post, // post id
+            text: c.text, // comment text
+            user: optimizedUser, // comment user (optimized)
+            repliesCount: Array.isArray(c.replies) ? c.replies.length : 0, // replies count
+            likesCount: Array.isArray(c.likes) ? c.likes.length : 0, // likes count of main comment
+            isLikedByMe: isCommentLikedByMe, // comment like/not liked flag
+
+            replies: (c.replies || []).map(r => {
+
+                // optimize user data for reply's repliedBy user
+                const repliedBy = r.repliedBy ? {
+                    id: r.repliedBy._id,
+                    username: r.repliedBy.username,
+                    fullName: r.repliedBy.fullName,
+                    email: r.repliedBy?.email || null,
+                    profileImage: r.repliedBy.profileImage || null,
+                    isVerified: r.repliedBy.isVerified,
+                    isPrivate: r.repliedBy.isPrivate,
+
+                    followersCount: r.repliedBy.followers?.length || 0,
+                    followingCount: r.repliedBy.following?.length || 0,
+                    postsCount: r.repliedBy.posts?.length || 0,
+                    bookmarksCount: r.repliedBy.bookmarks?.length || 0,
+                } : null;
+
+                // optimize user data for reply's repliedTo user
+                const repliedTo = r.repliedTo ? {
+                    id: r.repliedTo._id,
+                    username: r.repliedTo.username,
+                    fullName: r.repliedTo.fullName,
+                    email: r.repliedTo?.email || null,
+                    profileImage: r.repliedTo.profileImage || null,
+                    isVerified: r.repliedTo.isVerified,
+                    isPrivate: r.repliedTo.isPrivate,
+
+                    followersCount: r.repliedTo.followers?.length || 0,
+                    followingCount: r.repliedTo.following?.length || 0,
+                    postsCount: r.repliedTo.posts?.length || 0,
+                    bookmarksCount: r.repliedTo.bookmarks?.length || 0,
+                } : null;
+
+                // is comment liked by the current user 
+                const isReplyLikedByMe = r.likes?.some(id => id.toString() === userId.toString());
+
+                return {
+                    _id: r._id, // reply id
+                    repliedBy: repliedBy,
+                    repliedTo: repliedTo,
+                    text: r.text, // reply text
+                    likesCount: Array.isArray(r.likes) ? r.likes.length : 0, // likes count of reply
+                    isLikedByMe: isReplyLikedByMe, // reply like/not liked flag
+                    createdAt: r.createdAt, // timestamp of reply
+
+                };
+            }),
+
+            createdAt: c.createdAt, // timestamp of main comment
+            updatedAt: c.updatedAt // timestamp of main comment
+        };
+
+    });
+
+    // return response
+    return res.status(200).json({
+        success: true,
+        postId,
+        count: mapped.length,
+        comments: mapped
+    });
+
+};
 
 // DELETE COMMENT AND REPLY
 export const deleteCommentOrReply = async (req, res, next) => {

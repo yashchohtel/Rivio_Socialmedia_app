@@ -88,6 +88,13 @@ function App() {
         })
       }
 
+      if (notification.type === "COMMENT_LIKE") {
+        // toast notification
+        toast(`New notification ${notification.type}`, {
+          className: "custom-toast",
+        })
+      }
+
     });
 
     return () => {
