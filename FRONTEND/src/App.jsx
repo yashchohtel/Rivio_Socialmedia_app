@@ -95,6 +95,13 @@ function App() {
         })
       }
 
+      if (notification.type === "REPLY_LIKE") {
+        // toast notification
+        toast(`New notification ${notification.type}`, {
+          className: "custom-toast",
+        })
+      }
+
     });
 
     return () => {

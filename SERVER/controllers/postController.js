@@ -657,7 +657,7 @@ export const likeCommentAndReplay = async (req, res, next) => {
 
         // load only that reply (min fields)
         const comment = await Comment.findOne({ _id: commentId, "replies._id": replyId })
-            .select("replies._id replies.likes");
+            .select("replies._id replies.likes replies.repliedBy post");
 
         if (!comment) return next(new ErrorHandler("Comment or reply not found", 404));
 
@@ -680,14 +680,24 @@ export const likeCommentAndReplay = async (req, res, next) => {
                 { $addToSet: { "replies.$.likes": userId } }
             );
 
+            // send notification to reply owner
+            if (reply.repliedBy.toString() !== userId.toString()) {
+                await sendNotification(
+                    reply.repliedBy, // recipient (reply owner)
+                    userId,          // sender (who liked the reply)
+                    "REPLY_LIKE",    // type
+                    comment.post,    // postId
+                    commentId,       // commentId
+                    replyId          // replyId
+                );
+            }
+
         }
 
         // fetch fresh like count for that reply
         const fresh = await Comment.findOne({ _id: commentId, "replies._id": replyId })
             .select("replies._id replies.likes");
         const freshReply = fresh.replies.id(replyId);
-
-        // send notification
 
         // return response
         return res.status(200).json({
