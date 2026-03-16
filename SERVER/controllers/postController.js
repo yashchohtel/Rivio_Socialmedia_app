@@ -819,8 +819,6 @@ export const likeCommentAndReplay = async (req, res, next) => {
             commentId: commentId
         });
 
-        // notification system will be added soon
-
     }
 
     // Otherwise operate on the main comment 
