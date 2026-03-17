@@ -672,6 +672,16 @@ export const likeCommentAndReplay = async (req, res, next) => {
                 { $pull: { "replies.$.likes": userId } }
             );
 
+            // delete notification from db is not read yet.
+            await deleteNotification(
+                reply.repliedBy, // recipient (reply owner)
+                userId,          // sender 
+                "REPLY_LIKE",    // type
+                comment.post,    // postId
+                commentId,       // commentId
+                replyId          // replyId
+            );
+
         } else {
 
             // like: addToSet userId into replies.$.likes
@@ -725,6 +735,17 @@ export const likeCommentAndReplay = async (req, res, next) => {
             { _id: commentId },
             { $pull: { likes: userId } }
         );
+
+        // delete notificaion from db is not read yet
+        await deleteNotification(
+            comment.user,    // recipient (comment owner)
+            userId,          // who like's the comment
+            "COMMENT_LIKE",  // type
+            comment.post,    // posdId
+            comment._id      // comment id 
+        );
+
+
 
     } else {
 

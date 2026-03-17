@@ -7,8 +7,8 @@ import { addCommentOptimistic, addReplyOptimistic } from '../../../features/comm
 import { addComment, replyOnComment } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
-const WriteComment = ({ postId, replyContext, setReplyContext }) => {
-    
+const WriteComment = ({ postId, replyContext, setReplyContext, scrollToTop }) => {
+
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
@@ -115,6 +115,9 @@ const WriteComment = ({ postId, replyContext, setReplyContext }) => {
                 tempComment
             }));
 
+            // scroll comment box on the top
+            scrollToTop();
+
             // STEP 2: increase comment count optimisticly
             dispatch(updatePostCommentsCount({
                 postId,
@@ -143,7 +146,7 @@ const WriteComment = ({ postId, replyContext, setReplyContext }) => {
             }
 
             // return if text to send is empty
-            if(!textToSend) return;
+            if (!textToSend) return;
 
             // create temperory reply object
             const tempReply = {

@@ -4,7 +4,7 @@ import CommentSkeleton from '../../Skeletons/CommentSkeleton/CommentSkeleton'
 import { useSelector } from 'react-redux';
 import CommentItem from './CommentItem';
 
-const CommentBox = ({ activePostId, setReplyContext }) => {
+const CommentBox = ({ activePostId, setReplyContext}) => {
 
   // Get comment initial state from Redux store
   const { commentLoading } = useSelector((state) => state.comment);

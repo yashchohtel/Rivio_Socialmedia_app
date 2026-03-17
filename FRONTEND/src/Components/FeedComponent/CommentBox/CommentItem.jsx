@@ -92,7 +92,7 @@ const CommentItem = ({ comment, setReplyContext }) => {
         setTriggerAnimation(true);
 
         // like unlike comment
-        dispatch(likeUnlikeComment({postId, commentId}))
+        dispatch(likeUnlikeComment({ postId, commentId }))
 
     }
 

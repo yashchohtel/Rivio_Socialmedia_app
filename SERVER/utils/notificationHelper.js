@@ -7,14 +7,14 @@ export const sendNotification = async (recipientId, senderId, type, postId = nul
 
     try {
 
-        console.log("create noti")
-        log("recipientId: " + recipientId);
-        log("senderId: " + senderId);
-        log("type: " + type)
-        log("postId: " + postId)
-        log("commentId: " + commentId)
-        log("replyId: " + replyId)
-        console.log("____________________")
+        // console.log("create noti")
+        // log("recipientId: " + recipientId);
+        // log("senderId: " + senderId);
+        // log("type: " + type)
+        // log("postId: " + postId)
+        // log("commentId: " + commentId)
+        // log("replyId: " + replyId)
+        // console.log("____________________")
 
         // Create a new notification document in the database
         const notification = await Notification.create({
@@ -46,14 +46,14 @@ export const deleteNotification = async (recipientId, senderId, type, postId = n
 
     try {
 
-        // console.log("delete noti")
-        // log("recipientId: " + recipientId);
-        // log("senderId: " + senderId);
-        // log("type: " + type)
-        // log("postId: " + postId)
-        // log("commentId: " + commentId)
-        // log("replyId: " + replyId)
-        // console.log("____________________")
+        console.log("delete noti")
+        log("recipientId: " + recipientId);
+        log("senderId: " + senderId);
+        log("type: " + type)
+        log("postId: " + postId)
+        log("commentId: " + commentId)
+        log("replyId: " + replyId)
+        console.log("____________________")
 
         await Notification.findOneAndDelete({
             recipient: recipientId,
@@ -62,6 +62,7 @@ export const deleteNotification = async (recipientId, senderId, type, postId = n
             post: postId,
             comment: commentId,
             reply: replyId,
+            isRead: false,
         });
 
     } catch (error) {

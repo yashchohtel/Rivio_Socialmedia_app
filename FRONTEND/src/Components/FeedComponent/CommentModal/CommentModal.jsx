@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import './commentModal.css'
 import { closeCommentModal } from '../../../features/comment/commentSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,11 +58,22 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
     // state to store replay content usefull for replay feature getting data from comment box and sending it to write comment 
     const [replyContext, setReplyContext] = useState({
-        commentId: null,      // comment replay
+        commentId: null,         // comment replay
         repliedToUserData: null, // replied to user data
-        replyId: null,        // reply id (only for reply on reply)
+        replyId: null,           // reply id (only for reply on reply)
     });
-    
+
+    /* -------------------------------------- */
+
+    // refrence of caption and comments fox
+    const captionAndCommentsRef = useRef(null);
+
+    // functin to scroll captionAndComments to top when commed aded
+    const scrollToTop = () => {
+        captionAndCommentsRef.current.scrollTo({ top: 0, behavior: "smooth" });
+        console.log(captionAndCommentsRef.current);
+    }
+
     /* -------------------------------------- */
 
     // effect to load comments for active post id when comment modal opens
@@ -113,7 +124,10 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                         </div>
 
                         {/* caption and comments */}
-                        <div className="captionAndComments">
+                        <div
+                            className="captionAndComments"
+                            ref={captionAndCommentsRef}
+                        >
 
                             {/* caption component */}
                             {caption && (
@@ -165,6 +179,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 postId={_id} // active post id for writing comment
                                 replyContext={replyContext} // replay context to reply on comments
                                 setReplyContext={setReplyContext} // set reply context
+                                scrollToTop={scrollToTop} // scroll to top when commend added
                             />
 
                         </div>
