@@ -66,7 +66,7 @@ const ReplayItem = ({ reply, setReplyContext, commentId, handleDeleteClick, logg
     <>
 
       {/* comment item */}
-      <li className="commentItem">
+      <li className="commentItem replyItem">
 
         {/* comment item profile image */}
         <div className="commentItemProfileImg">

@@ -197,7 +197,6 @@ const commentSlice = createSlice({
                     postComments.comments[index] = comment;
                 }
 
-
             })
             .addCase(addComment.rejected, (state, action) => {
 

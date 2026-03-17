@@ -7,7 +7,7 @@ import { addCommentOptimistic, addReplyOptimistic } from '../../../features/comm
 import { addComment, replyOnComment } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 
-const WriteComment = ({ postId, replyContext, setReplyContext, scrollToTop }) => {
+const WriteComment = ({ postId, replyContext, setReplyContext, scrollToTop, highlightComment }) => {
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
@@ -106,17 +106,20 @@ const WriteComment = ({ postId, replyContext, setReplyContext, scrollToTop }) =>
                 text: value,
                 createdAt: new Date().toISOString(),
                 user: currentUser,
-                isOptimistic: true
+                isOptimistic: true,
             };
 
             // STEP 1: optimistic update
             dispatch(addCommentOptimistic({
                 postId: postId,
-                tempComment
+                tempComment,
             }));
 
             // scroll comment box on the top
             scrollToTop();
+
+            // highlight first comment
+            highlightComment();
 
             // STEP 2: increase comment count optimisticly
             dispatch(updatePostCommentsCount({

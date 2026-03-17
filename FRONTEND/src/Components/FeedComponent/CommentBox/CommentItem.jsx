@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './commentBox.css'
 import { useNavigate } from 'react-router-dom';
 import { timeAgo } from '../../../utility/postCardUtility';
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
 import { likeUnlikeComment } from '../../../features/comment/commentThunk';
 
-const CommentItem = ({ comment, setReplyContext }) => {
+const CommentItem = ({ comment, setReplyContext, isNew }) => {
 
     // console.log(comment);
 
@@ -103,7 +103,7 @@ const CommentItem = ({ comment, setReplyContext }) => {
         <>
 
             {/* comment item */}
-            <li className="commentItem">
+            <li className={`commentItem ${isNew ? "newComment" : ""}`}>
 
                 {/* comment item profile image */}
                 <div className="commentItemProfileImg"

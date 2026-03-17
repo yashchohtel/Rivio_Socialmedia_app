@@ -24,6 +24,12 @@
   margin-bottom: 2rem;
   display: flex;
   gap: 1.2rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.replyItem {
+  padding: 0;
 }
 
 /* comment item profile image */
@@ -193,6 +199,20 @@
 
 .commentItemContent .commentItemFooter .deleteButton:hover {
   transform: scale(1.1);
+}
+
+/* comment item new comment effect */
+@keyframes commentHighlight {
+  0% {
+    background-color: var(--bg-eight);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.newComment {
+  animation: commentHighlight 1.5s ease-out forwards;
 }
 
 /* comment item replay ----------------------------------------------------- */

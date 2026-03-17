@@ -4,7 +4,7 @@ import CommentSkeleton from '../../Skeletons/CommentSkeleton/CommentSkeleton'
 import { useSelector } from 'react-redux';
 import CommentItem from './CommentItem';
 
-const CommentBox = ({ activePostId, setReplyContext}) => {
+const CommentBox = ({ activePostId, setReplyContext, highlightFirst}) => {
 
   // Get comment initial state from Redux store
   const { commentLoading } = useSelector((state) => state.comment);
@@ -42,12 +42,13 @@ const CommentBox = ({ activePostId, setReplyContext}) => {
         <ul className="CommentItemContainer">
 
           {/* show comment items if comment loading is false */}
-          {!commentLoading && comments.map((comment) => (
+          {!commentLoading && comments.map((comment, index) => (
 
             <CommentItem
               key={comment._id} // kye
               comment={comment} // comment data
               setReplyContext={setReplyContext} // to set replay context 
+              isNew={index === 0 && highlightFirst}
             />
 
           ))}

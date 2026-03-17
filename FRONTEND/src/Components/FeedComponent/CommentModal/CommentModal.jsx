@@ -71,7 +71,19 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
     // functin to scroll captionAndComments to top when commed aded
     const scrollToTop = () => {
         captionAndCommentsRef.current.scrollTo({ top: 0, behavior: "smooth" });
-        console.log(captionAndCommentsRef.current);
+    }
+
+    /* -------------------------------------- */
+
+    // state to store highlight status
+    const [highlightFirst, setHighlightFirst] = useState(false);
+
+    console.log(highlightFirst);
+    
+    // function to make first newly comment added highlight
+    const highlightComment = () => {
+        setHighlightFirst(true);
+        setTimeout(() => setHighlightFirst(false), 1500);
     }
 
     /* -------------------------------------- */
@@ -150,6 +162,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 <CommentBox
                                     activePostId={activePostId} // acctive post id for comment
                                     setReplyContext={setReplyContext} // to set replay context
+                                    highlightFirst={highlightFirst} // to hightlight first new added comment
                                 />
 
                             </div>
@@ -180,6 +193,7 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 replyContext={replyContext} // replay context to reply on comments
                                 setReplyContext={setReplyContext} // set reply context
                                 scrollToTop={scrollToTop} // scroll to top when commend added
+                                highlightComment={highlightComment} // funcion to make first comment hight light
                             />
 
                         </div>
