@@ -4,14 +4,14 @@ import CommentSkeleton from '../../Skeletons/CommentSkeleton/CommentSkeleton'
 import { useSelector } from 'react-redux';
 import CommentItem from './CommentItem';
 
-const CommentBox = ({ activePostId, setReplyContext, highlightFirst}) => {
+const CommentBox = ({ activePostId, setReplyContext, highlightFirst }) => {
 
   // Get comment initial state from Redux store
   const { commentLoading } = useSelector((state) => state.comment);
 
   // get active post id and comment modal open status from redux store
   const comments = useSelector(state => state.comment.commentsByPostId[activePostId]?.comments) || [];
-  
+
   return (
 
     <>
@@ -48,7 +48,8 @@ const CommentBox = ({ activePostId, setReplyContext, highlightFirst}) => {
               key={comment._id} // kye
               comment={comment} // comment data
               setReplyContext={setReplyContext} // to set replay context 
-              isNew={index === 0 && highlightFirst}
+              // isNew={index === 0 && highlightFirst} 
+              isNew={index === 0 && highlightFirst && comment.isOptimistic}
             />
 
           ))}
