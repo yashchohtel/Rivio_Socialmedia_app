@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/errorHandler.js"; // Import custom error hand
 import { sendToken } from "../utils/sendJwtToken.js"; // Import function to send JWT token
 import fs from "fs"; // Import file system module
 import cloudinary from "../config/cloudinary.js"; // Import Cloudinary configuration
-import mongoose from "mongoose";
 
 // REGISTRATION 
 export const registerUser = async (req, res, next) => {
