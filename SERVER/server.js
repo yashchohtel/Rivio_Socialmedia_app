@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"; // Import cookie-parser middleware
 import postRouter from "./routes/postRoutes.js"; // Import post routes
 import userRouter from "./routes/userRoutes.js"; // Import user routes
 import chatRoutes from "./routes/chatsRoutes.js"; // Import chats routes
+import notificationRouter from "./routes/notificationRoutes.js"; // import notification router
 import cors from "cors"; // Middleware to enable CORS (Cross-Origin Resource Sharing)
 import { createServer } from "http"; // Import createServer function from HTTP module to create an HTTP server
 import { initializeSocket } from "./socket/socket.js"; // Import function to initialize Socket.IO
@@ -52,6 +53,9 @@ app.use("/api/posts", postRouter); // Use postRouter for handling post-related r
 
 // post routes `/api/chats`
 app.use("/api/chats", chatRoutes); // Use chatRoutes for handling chats-related routes
+
+// notification routes `/api/notifications`
+app.use("/api/notifications", notificationRouter); // Use notificationRouter for handling notification-related routes
 
 // -------------------- ERROR MIDDLEWARE -------------------- //
 
