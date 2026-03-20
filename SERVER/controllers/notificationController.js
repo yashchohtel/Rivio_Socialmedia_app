@@ -1,3 +1,4 @@
+import { log } from "console";
 import Notification from "../models/notificationModal/notificationModal.js"; // import notification modal
 import User from "../models/profileModel/userModel.js"; // Import User model
 import ErrorHandler from "../utils/errorHandler.js"; // Import custom error handler
@@ -11,60 +12,82 @@ export const getAllNotifications = async (req, res, next) => {
     // find notification of the loggedin user shorted by latest first
     const notifications = await Notification.find({ recipient: userId })
         .sort({ createdAt: -1 })
-        .populate("recipient", "username fullName profileImage isVerified isPrivate followers following posts bookmarks")
         .populate("sender", "username fullName profileImage isVerified isPrivate followers following posts bookmarks")
-        .populate("post", "images")
+        .populate("post", "media")
         .populate("comment", "text replies")
 
-
     // optimized notifications
-    const optimizedNotificationData = notifications.map(notification => ({
+    const optimizedNotificationData = notifications.map((notification) => {
 
-        _id: notification._id, // notificatio id
-        type: notification.type, // notification type
+        // finding reply data if exist
+        let replyData = null;
+        if (notification.comment && notification.reply) {
 
-        // optimized recipient user object for response
-        recipient: {
-            id: notification.recipient._id,
-            username: notification.recipient.username,
-            fullName: notification.recipient.fullName,
-            profileImage: notification.recipient.profileImage || null,
-            isVerified: notification.recipient.isVerified,
-            isPrivate: notification.recipient.isPrivate,
+            const foundReply = notification.comment.replies?.find((r) => (
+                r._id.equals(notification.reply)
+            ));
 
-            followersCount: notification.recipient.followers?.length || 0,
-            followingCount: notification.recipient.following?.length || 0,
-            postsCount: notification.recipient.posts?.length || 0,
-            bookmarksCount: notification.recipient.bookmarks?.length || 0,
-        },
+            replyData = foundReply ? {
+                id: foundReply._id,
+                replyText: foundReply.text || null,
+            } : null;
 
-        // optimized sender user object for response
-        sender: {
-            id: notification.sender._id,
-            username: notification.sender.username,
-            fullName: notification.sender.fullName,
-            profileImage: notification.sender.profileImage || null,
-            isVerified: notification.sender.isVerified,
-            isPrivate: notification.sender.isPrivate,
+        }
 
-            followersCount: notification.sender.followers?.length || 0,
-            followingCount: notification.sender.following?.length || 0,
-            postsCount: notification.sender.posts?.length || 0,
-            bookmarksCount: notification.sender.bookmarks?.length || 0,
+        // return optimized notification object
+        return {
 
-        },
+            _id: notification._id, // notificatio id
+            type: notification.type, // notification type
 
-        comment: notification.comment?.text, // comment text
-        post: notification.post?._id, // post id on which comment id made
-        isRead: notification.isRead, // is read flag
-        createdAt: notification.createdAt, // created
-    }))
+            // optimized sender user object for response (recipient is not included his datais alrady in frontend)
+            sender: {
+                id: notification.sender._id,
+                username: notification.sender.username,
+                fullName: notification.sender.fullName,
+                profileImage: notification.sender.profileImage || null,
+                isVerified: notification.sender.isVerified,
+                isPrivate: notification.sender.isPrivate,
 
+                followersCount: notification.sender.followers?.length || 0,
+                followingCount: notification.sender.following?.length || 0,
+                postsCount: notification.sender.posts?.length || 0,
+                bookmarksCount: notification.sender.bookmarks?.length || 0,
+
+            },
+
+            // post data
+            post: notification.post ? {
+                id: notification.post?._id, // post id on which comment id made
+                thumbnail: notification.post.media?.[0]?.url || null, // first image url of media for thumbnail
+            } : null,
+
+            // comment data
+            comment: notification.comment ? {
+                id: notification.comment?._id, // comment id
+                commentText: notification.comment?.text || null, // comment text
+            } : null,
+
+            // reply data
+            reply: replyData,
+
+            isRead: notification.isRead, // is read flag
+            createdAt: notification.createdAt, // created
+
+        }
+
+    })
+
+    // mark all notificaion as read
+    await Notification.updateMany(
+        { recipient: userId, isRead: false },
+        { $set: { isRead: true } }
+    );
 
     // return response
     return res.status(200).json({
-        userId,
-        notifications
+        success: true,
+        optimizedNotificationData
     });
 
-}
+};
