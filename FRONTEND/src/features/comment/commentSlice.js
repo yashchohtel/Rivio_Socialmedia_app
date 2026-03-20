@@ -10,7 +10,7 @@ const initialState = {
     commentsByPostId: {} // to store comments for each post, key is post id and value is array of comments
 };
 
-// creating slice for auth
+// creating slice for comment
 const commentSlice = createSlice({
 
     // name of the slice

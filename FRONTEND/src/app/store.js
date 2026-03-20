@@ -3,6 +3,7 @@ import authReducer from '../features/auth/authSlice.js';
 import postReducer from '../features/posts/postSlice.js';
 import commentReducer from '../features/comment/commentSlice.js';
 import confirmReducer from '../features/confirmation/confirmationSlice.js';
+import notificationReducer from '../features/notification/notificationSlice.js'
 
 // configure store with 
 const store = configureStore({
@@ -21,6 +22,9 @@ const store = configureStore({
 
         // confirm reducer
         confirm: confirmReducer,
+
+        // notification reducer
+        notification: notificationReducer,
 
     },
 

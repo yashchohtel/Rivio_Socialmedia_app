@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 
