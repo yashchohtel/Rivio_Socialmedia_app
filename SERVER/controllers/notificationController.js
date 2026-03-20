@@ -1,6 +1,4 @@
-import { log } from "console";
 import Notification from "../models/notificationModal/notificationModal.js"; // import notification modal
-import User from "../models/profileModel/userModel.js"; // Import User model
 import ErrorHandler from "../utils/errorHandler.js"; // Import custom error handler
 
 // GET ALL NOTIFICAION
@@ -88,6 +86,47 @@ export const getAllNotifications = async (req, res, next) => {
     return res.status(200).json({
         success: true,
         optimizedNotificationData
+    });
+
+};
+
+// DELETE SINGLE NOTIFICATION
+export const deleteNotification = async (req, res, next) => {
+
+    // getting user id
+    const userId = req.user.id;
+
+    // getting notificaion id
+    const notificationId = req.params.notificationId;
+
+    // finding notificaion and deleting
+    const notification = await Notification.findOneAndDelete({
+        _id: notificationId,
+        recipient: userId  // security — only owner can delete notification
+    });
+    if (!notification) return next(new ErrorHandler("Notification not found", 404));
+
+    // return response
+    return res.status(200).json({
+        success: true,
+        message: "Notification deleted",
+    });
+
+};
+
+// DELETE ALL NOTIFICATIONS
+export const deleteAllNotifications = async (req, res, next) => {
+
+    // getting user id
+    const userId = req.user.id;
+
+    // delete all notificions related to user
+    await Notification.deleteMany({ recipient: userId });
+
+    // return response
+    return res.status(200).json({
+        success: true,
+        message: "All notifications deleted",
     });
 
 };
