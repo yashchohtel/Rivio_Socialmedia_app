@@ -25,6 +25,11 @@ const SideNavBar = (props) => {
     // getting user data from redux store
     const { user } = useSelector((state) => state.auth);
 
+    // getting unreadCount from notificaion store
+    const { unreadCount } = useSelector((state) => state.notification);
+
+    console.log(unreadCount);
+
     /* -------------------------------------- */
 
     return (
@@ -48,7 +53,7 @@ const SideNavBar = (props) => {
                     </div>
 
                     {/* navigation links */}
-                    <div className="navigationLinks">
+                    <div className={`navigationLinks ${isSidebarCollapsed ? "maxContentWidth" : ""}`}>
 
                         {/* home */}
                         <Link to="/app"
@@ -116,11 +121,21 @@ const SideNavBar = (props) => {
                         {/* Notification */}
                         <div
                             className={`linkContainer notification ${activeItem === "notification" ? "active" : ""}`}
-                            onClick={() => {
-                                handleModalLinkClick("notification")
-                            }}
+                            onClick={() => { handleModalLinkClick("notification") }}
                         >
-                            <span className="icon"> {activeItem === "notification" ? <FaHeart /> : <FaRegHeart />} </span>
+                            <span className="icon">
+
+                                {/* icon according to condition */}
+                                {activeItem === "notification" ? <FaHeart /> : <FaRegHeart />}
+
+                                {/* element count */}
+                                {unreadCount > 0 && (
+                                    <div className="elementCount">
+                                        <span className="count"> {unreadCount} </span>
+                                    </div>
+                                )}
+
+                            </span>
 
                             {!isSidebarCollapsed && (
                                 <span className={`name ${activeItem === "notification" ? "active" : ""}`}> Notifications </span>
@@ -173,6 +188,7 @@ const SideNavBar = (props) => {
                 {/* more option container */}
                 <div
                     className={`linkContainer optionContainer ${activeItem === "more" ? "active" : ""}`}
+                    style={{ width: isSidebarCollapsed ? "max-content" : "" }}
                     onClick={() => {
                         handleModalLinkClick("more")
                         handleSBExpande();

@@ -6,11 +6,18 @@ import SearchModal from '../Components/Modal Component/SearchModal/SearchModal';
 import NotificationModal from '../Components/Modal Component/NotificationModal/NotificationModal';
 import CreatePostModal from '../Components/Modal Component/CreatePostModal/CreatePostModal';
 import GlobalDeleteConfirmation from '../Components/Modal Component/GlobalDeleteConfirmation/GlobalDeleteConfirmation';
+import { getAllNotifications } from '../features/notification/notificationThunk';
+import { useDispatch } from 'react-redux';
 
 const MainLayout = () => {
 
     // initilize useLocation 
     const location = useLocation();
+
+    /* -------------------------------------- */
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
 
     /* -------------------------------------- */
 
@@ -118,8 +125,12 @@ const MainLayout = () => {
 
     /* -------------------------------------- */
 
-    // global delete confirmation
-
+    // effect to load notification related to user
+    useEffect(() => {
+        if (activeModal === 'notification') {
+            dispatch(getAllNotifications());
+        }
+    }, [activeModal]);
 
     /* -------------------------------------- */
 

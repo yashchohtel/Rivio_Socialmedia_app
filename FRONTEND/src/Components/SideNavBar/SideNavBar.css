@@ -61,6 +61,11 @@
   cursor: pointer;
 }
 
+/* to set width max content when side bar is collapsed */
+.navigationLinks.maxContentWidth .linkContainer {
+  width: max-content;
+}
+
 .sidebar .linkContainer.active {
   background-color: var(--hover-primary);
 }
@@ -78,6 +83,7 @@
   height: 3rem;
   width: 3rem;
   font-size: 2.4rem;
+  position: relative;
 }
 
 /* .sidebar .message .icon,  */
@@ -108,6 +114,28 @@
 
 .sidebar .name.active {
   font-weight: 600;
+}
+
+/* notification count in icon */
+.elementCount {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  height: 1.8rem;
+  width: 1.8rem;
+  background: var(--bg-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-heading);
+}
+
+.elementCount .count {
+  font-family: var(--font-heading);
+  color: var(--text-color-2);
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 /* more option modal */
@@ -154,6 +182,7 @@
   .sidebar .linkContainer {
     align-items: center;
     justify-content: center;
+    width: max-content;
   }
 
   .sidebar .name {

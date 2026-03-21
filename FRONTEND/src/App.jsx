@@ -17,6 +17,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
 import { updatePostCommentsCount, updatePostLikes } from "./features/posts/postSlice";
 import { addCommentFromSocket, addReplyFromSocket } from "./features/comment/commentSlice";
+import { getUnreadNotificationCount } from "./features/notification/notificationThunk";
+import { incrementUnreadCount } from "./features/notification/notificationSlice";
 
 function App() {
 
@@ -25,6 +27,8 @@ function App() {
   // configure dispatch use to dispatch actions
   const dispatch = useDispatch();
 
+  /* -------------------------------------- */
+
   // Get auth loading state from Redux store
   const { authLoading, user } = useSelector((state) => state.auth);
 
@@ -32,6 +36,15 @@ function App() {
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
+
+  /* -------------------------------------- */
+
+  // effect to load unread notificaion count only if user id loggedin
+  useEffect(() => {
+    if (user) {
+      dispatch(getUnreadNotificationCount());
+    }
+  }, [user]);
 
   /* -------------------------------------- */
 
@@ -65,42 +78,11 @@ function App() {
 
     socket.on("notification", (notification) => {
 
-      // when a user likes a post
-      if (notification.type === "POST_LIKE") {
-        // toast notification
-        toast(`New notification ${notification.type}`, {
-          className: "custom-toast",
-        })
+      // notificaton toast
+      toast(`New notification ${notification.type}`, { className: "custom-toast" });
 
-      }
-
-      if (notification.type === "POST_COMMENT") {
-        // toast notification
-        toast(`New notification ${notification.type}`, {
-          className: "custom-toast",
-        })
-      }
-
-      if (notification.type === "COMMENT_REPLY") {
-        // toast notification
-        toast(`New notification ${notification.type}`, {
-          className: "custom-toast",
-        })
-      }
-
-      if (notification.type === "COMMENT_LIKE") {
-        // toast notification
-        toast(`New notification ${notification.type}`, {
-          className: "custom-toast",
-        })
-      }
-
-      if (notification.type === "REPLY_LIKE") {
-        // toast notification
-        toast(`New notification ${notification.type}`, {
-          className: "custom-toast",
-        })
-      }
+      // reducer to increase unread notificaion count
+      dispatch(incrementUnreadCount());
 
     });
 

@@ -130,3 +130,23 @@ export const deleteAllNotifications = async (req, res, next) => {
     });
 
 };
+
+// GET UNREAD NOTIFICATION COUNT
+export const getUnreadNotificationCount = async (req, res, next) => {
+
+    // get user id
+    const userId = req.user.id;
+
+    // get count of unread notificaions
+    const unreadCount = await Notification.countDocuments({
+        recipient: userId,
+        isRead: false
+    });
+
+    // return response
+    return res.status(200).json({
+        success: true,
+        unreadCount
+    });
+
+};
