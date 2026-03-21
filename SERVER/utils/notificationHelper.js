@@ -47,6 +47,15 @@ export const deleteNotification = async (recipientId, senderId, type, postId = n
             isRead: false,
         });
 
+        // emit delete notificaion event
+        if (deleted) {
+            const socketId = getSocketId(recipientId);
+            if (socketId) {
+                const io = getIO();
+                io.to(socketId).emit("notification_deleted", { type });
+            }
+        }
+
     } catch (error) {
 
         console.error("Error deleting notification:", error);

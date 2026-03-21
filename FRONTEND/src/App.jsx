@@ -18,7 +18,7 @@ import { socket } from "./socket/socket";
 import { updatePostCommentsCount, updatePostLikes } from "./features/posts/postSlice";
 import { addCommentFromSocket, addReplyFromSocket } from "./features/comment/commentSlice";
 import { getUnreadNotificationCount } from "./features/notification/notificationThunk";
-import { incrementUnreadCount } from "./features/notification/notificationSlice";
+import { decrementUnreadCount, incrementUnreadCount } from "./features/notification/notificationSlice";
 
 function App() {
 
@@ -84,6 +84,11 @@ function App() {
       // reducer to increase unread notificaion count
       dispatch(incrementUnreadCount());
 
+    });
+
+    // decrement unread count on notificaiotn delete
+    socket.on("notification_deleted", () => {
+      dispatch(decrementUnreadCount());
     });
 
     return () => {

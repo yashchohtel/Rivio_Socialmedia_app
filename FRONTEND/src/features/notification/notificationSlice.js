@@ -24,6 +24,13 @@ const notificationSlice = createSlice({
         // reducer to increment unreadCount when notificaion recivied
         incrementUnreadCount: (state) => {
             state.unreadCount += 1;
+        },
+
+        // reducer to decrement unread count when notificaion deleted
+        decrementUnreadCount: (state) => {
+            if (state.unreadCount > 0) {
+                state.unreadCount -= 1;
+            }
         }
 
     },
@@ -62,7 +69,7 @@ const notificationSlice = createSlice({
 })
 
 // export reducer function
-export const { incrementUnreadCount } = notificationSlice.actions;
+export const { incrementUnreadCount, decrementUnreadCount } = notificationSlice.actions;
 
 // export notificationSlice reducer
 export default notificationSlice.reducer;
