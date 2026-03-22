@@ -93,6 +93,7 @@ function App() {
 
     return () => {
       socket.off("notification");
+      socket.off("notification_deleted");
     };
 
   }, []);

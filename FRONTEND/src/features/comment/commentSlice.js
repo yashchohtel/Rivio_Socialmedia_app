@@ -113,7 +113,7 @@ const commentSlice = createSlice({
 
         },
 
-        // add reply from socket
+        // add real time reply data from socket
         addReplyFromSocket: (state, action) => {
 
             // extract data from action payload

@@ -37,7 +37,7 @@ export const deleteNotification = async (recipientId, senderId, type, postId = n
 
     try {
 
-        await Notification.findOneAndDelete({
+        const deleted = await Notification.findOneAndDelete({
             recipient: recipientId,
             sender: senderId,
             type,
