@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createPost, handlePostBookmark, handlePostLike, loadFeed } from "./postThunk";
+import { getCommentsForPost } from "../comment/commentThunk";
 
 // initial state for post slice
 const initialState = {
@@ -204,9 +205,24 @@ const postSlice = createSlice({
             })
             .addCase(handlePostBookmark.rejected, (state, action) => {
                 state.error = action.payload;
-            });
+            })
 
-    }
+            // TO SYNK WITH THE COMMENT COUNT
+            .addCase(getCommentsForPost.fulfilled, (state, action) => {
+
+                // get postId and actualCount
+                const { postId, actualCount } = action.payload;
+
+                // find post
+                const post = state.posts.find(p => p._id === postId);
+
+                // synk with actual coment count
+                if (post) {
+                    post.commentsCount = actualCount;
+                }
+            })
+
+}
 
 });
 

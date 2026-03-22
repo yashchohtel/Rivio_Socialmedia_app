@@ -77,8 +77,6 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
 
     // state to store highlight status
     const [highlightFirst, setHighlightFirst] = useState(false);
-
-    console.log(highlightFirst);
     
     // function to make first newly comment added highlight
     const highlightComment = () => {

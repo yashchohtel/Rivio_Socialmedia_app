@@ -15,8 +15,7 @@ import SavePosts from "./pages/SavePosts/SavePosts";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
-import { updatePostCommentsCount, updatePostLikes } from "./features/posts/postSlice";
-import { addCommentFromSocket, addReplyFromSocket } from "./features/comment/commentSlice";
+import { updatePostLikes } from "./features/posts/postSlice";
 import { getUnreadNotificationCount } from "./features/notification/notificationThunk";
 import { decrementUnreadCount, incrementUnreadCount } from "./features/notification/notificationSlice";
 
@@ -108,40 +107,6 @@ function App() {
     });
 
     return () => socket.off("post_like_update");
-
-  }, []);
-
-  // effect to emit post_comment_update on visible users feed
-  useEffect(() => {
-
-    socket.on("post_comment_update", ({ postId, comment }) => {
-
-      // update comment expect sender (sender updated by optimistic)
-      dispatch(addCommentFromSocket({ postId, comment }));
-
-      // update comment count expect sender (sender updated by optimistic)
-      dispatch(updatePostCommentsCount({ postId, incrementBy: 1 }));
-
-    });
-
-    return () => socket.off("post_comment_update");
-
-  }, []);
-
-  // effect to emit comment_reply_update on visible users feed
-  useEffect(() => {
-
-    socket.on("comment_reply_update", ({ postId, commentId, reply }) => {
-
-      // update comment expect sender (sender updated by optimistic)
-      dispatch(addReplyFromSocket({ postId, commentId, reply }));
-
-      // update comment count expect sender (sender updated by optimistic)
-      dispatch(updatePostCommentsCount({ postId, incrementBy: 1 }));
-
-    });
-
-    return () => socket.off("comment_reply_update");
 
   }, []);
 

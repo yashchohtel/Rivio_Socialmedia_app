@@ -45,7 +45,7 @@ const GlobalDeleteConfirmation = () => {
         // delete comment
         if (meta.action === "deleteComment") {
 
-            // ecrement comment count optimisticlly
+            // update comment count optimisticlly
             const totalRepliesCount = 1 + (deletedComment?.replies?.length || 0);
             dispatch(updatePostCommentsCount({ postId: meta.postId, incrementBy: -totalRepliesCount }));
 

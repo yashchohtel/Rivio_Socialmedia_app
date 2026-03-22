@@ -459,18 +459,6 @@ export const commentOnPost = async (req, res, next) => {
         updatedAt: savedComment.updatedAt  // timestamp of comment
     };
 
-    // send real time comment data update event
-    const io = getIO();
-
-    // sender socketId
-    const socketId = getSocketId(userId);
-
-    // emit event to update post comments except the sender (current user)
-    io.to(postId.toString()).except(socketId).emit("post_comment_update", {
-        postId,
-        comment: optimizedCommmentData
-    });
-
     // send notification to the post owner of comment (Don't notify if user comments on own post)
     if (post.user.toString() !== userId.toString()) {
 
@@ -584,19 +572,6 @@ export const replyOnComment = async (req, res, next) => {
         likesCount: 0, // like count (zero because new)
         createdAt: newReply.createdAt // created at timestamp
     };
-
-    // send real time comment data update event
-    const io = getIO();
-
-    // sender socketId
-    const socketId = getSocketId(userId);
-
-    // emit event to update post comments reply except the sender (current user)
-    io.to(comment.post.toString()).except(socketId).emit("comment_reply_update", {
-        postId: comment.post,
-        commentId: comment._id,
-        reply: optimizedReply
-    });
 
     // notification system
     const commentOwnerId = comment.user?.toString();
@@ -993,12 +968,18 @@ export const getCommentsForPost = async (req, res, next) => {
 
     });
 
+    // calculating total comments count (comment+replies)
+    const actualCount = mapped.reduce((acc, c) => {
+        return acc + 1 + (c.replies?.length || 0);
+    }, 0);
+
     // return response
     return res.status(200).json({
         success: true,
         postId,
-        count: mapped.length,
-        comments: mapped
+        count: mapped.length, 
+        actualCount, // actual comment count
+        comments: mapped // comments
     });
 
 };

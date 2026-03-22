@@ -63,31 +63,6 @@ const commentSlice = createSlice({
 
         },
 
-        // add real time comment data from socket
-        addCommentFromSocket: (state, action) => {
-
-            // extract postId and comment from payload
-            const { postId, comment } = action.payload;
-
-            // ensure post exists in state
-            if (!state.commentsByPostId[postId]) {
-                state.commentsByPostId[postId] = {
-                    comments: [],
-                    count: 0
-                };
-            }
-
-            // prevent duplicate if current user already added optimistically
-            const exists = state.commentsByPostId[postId].comments.some((c) => {
-                return c._id.toString() === comment._id.toString();
-            });
-
-            if (!exists) {
-                state.commentsByPostId[postId].comments.unshift(comment);
-                state.commentsByPostId[postId].count += 1;
-            }
-        },
-
         // add comment's reply optimistic
         addReplyOptimistic: (state, action) => {
 
@@ -110,31 +85,6 @@ const commentSlice = createSlice({
 
             // increase replies count
             comment.repliesCount += 1;
-
-        },
-
-        // add real time reply data from socket
-        addReplyFromSocket: (state, action) => {
-
-            // extract data from action payload
-            const { postId, commentId, reply } = action.payload;
-
-            // find post comments
-            const postComments = state.commentsByPostId[postId];
-            if (!postComments) return;
-
-            // find posts
-            const comment = postComments.comments.find(c => c._id === commentId);
-            if (!comment) return;
-
-            // find replie exist or not
-            const exists = comment.replies.some(r => r._id === reply._id);
-
-            // if not exists add replies
-            if (!exists) {
-                comment.replies.push(reply);
-                comment.repliesCount += 1;
-            }
 
         },
 
@@ -162,12 +112,14 @@ const commentSlice = createSlice({
                 const { postId, count, comments } = action.payload;
 
                 // update commentsByPostId with new comments - only store if comments exist
-                if (count > 0) {
-                    state.commentsByPostId[postId] = {
-                        comments,
-                        count
-                    };
-                }
+                // if (count > 0) {
+                //     state.commentsByPostId[postId] = {
+                //         comments,
+                //         count
+                //     };
+                // }
+
+                state.commentsByPostId[postId] = { comments, count }; // hamesha fresh dat
 
             })
             .addCase(getCommentsForPost.rejected, (state) => {
