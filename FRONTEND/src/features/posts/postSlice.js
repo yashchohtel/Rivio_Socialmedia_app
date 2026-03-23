@@ -222,7 +222,7 @@ const postSlice = createSlice({
                 }
             })
 
-}
+    }
 
 });
 

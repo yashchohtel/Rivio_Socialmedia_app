@@ -1,8 +1,17 @@
+/* notification modal */
 .NotificationModal {
   background: var(--bg-primary);
   height: 100vh;
-  width: 40rem;
+  width: 45rem;
   border-right: 1px solid var(--border-primary);
-  background-color: rgb(74, 74, 83);
-  padding: 0.5rem 1rem;
+  padding: 2rem 1.5rem;
+}
+
+/* notificaon modal heading */
+.NotificationModal .notificationHead {
+  color: var(--text-color-8);
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  margin-left: 1rem;
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import './notificationModal.css'
+import NotificationSkeleton from '../../Skeletons/NotificationSkeleton/NotificationSkeleton'
 
 const NotificationModal = () => {
     
@@ -11,7 +12,11 @@ const NotificationModal = () => {
                     e.stopPropagation()
                 }}
             >
-                <h1>This is notification modal</h1>
+                <h1 className='notificationHead'>Notifications</h1>
+
+                {/* notification loading skeleton */}
+                <NotificationSkeleton/>
+
             </div>
         </>
     )

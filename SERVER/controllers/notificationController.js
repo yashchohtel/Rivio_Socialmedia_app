@@ -74,8 +74,8 @@ export const getAllNotifications = async (req, res, next) => {
 
         }
 
-    })
-
+    });
+    
     // mark all notificaion as read
     await Notification.updateMany(
         { recipient: userId, isRead: false },
