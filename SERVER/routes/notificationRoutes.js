@@ -24,3 +24,4 @@ notificationRouter.get('/getUnreadCount', isUserAuth, catchAsyncError(getUnreadN
 // 'http://localhost:5000/api/notifications/getUnreadCount'
 
 export default notificationRouter; // export user router
+
