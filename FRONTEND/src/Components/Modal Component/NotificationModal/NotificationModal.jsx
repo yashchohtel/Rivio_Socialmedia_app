@@ -16,6 +16,20 @@ const NotificationModal = ({ closeModal }) => {
     // state to store active tab
     const [activeTab, setActiveTab] = useState("all");
 
+    /* -------------------------------------- */
+
+    // types of comments
+    const commentTypes = ["POST_COMMENT", "COMMENT_REPLY", "COMMENT_LIKE", "REPLY_LIKE"];
+
+    // filtered notificasions 
+    const filteredNotifications = activeTab === 'comments'
+        ? notifications.filter(n => commentTypes.includes(n.type))
+        : notifications;
+
+    console.log(filteredNotifications);
+
+    /* -------------------------------------- */
+
     return (
         <>
             <div
@@ -66,7 +80,7 @@ const NotificationModal = ({ closeModal }) => {
                             Comments
                         </button>
 
-                    </div> 
+                    </div>
                 )}
 
             </div>
