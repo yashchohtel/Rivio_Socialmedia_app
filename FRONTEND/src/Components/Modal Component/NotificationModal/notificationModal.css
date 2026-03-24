@@ -2,9 +2,30 @@
 .NotificationModal {
   background: var(--bg-primary);
   height: 100vh;
-  width: 45rem;
+  width: 42rem;
   border-right: 1px solid var(--border-primary);
   padding: 2rem 1.5rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* modal close button */
+.modalClose {
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  color: var(--text-color-6);
+  font-size: 2rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.modalClose:hover {
+  color: var(--text-color-1);
 }
 
 /* notificaon modal heading */
@@ -14,4 +35,42 @@
   font-weight: 600;
   letter-spacing: 0.04rem;
   margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* no notificaoin messae */
+.NotificationModal .notificationMessage {
+  text-align: center;
+  margin-top: 5rem;
+  color: var(--text-color-1);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+}
+
+/* -------------------------- */
+
+/* notificaiton filter tabs */
+.notificationFilterTab {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 1rem;
+}
+
+/* filter btn */
+.filterBtn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 5rem;
+  border: 1px solid var(--border-secondary);
+  background: transparent;
+  color: var(--text-color-2);
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: var(--transition-fast);
+}
+
+/* filter btn actve */
+.filterBtn.active {
+  background: var(--bg-eight);
+  border-color: var(--border-tirtay);
 }

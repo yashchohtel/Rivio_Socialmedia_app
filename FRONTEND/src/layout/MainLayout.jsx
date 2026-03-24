@@ -179,7 +179,9 @@ const MainLayout = () => {
                             closeModal();
                         }}
                     >
-                        <NotificationModal />
+                        <NotificationModal
+                            closeModal={closeModal} // to close the modal
+                        />
                     </div>
 
                     {/* create modal container */}

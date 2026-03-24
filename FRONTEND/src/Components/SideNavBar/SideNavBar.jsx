@@ -28,8 +28,6 @@ const SideNavBar = (props) => {
     // getting unreadCount from notificaion store
     const { unreadCount } = useSelector((state) => state.notification);
 
-    console.log(unreadCount);
-
     /* -------------------------------------- */
 
     return (

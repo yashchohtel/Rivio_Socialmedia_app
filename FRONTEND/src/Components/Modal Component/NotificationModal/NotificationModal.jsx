@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './notificationModal.css'
 import NotificationSkeleton from '../../Skeletons/NotificationSkeleton/NotificationSkeleton'
+import { useSelector } from 'react-redux';
+import { IoMdClose } from "react-icons/io";
 
-const NotificationModal = () => {
-    
+const NotificationModal = ({ closeModal }) => {
+
+    /* -------------------------------------- */
+
+    // getting notifiicaon data from notificaon state
+    const { notifications, notificationLoading } = useSelector(state => state.notification);
+
+    /* -------------------------------------- */
+
+    // state to store active tab
+    const [activeTab, setActiveTab] = useState("all");
+
     return (
         <>
             <div
@@ -12,14 +24,54 @@ const NotificationModal = () => {
                     e.stopPropagation()
                 }}
             >
+
+                {/* modal close button */}
+                <button
+                    className="modalClose"
+                    onClick={() => closeModal()}
+                >
+                    <IoMdClose />
+                </button>
+
+                {/* notificaiton heading */}
                 <h1 className='notificationHead'>Notifications</h1>
 
                 {/* notification loading skeleton */}
-                <NotificationSkeleton/>
+                {notificationLoading && (
+                    <NotificationSkeleton />
+                )}
+
+                {/* not notification messaeg */}
+                {!notificationLoading && notifications.length === 0 && (
+                    <p className='notificationMessage'>No notifications</p>
+                )}
+
+                {/* notificaion filters button */}
+                {!notificationLoading && notifications.length !== 0 && (
+                    <div className="notificationFilterTab">
+
+                        {/* all notificaion */}
+                        <button
+                            className={`filterBtn ${activeTab === 'all' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('all')}
+                        >
+                            All
+                        </button>
+
+                        {/* comments notificaion */}
+                        <button
+                            className={`filterBtn ${activeTab === 'comments' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('comments')}
+                        >
+                            Comments
+                        </button>
+
+                    </div> 
+                )}
 
             </div>
         </>
     )
 }
 
-export default NotificationModal
+export default NotificationModal;
