@@ -7,7 +7,7 @@ import cloudinary from "../config/cloudinary.js"; // Import Cloudinary configura
 import mongoose from "mongoose"; // Import mongoose for ObjectId
 import { optimizeImage, uploadFileToCloudinary } from "../utils/postUplodUtils.js"; // Import image upload utilities
 import { deleteNotification, sendNotification } from "../utils/notificationHelper.js"; // Import function to send notifications
-import { getIO, getSocketId } from "../socket/socket.js";
+import { getIO } from "../socket/socket.js";
 
 // CREATE POST
 export const createPost = async (req, res, next) => {

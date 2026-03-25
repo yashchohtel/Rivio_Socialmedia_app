@@ -74,3 +74,31 @@
   background: var(--bg-eight);
   border-color: var(--border-tirtay);
 }
+
+/* notifications contianer */
+.notificationsContainer {
+  margin-left: 1rem;
+  margin-top: 2rem;
+}
+
+.notificationsContainer .notiSubHeading {
+  color: var(--text-color-6);
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.03rem;
+  margin-bottom: 1rem;
+}
+
+.notificationsContainer .notifications {
+  height: 15rem;
+  background: var(--bg-six);
+  margin-bottom: 1rem;
+}
+
+.notirule {
+  height: 2px;
+  background: var(--bg-four);
+  border-radius: 1rem;
+  margin-left: 1rem;
+}

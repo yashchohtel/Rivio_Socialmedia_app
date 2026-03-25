@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import './notificationModal.css'
 import NotificationSkeleton from '../../Skeletons/NotificationSkeleton/NotificationSkeleton'
@@ -26,7 +27,34 @@ const NotificationModal = ({ closeModal }) => {
         ? notifications.filter(n => commentTypes.includes(n.type))
         : notifications;
 
-    console.log(filteredNotifications);
+    /* -------------------------------------- */
+
+    // notification filtered according to time (today, this week, earlier)
+
+    // current date
+    const now = new Date();
+
+    // todays srart (mid night 12am)
+    const todayStart = new Date(now);
+
+    // setting today date at midnight 12 am
+    todayStart.setHours(0, 0, 0, 0);
+
+    // seven days ago date
+    const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+
+    // todays notifications
+    const todayNotifications = filteredNotifications.filter(n => new Date(n.createdAt) >= todayStart);
+
+    // this week notifications  
+    const thisWeekNotifications = filteredNotifications.filter(n =>
+        new Date(n.createdAt) >= sevenDaysAgo && new Date(n.createdAt) < todayStart
+    );
+
+    // earlierNotifications 
+    const earlierNotifications = filteredNotifications.filter(n =>
+        new Date(n.createdAt) < sevenDaysAgo
+    );
 
     /* -------------------------------------- */
 
@@ -55,7 +83,7 @@ const NotificationModal = ({ closeModal }) => {
                     <NotificationSkeleton />
                 )}
 
-                {/* not notification messaeg */}
+                {/* not notification message */}
                 {!notificationLoading && notifications.length === 0 && (
                     <p className='notificationMessage'>No notifications</p>
                 )}
@@ -83,7 +111,64 @@ const NotificationModal = ({ closeModal }) => {
                     </div>
                 )}
 
+                {/* no comment activity message */}
+                {!notificationLoading && activeTab === 'comments' && filteredNotifications.length === 0 && (
+                    <p className="notificationMessage">No comment activity yet</p>
+                )}
+
+                {/* today notifications */}
+                {todayNotifications.length > 0 && (
+                    <>
+                        <section className="notificationsContainer">
+
+                            {/* notification sub heading */}
+                            <h3 className='notiSubHeading'>today</h3>
+
+                            {/* notifications */}
+                            <div className="notifications"></div>
+
+                        </section>
+
+                        {/* notification rule */}
+                        <div className="notirule"></div>
+                    </>
+                )}
+
+                {/* this week notifications */}
+                {thisWeekNotifications.length > 0 && (
+                    <>
+                        <section className="notificationsContainer">
+
+                            {/* notification sub heading */}
+                            <h3 className='notiSubHeading'>This week</h3>
+
+                            {/* notifications */}
+                            <div className="notifications"></div>
+
+                        </section>
+
+                        {/* notification rule */}
+                        <div className="notirule"></div>
+                    </>
+                )}
+
+                {/* Earlier notifications */}
+                {earlierNotifications.length > 0 && (
+
+                    <section className="notificationsContainer">
+
+                        {/* notification sub heading */}
+                        <h3 className='notiSubHeading'>Earlier</h3>
+
+                        {/* notifications */}
+                        <div className="notifications"></div>
+
+                    </section>
+
+                )}
+
             </div>
+
         </>
     )
 }
