@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react'
 import './notificationModal.css'
 import NotificationSkeleton from '../../Skeletons/NotificationSkeleton/NotificationSkeleton'
 import { useSelector } from 'react-redux';
 import { IoMdClose } from "react-icons/io";
+import NotificationItem from './NotificationItem';
 
 const NotificationModal = ({ closeModal }) => {
 
@@ -124,46 +124,69 @@ const NotificationModal = ({ closeModal }) => {
                             {/* notification sub heading */}
                             <h3 className='notiSubHeading'>today</h3>
 
-                            {/* notifications */}
-                            <div className="notifications"></div>
+                            {/* notificationItem */}
+                            {todayNotifications.map((notification) => (
+                                <NotificationItem
+                                    key={notification._id}
+                                    notification={notification}
+                                    closeModal={closeModal} // to close modal
+                                />
+                            ))}
 
                         </section>
 
-                        {/* notification rule */}
-                        <div className="notirule"></div>
                     </>
                 )}
 
                 {/* this week notifications */}
                 {thisWeekNotifications.length > 0 && (
                     <>
+
+                        {/* notification rule */}
+                        <div className="notirule"></div>
+
                         <section className="notificationsContainer">
 
                             {/* notification sub heading */}
                             <h3 className='notiSubHeading'>This week</h3>
 
-                            {/* notifications */}
-                            <div className="notifications"></div>
+                            {/* notificationItem */}
+                            {thisWeekNotifications.map((notification) => (
+                                <NotificationItem
+                                    key={notification._id}
+                                    notification={notification}
+                                    closeModal={closeModal} // to close modal
+                                />
+                            ))}
 
                         </section>
 
-                        {/* notification rule */}
-                        <div className="notirule"></div>
                     </>
                 )}
 
                 {/* Earlier notifications */}
                 {earlierNotifications.length > 0 && (
+                    <>
+                        {/* notification rule */}
+                        <div className="notirule"></div>
 
-                    <section className="notificationsContainer">
+                        <section className="notificationsContainer">
 
-                        {/* notification sub heading */}
-                        <h3 className='notiSubHeading'>Earlier</h3>
+                            {/* notification sub heading */}
+                            <h3 className='notiSubHeading'>Earlier</h3>
 
-                        {/* notifications */}
-                        <div className="notifications"></div>
+                            {/* notificationItem */}
+                            {earlierNotifications.map((notification) => (
+                                <NotificationItem
+                                    notification={notification}
+                                    key={notification._id}
+                                    closeModal={closeModal} // to close modal
+                                />
+                            ))}
 
-                    </section>
+                        </section>
+
+                    </>
 
                 )}
 
