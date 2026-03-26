@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
 import { deleteComment, deleteReply } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
-import { deleteNotification } from '../../../features/notification/notificationThunk';
+import { deleteAllNotifications, deleteNotification } from '../../../features/notification/notificationThunk';
 
 const GlobalDeleteConfirmation = () => {
 
@@ -31,6 +31,12 @@ const GlobalDeleteConfirmation = () => {
     const deletedNotification = useSelector((state) =>
         meta?.notificationId ? state.notification.notifications.find(n => n._id === meta?.notificationId) : null
     )
+
+    // all notifications to be deleted (backup for restore if api fails)
+    const deletedNotifications = useSelector((state) => meta?.action === "deleteAllNotifications"
+        ? state.notification.notifications
+        : []
+    );
 
     /* -------------------------------------- */
 
@@ -80,6 +86,14 @@ const GlobalDeleteConfirmation = () => {
 
             // dispatch deleteNotification (restore happening in rejection if api fails)
             dispatch(deleteNotification({ notificationId: meta.notificationId, deletedNotification }));
+        }
+
+        // delete all notifications
+        if (meta.action === "deleteAllNotifications") {
+
+            // dispatch delete all
+            dispatch(deleteAllNotifications({ deletedNotifications }));
+
         }
 
         // close modal

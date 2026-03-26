@@ -53,8 +53,27 @@
 .notificationFilterTab {
   display: flex;
   align-items: center;
-  gap: 1rem;
   margin-left: 1rem;
+  justify-content: space-between;
+}
+
+/* notificaion tabs */
+.notificationFilterTab .filterButtons {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* delete all notificiaon button */
+.notificationFilterTab .deleteAllNoti {
+  color: var(--text-color-1);
+  font-size: 1.3rem;
+  font-weight: 500;
+  transition: var(--transition-normal);
+}
+
+.notificationFilterTab .deleteAllNoti {
+  color: var(--text-error-color);
 }
 
 /* filter btn */

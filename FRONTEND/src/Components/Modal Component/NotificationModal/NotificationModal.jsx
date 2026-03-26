@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
 import './notificationModal.css'
 import NotificationSkeleton from '../../Skeletons/NotificationSkeleton/NotificationSkeleton'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IoMdClose } from "react-icons/io";
 import NotificationItem from './NotificationItem';
+import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
 
 const NotificationModal = ({ closeModal }) => {
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
 
     /* -------------------------------------- */
 
@@ -58,6 +62,18 @@ const NotificationModal = ({ closeModal }) => {
 
     /* -------------------------------------- */
 
+    // handle comment delete clik 
+    const handleDeleteClick = (meta) => {
+
+        dispatch(openDeleteConfirmModal({
+            message: `delete all notifications?`,
+            meta
+        }));
+
+    };
+
+    /* -------------------------------------- */
+
     return (
         <>
             <div
@@ -92,20 +108,33 @@ const NotificationModal = ({ closeModal }) => {
                 {!notificationLoading && notifications.length !== 0 && (
                     <div className="notificationFilterTab">
 
-                        {/* all notificaion */}
-                        <button
-                            className={`filterBtn ${activeTab === 'all' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('all')}
-                        >
-                            All
-                        </button>
+                        {/* filter buttons */}
+                        <div className="filterButtons">
 
-                        {/* comments notificaion */}
+                            {/* all notificaion */}
+                            <button
+                                className={`filterBtn ${activeTab === 'all' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('all')}
+                            >
+                                All
+                            </button>
+
+                            {/* comments notificaion */}
+                            <button
+                                className={`filterBtn ${activeTab === 'comments' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('comments')}
+                            >
+                                Comments
+                            </button>
+
+                        </div>
+
+                        {/* delete all notificaion button */}
                         <button
-                            className={`filterBtn ${activeTab === 'comments' ? 'active' : ''}`}
-                            onClick={() => setActiveTab('comments')}
+                            className="deleteAllNoti"
+                            onClick={() => handleDeleteClick({ action: "deleteNotification" })}
                         >
-                            Comments
+                            Delete All
                         </button>
 
                     </div>

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { deleteNotification, getAllNotifications, getUnreadNotificationCount } from "./notificationThunk";
+import { deleteAllNotifications, deleteNotification, getAllNotifications, getUnreadNotificationCount } from "./notificationThunk";
 
 // initial state for comment slice
 const initialState = {
@@ -83,6 +83,20 @@ const notificationSlice = createSlice({
 
                 // re enter that notification if deletion fails
                 state.notifications.unshift(action.payload.deletedNotification);
+
+            })
+
+            // DELETE ALL NOTIFICATIONS
+            .addCase(deleteAllNotifications.pending, (state) => {
+
+                // clear all notifications optimistically
+                state.notifications = [];
+
+            })
+            .addCase(deleteAllNotifications.rejected, (state, action) => {
+
+                // restore all notifications if failed
+                state.notifications = action.payload.deletedNotifications;
 
             })
 
