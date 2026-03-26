@@ -138,12 +138,14 @@ const NotificationModal = ({ closeModal }) => {
                     </>
                 )}
 
+                {/* notification rule */}
+                {todayNotifications.length > 0 && (
+                    <div className="notirule"></div>
+                )}
+
                 {/* this week notifications */}
                 {thisWeekNotifications.length > 0 && (
                     <>
-
-                        {/* notification rule */}
-                        <div className="notirule"></div>
 
                         <section className="notificationsContainer">
 
@@ -164,11 +166,14 @@ const NotificationModal = ({ closeModal }) => {
                     </>
                 )}
 
+                {/* notification rule */}
+                {earlierNotifications.length > 0 && (
+                    <div className="notirule"></div>
+                )}
+
                 {/* Earlier notifications */}
                 {earlierNotifications.length > 0 && (
                     <>
-                        {/* notification rule */}
-                        <div className="notirule"></div>
 
                         <section className="notificationsContainer">
 

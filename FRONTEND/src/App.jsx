@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { socket } from "./socket/socket";
 import { updatePostLikes } from "./features/posts/postSlice";
 import { getUnreadNotificationCount } from "./features/notification/notificationThunk";
-import { decrementUnreadCount, incrementUnreadCount } from "./features/notification/notificationSlice";
+import { addNotification, decrementUnreadCount, incrementUnreadCount } from "./features/notification/notificationSlice";
 
 function App() {
 
@@ -77,11 +77,16 @@ function App() {
 
     socket.on("notification", (notification) => {
 
+      console.log(notification);
+      
       // notificaton toast
       toast(`New notification ${notification.type}`, { className: "custom-toast" });
 
       // reducer to increase unread notificaion count
       dispatch(incrementUnreadCount());
+
+      // reducer to insert new notificaion to notificaions array comming from socket
+      dispatch(addNotification(notification)); 
 
     });
 

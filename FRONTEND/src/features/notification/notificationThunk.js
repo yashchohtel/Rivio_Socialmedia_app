@@ -52,3 +52,24 @@ export const getAllNotifications = createAsyncThunk("notification/getAllNotifica
     }
 
 });
+
+// thunk to delete notification
+export const deleteNotification = createAsyncThunk("notification/deleteNotification", async ({ notificationId, deletedNotification }, { rejectWithValue }) => {
+
+    try {
+
+        // delete request to delete notificaion
+        await api.delete(`/api/notifications/deleteNotification/${notificationId}`);
+
+        // return notificatoinId
+        return { notificationId };
+
+    } catch (error) {
+
+        // error handlng
+        toast.error(error.response?.data?.message || "Failed to delete notification");
+        return rejectWithValue({ deletedNotification });
+
+    }
+
+});

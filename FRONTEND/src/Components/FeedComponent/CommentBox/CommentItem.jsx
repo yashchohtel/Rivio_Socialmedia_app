@@ -13,8 +13,6 @@ import { likeUnlikeComment } from '../../../features/comment/commentThunk';
 
 const CommentItem = ({ comment, setReplyContext, isNew }) => {
 
-    // console.log(comment);
-
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
@@ -74,10 +72,12 @@ const CommentItem = ({ comment, setReplyContext, isNew }) => {
 
     // handle comment delete clik 
     const handleDeleteClick = (meta) => {
+
         dispatch(openDeleteConfirmModal({
             message: `delete this ${meta.replyId ? "reply" : "comment"}?`,
             meta
         }));
+
     };
 
     /* -------------------------------------- */

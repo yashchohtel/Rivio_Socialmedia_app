@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllNotifications, getUnreadNotificationCount } from "./notificationThunk";
+import { deleteNotification, getAllNotifications, getUnreadNotificationCount } from "./notificationThunk";
 
 // initial state for comment slice
 const initialState = {
@@ -31,6 +31,11 @@ const notificationSlice = createSlice({
             if (state.unreadCount > 0) {
                 state.unreadCount -= 1;
             }
+        },
+
+        // reducer to add notificain from socket
+        addNotification: (state, action) => {
+            state.notifications.unshift(action.payload); // sabse upar add karo
         }
 
     },
@@ -64,12 +69,29 @@ const notificationSlice = createSlice({
                 state.error = action.payload;
             })
 
+            // DELETE NOTIFICAION
+            .addCase(deleteNotification.pending, (state, action) => {
+
+                // get notification id from meta arg
+                const { notificationId } = action.meta.arg;
+
+                // remove notification optimistacly
+                state.notifications = state.notifications.filter(n => n._id !== notificationId);
+
+            })
+            .addCase(deleteNotification.rejected, (state, action) => {
+
+                // re enter that notification if deletion fails
+                state.notifications.unshift(action.payload.deletedNotification);
+
+            })
+
     }
 
 })
 
 // export reducer function
-export const { incrementUnreadCount, decrementUnreadCount } = notificationSlice.actions;
+export const { incrementUnreadCount, decrementUnreadCount, addNotification } = notificationSlice.actions;
 
 // export notificationSlice reducer
 export default notificationSlice.reducer;

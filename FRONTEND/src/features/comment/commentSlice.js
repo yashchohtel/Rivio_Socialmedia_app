@@ -111,15 +111,8 @@ const commentSlice = createSlice({
                 // destructure payload
                 const { postId, count, comments } = action.payload;
 
-                // update commentsByPostId with new comments - only store if comments exist
-                // if (count > 0) {
-                //     state.commentsByPostId[postId] = {
-                //         comments,
-                //         count
-                //     };
-                // }
-
-                state.commentsByPostId[postId] = { comments, count }; // hamesha fresh dat
+                // store comments (fresh data)
+                state.commentsByPostId[postId] = { comments, count }; 
 
             })
             .addCase(getCommentsForPost.rejected, (state) => {

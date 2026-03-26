@@ -23,7 +23,13 @@ export const sendNotification = async (recipientId, senderId, type, postId = nul
         // If user is online, emit the notification to their socket
         if (socketId) {
             const io = getIO();
-            io.to(socketId).emit("notification", notification);
+
+            // populate karke bhejo
+            const populatedNotification = await Notification.findById(notification._id)
+                .populate("sender", "username fullName profileImage isVerified isPrivate followers following posts bookmarks")
+                .populate("post", "thumbnail");
+
+            io.to(socketId).emit("notification", populatedNotification);
         }
 
     } catch (error) {

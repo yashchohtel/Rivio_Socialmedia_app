@@ -3,9 +3,15 @@ import './notificationItem.css'
 import { timeAgo } from '../../../utility/postCardUtility';
 import { useNavigate } from 'react-router-dom';
 import { MdVerified } from 'react-icons/md';
+import { openDeleteConfirmModal } from '../../../features/confirmation/confirmationSlice';
+import { useDispatch } from 'react-redux';
 
 const NotificationItem = ({ notification, closeModal }) => {
 
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    /* -------------------------------------- */
 
     // initilize useNavigate 
     const navigate = useNavigate();
@@ -13,7 +19,7 @@ const NotificationItem = ({ notification, closeModal }) => {
     /* -------------------------------------- */
 
     // destruvture data from notificaion object
-    const { type, sender, post, comment, reply, isRead, createdAt } = notification;
+    const { _id: notificationId, type, sender, post, comment, reply, isRead, createdAt } = notification;
 
     /* -------------------------------------- */
 
@@ -52,6 +58,18 @@ const NotificationItem = ({ notification, closeModal }) => {
 
         // close modal
         closeModal();
+
+    };
+
+    /* -------------------------------------- */
+
+    // handle comment delete clik 
+    const handleDeleteClick = (meta) => {
+
+        dispatch(openDeleteConfirmModal({
+            message: `delete this notification?`,
+            meta
+        }));
 
     };
 
@@ -111,8 +129,21 @@ const NotificationItem = ({ notification, closeModal }) => {
 
                     </p>
 
-                    {/* time */}
-                    <span className="notiTime">{timeAgo(createdAt)}</span>
+                    {/* time and delete */}
+                    <div className="timeAndDelete">
+
+                        {/* time */}
+                        <span className="notiTime">{timeAgo(createdAt)}</span>
+
+                        {/* delete */}
+                        <button
+                            className="delete"
+                            onClick={() => handleDeleteClick({ action: "deleteNotification", notificationId })}
+                        >
+                            delete
+                        </button>
+
+                    </div>
 
                 </div>
 
