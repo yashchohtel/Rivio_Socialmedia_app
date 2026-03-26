@@ -24,12 +24,64 @@ export const sendNotification = async (recipientId, senderId, type, postId = nul
         if (socketId) {
             const io = getIO();
 
-            // populate karke bhejo
+            // populate notificaion
             const populatedNotification = await Notification.findById(notification._id)
                 .populate("sender", "username fullName profileImage isVerified isPrivate followers following posts bookmarks")
-                .populate("post", "thumbnail");
+                .populate("post", "media")
+                .populate("comment", "text replies")
 
-            io.to(socketId).emit("notification", populatedNotification);
+            // finding reply data if exist
+            let replyData = null;
+
+            if (populatedNotification.comment && replyId) {
+                const foundReply = populatedNotification.comment.replies?.find(r => r._id.equals(replyId));
+                replyData = foundReply ? {
+                    id: foundReply._id,
+                    replyText: foundReply.text || null,
+                } : null;
+            }
+
+            const optimizedNotification = {
+                _id: populatedNotification._id, // notificaion id
+                type: populatedNotification.type, // notificaon type
+
+                // sender user detail
+                sender: {
+                    id: populatedNotification.sender._id,
+                    username: populatedNotification.sender.username,
+                    fullName: populatedNotification.sender.fullName,
+                    profileImage: populatedNotification.sender.profileImage || null,
+                    isVerified: populatedNotification.sender.isVerified,
+                    isPrivate: populatedNotification.sender.isPrivate,
+                    followersCount: populatedNotification.sender.followers?.length || 0,
+                    followingCount: populatedNotification.sender.following?.length || 0,
+                    postsCount: populatedNotification.sender.posts?.length || 0,
+                    bookmarksCount: populatedNotification.sender.bookmarks?.length || 0,
+                },
+
+                // post detail
+                post: populatedNotification.post ? {
+                    id: populatedNotification.post._id,
+                    thumbnail: populatedNotification.post.media?.[0]?.url || null,
+                } : null,
+
+                // comment data
+                comment: populatedNotification.comment ? {
+                    id: populatedNotification.comment._id,
+                    commentText: populatedNotification.comment.text || null,
+                } : null,
+
+                // reply data
+                reply: replyData,
+
+                // isread flage
+                isRead: false,
+
+                // createdAt
+                createdAt: populatedNotification.createdAt,
+            }
+
+            io.to(socketId).emit("notification", optimizedNotification);
         }
 
     } catch (error) {
