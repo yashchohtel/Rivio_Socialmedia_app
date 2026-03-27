@@ -120,6 +120,8 @@ export const deleteAllNotifications = async (req, res, next) => {
     // getting user id
     const userId = req.user.id;
 
+    console.log("userID " + userId);
+    
     // delete all notificions related to user
     await Notification.deleteMany({ recipient: userId });
 

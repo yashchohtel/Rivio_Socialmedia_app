@@ -5,6 +5,7 @@ import { closeDeleteConfirmModal } from '../../../features/confirmation/confirma
 import { deleteComment, deleteReply } from '../../../features/comment/commentThunk';
 import { updatePostCommentsCount } from '../../../features/posts/postSlice';
 import { deleteAllNotifications, deleteNotification } from '../../../features/notification/notificationThunk';
+import { decrementUnreadCount, unreadCountZero } from '../../../features/notification/notificationSlice';
 
 const GlobalDeleteConfirmation = () => {
 
@@ -15,6 +16,8 @@ const GlobalDeleteConfirmation = () => {
 
     // get confirm data form confirm state
     const { isOpen, message, meta, } = useSelector((state) => state.confirm);
+
+    /* -------------------------------------- */
 
     // comment to be deleted (save to resotre if api fails)
     const deletedComment = useSelector((state) =>
@@ -27,16 +30,10 @@ const GlobalDeleteConfirmation = () => {
         : null
     );
 
-    // notification to be deleted (save to restore if api fails)
-    const deletedNotification = useSelector((state) =>
-        meta?.notificationId ? state.notification.notifications.find(n => n._id === meta?.notificationId) : null
-    )
+    /* -------------------------------------- */
 
-    // all notifications to be deleted (backup for restore if api fails)
-    const deletedNotifications = useSelector((state) => meta?.action === "deleteAllNotifications"
-        ? state.notification.notifications
-        : []
-    );
+    // notification data getting from state
+    const notifications = useSelector(state => state.notification.notifications);
 
     /* -------------------------------------- */
 
@@ -82,17 +79,29 @@ const GlobalDeleteConfirmation = () => {
         }
 
         // delete notification
-        if (meta.action === "deleteNotification") {
+        if (meta.action === "deleteNotification" && meta.notificationId) {
 
+            // find notification
+            const deletedNotification = notifications.find(n => n._id === meta.notificationId);
+
+            // find index
+            const index = notifications.findIndex(n => n._id === meta.notificationId);
+
+            // reducer unread notificaion count 
+            dispatch(decrementUnreadCount());
+            
             // dispatch deleteNotification (restore happening in rejection if api fails)
-            dispatch(deleteNotification({ notificationId: meta.notificationId, deletedNotification }));
+            dispatch(deleteNotification({ notificationId: meta.notificationId, deletedNotification, index }));
         }
 
         // delete all notifications
         if (meta.action === "deleteAllNotifications") {
 
             // dispatch delete all
-            dispatch(deleteAllNotifications({ deletedNotifications }));
+            dispatch(deleteAllNotifications({ deletedNotifications: [...notifications] }));
+
+            // dispat unreadCountZero
+            dispatch(unreadCountZero());
 
         }
 

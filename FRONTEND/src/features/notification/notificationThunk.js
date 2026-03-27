@@ -54,7 +54,7 @@ export const getAllNotifications = createAsyncThunk("notification/getAllNotifica
 });
 
 // thunk to delete notification
-export const deleteNotification = createAsyncThunk("notification/deleteNotification", async ({ notificationId, deletedNotification }, { rejectWithValue }) => {
+export const deleteNotification = createAsyncThunk("notification/deleteNotification", async ({ notificationId, deletedNotification, index }, { rejectWithValue }) => {
 
     try {
 
@@ -68,29 +68,27 @@ export const deleteNotification = createAsyncThunk("notification/deleteNotificat
 
         // error handlng
         toast.error(error.response?.data?.message || "Failed to delete notification");
-        return rejectWithValue({ deletedNotification });
+        return rejectWithValue({ deletedNotification, index });
 
     }
 
 });
 
 // thunk to delete all notificaon
-export const deleteAllNotifications = createAsyncThunk( "notification/deleteAllNotifications", async ({ deletedNotifications }, { rejectWithValue }) => {
+export const deleteAllNotifications = createAsyncThunk("notification/deleteAllNotifications", async ({ deletedNotifications }, { rejectWithValue }) => {
 
-        try {
+    try {
 
-            // api call
-            await api.delete("/api/notifications/deleteAllNotifications");
+        // api call
+        await api.delete("/api/notifications/deleteAllNotifications");
 
-            return {}; // kuch return karne ki need nahi
 
-        } catch (error) {
+    } catch (error) {
 
-            toast.error(error.response?.data?.message || "Failed to delete all notifications");
+        toast.error(error.response?.data?.message || "Failed to delete all notifications");
 
-            return rejectWithValue({ deletedNotifications });
-
-        }
+        return rejectWithValue({ deletedNotifications });
 
     }
-);
+
+});

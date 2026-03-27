@@ -130,12 +130,14 @@ const NotificationModal = ({ closeModal }) => {
                         </div>
 
                         {/* delete all notificaion button */}
-                        <button
-                            className="deleteAllNoti"
-                            onClick={() => handleDeleteClick({ action: "deleteNotification" })}
-                        >
-                            Delete All
-                        </button>
+                        {filteredNotifications.length > 1 && (
+                            <button
+                                className="deleteAllNoti"
+                                onClick={() => handleDeleteClick({ action: "deleteAllNotifications" })}
+                            >
+                                Delete All
+                            </button>
+                        )}
 
                     </div>
                 )}

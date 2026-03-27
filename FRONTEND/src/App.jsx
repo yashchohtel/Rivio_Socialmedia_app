@@ -76,8 +76,6 @@ function App() {
   useEffect(() => {
 
     socket.on("notification", (notification) => {
-
-      console.log(notification);
       
       // notificaton toast
       toast(`New notification ${notification.type}`, { className: "custom-toast" });

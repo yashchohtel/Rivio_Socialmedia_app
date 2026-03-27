@@ -33,6 +33,11 @@ const notificationSlice = createSlice({
             }
         },
 
+        // reducer to set unreadCount zero
+        unreadCountZero: (state) => {
+            state.unreadCount = 0;
+        },
+
         // reducer to add notificain from socket
         addNotification: (state, action) => {
             state.notifications.unshift(action.payload); // sabse upar add karo
@@ -81,8 +86,13 @@ const notificationSlice = createSlice({
             })
             .addCase(deleteNotification.rejected, (state, action) => {
 
-                // re enter that notification if deletion fails
-                state.notifications.unshift(action.payload.deletedNotification);
+                // get data from action payload
+                const { deletedNotification, index } = action.payload;
+
+                // rollback - insexrt the notifian from where it was if api fails
+                if (deletedNotification && index !== -1) {
+                    state.notifications.splice(index, 0, deletedNotification);
+                }
 
             })
 
@@ -105,7 +115,7 @@ const notificationSlice = createSlice({
 })
 
 // export reducer function
-export const { incrementUnreadCount, decrementUnreadCount, addNotification } = notificationSlice.actions;
+export const { incrementUnreadCount, decrementUnreadCount, unreadCountZero, addNotification } = notificationSlice.actions;
 
 // export notificationSlice reducer
 export default notificationSlice.reducer;
