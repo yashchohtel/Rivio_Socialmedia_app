@@ -1,7 +1,7 @@
 import express from "express"; // Express framework for building APIs
 import catchAsyncError from "../middleware/catchAsyncError.js"; // Import async error handler middleware
 import { isUserAuth } from "../middleware/auth.js"; // Import authentication middleware
-import { bookMarkPost, commentOnPost, createPost, deleteCommentOrReply, deletePost, getAllPosts, getCommentsForPost, getMyPosts, likeCommentAndReplay, likePost, replyOnComment } from "../controllers/postController.js";
+import { bookMarkPost, commentOnPost, createPost, deleteCommentOrReply, deletePost, getAllPosts, getCommentsForPost, getMyPosts, getPost, likeCommentAndReplay, likePost, replyOnComment } from "../controllers/postController.js";
 import { upload } from "../middleware/multer.js"; // Import multer middleware for file uploads
 
 const postRouter = express.Router(); // Creating an instance of Express Router
@@ -15,6 +15,10 @@ postRouter.post('/createPost', isUserAuth, upload.array("postImage", 10), catchA
 // Get all post [GET]
 postRouter.get('/getAllPosts', isUserAuth, catchAsyncError(getAllPosts));
 // 'http://localhost:5000/api/posts/getAllPosts'
+
+// Get post [GET]
+postRouter.get('/getPost/:postId', isUserAuth, catchAsyncError(getPost));
+// 'http://localhost:5000/api/posts/getPost/:postId'
 
 // Get my posts [GET]
 postRouter.get('/getMyPosts', isUserAuth, catchAsyncError(getMyPosts));

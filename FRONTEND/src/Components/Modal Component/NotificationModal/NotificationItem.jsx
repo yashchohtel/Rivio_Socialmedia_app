@@ -21,6 +21,8 @@ const NotificationItem = ({ notification, closeModal }) => {
     // destruvture data from notificaion object
     const { _id: notificationId, type, sender, post, comment, reply, isRead, createdAt } = notification;
 
+    console.log(post.id)
+
     /* -------------------------------------- */
 
     // state to store expended status for comment content
@@ -48,6 +50,18 @@ const NotificationItem = ({ notification, closeModal }) => {
 
     /* -------------------------------------- */
 
+    // handle comment delete clik 
+    const handleDeleteClick = (meta) => {
+
+        dispatch(openDeleteConfirmModal({
+            message: `delete this notification?`,
+            meta
+        }));
+
+    };
+
+    /* -------------------------------------- */
+
     // function to handle navigate to user profile
     const navigateToProfile = (id) => {
 
@@ -63,17 +77,18 @@ const NotificationItem = ({ notification, closeModal }) => {
 
     /* -------------------------------------- */
 
-    // handle comment delete clik 
-    const handleDeleteClick = (meta) => {
+    // function to handle navigate to single post
+    const navigateToPost = (id) => {
 
-        dispatch(openDeleteConfirmModal({
-            message: `delete this notification?`,
-            meta
-        }));
+        console.log(id);
+        
+        // navigate to single post page 
+        navigate(`/app/post/${id}`);
 
-    };
+        // close notification modal
+        closeModal();
 
-    /* -------------------------------------- */
+    }
 
     return (
         <>
@@ -149,7 +164,9 @@ const NotificationItem = ({ notification, closeModal }) => {
 
                 {/* thumbnail */}
                 {post?.thumbnail && (
-                    <div className="notiThumbnail">
+                    <div className="notiThumbnail"
+                        onClick={() => navigateToPost(post.id)}
+                    >
                         <img src={post.thumbnail} alt="post" />
                     </div>
                 )}

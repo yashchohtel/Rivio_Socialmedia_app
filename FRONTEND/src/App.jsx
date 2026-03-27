@@ -18,6 +18,7 @@ import { socket } from "./socket/socket";
 import { updatePostLikes } from "./features/posts/postSlice";
 import { getUnreadNotificationCount } from "./features/notification/notificationThunk";
 import { addNotification, decrementUnreadCount, incrementUnreadCount } from "./features/notification/notificationSlice";
+import SinglePost from "./pages/SinglePost/SinglePost";
 
 function App() {
 
@@ -165,6 +166,9 @@ function App() {
 
           {/* save post page */}
           <Route path="bookmark" element={<SavePosts />} />
+
+          {/* single post route */}
+          <Route path="post/:postId" element={<SinglePost/>} />
 
         </Route>
 

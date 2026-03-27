@@ -9,8 +9,6 @@ const PostCard = ({ post, openFeedActionOption }) => {
 
     // destructure post data
     const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount,sharesCount, likesCount, isLiked, isBookmarked, bookmarkStatus, caption } = post;
-
-    // console.log(_id);
     
     /* -------------------------------------- */
 

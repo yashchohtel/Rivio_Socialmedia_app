@@ -279,7 +279,97 @@ export const getAllPosts = async (req, res, next) => {
 
 };
 
-// GER MY POSTS
+// GET SINGLE POST 
+export const getPost = async (req, res, next) => {
+
+    // Extract user ID from request
+    const userId = req.user.id;
+
+    // Find user by ID and exclude password from the result
+    const currentUser = await User.findById(userId).select("followers following bookmarks");
+    if (!currentUser) return next(new ErrorHandler("User not found", 404));
+
+    // extract post id
+    const { postId } = req.params;
+
+    // check post exists + populate
+    const post = await Post.findById(postId).populate({ path: "user", select: "username fullName profileImage isVerified isPrivate followers following posts bookmarks" })
+
+    // if not found
+    if (!post) return next(new ErrorHandler("Post not found", 404));
+
+    // post user id
+    const postUserId = post.user._id.toString();
+
+    // current user id
+    const currentUserId = userId.toString();
+
+    // own post check
+    const isOwnPost = postUserId === currentUserId;
+
+    // follow check (only if not own post)
+    const isFollowing = isOwnPost ? false : currentUser.following?.some(id => id.toString() === postUserId);
+
+    // like check 
+    const isLiked = post.likes?.some(id => id.toString() === currentUserId);
+
+    // bookmark check
+    const isBookmarked = currentUser.bookmarks?.some(id => id.toString() === post._id.toString());
+
+    // destructure user for optimized response (avoid sending unnecessary data)
+    const user = post.user;
+
+    // optimized user object for response
+    const optimizedUser = {
+        id: user._id,
+        username: user.username,
+        fullName: user.fullName,
+        profileImage: user.profileImage || null,
+        isVerified: user.isVerified,
+        isPrivate: user.isPrivate,
+
+        followersCount: user.followers?.length || 0,
+        followingCount: user.following?.length || 0,
+        postsCount: user.posts?.length || 0,
+        bookmarksCount: post.user.bookmarks?.length || 0,
+    };
+
+    // only required post data
+    const requiredPostData = {
+
+        _id: post._id, // postId
+        caption: post.caption, // caption
+        media: post.media, // media
+        location: post.location, // location
+        createdAt: post.createdAt, // createdAt
+
+        likesCount: post.likesCount, // likes count
+        commentsCount: post.commentsCount, // comment count
+        sharesCount: post.sharesCount, // share count
+
+    }
+
+    // return result
+    const postData = {
+        ...requiredPostData, // post data
+        user: optimizedUser, // populated and optimized user object
+        isOwnPost, // is own post flag
+        isFollowing, // is current user following
+        isLiked, // is liked flag
+        isBookmarked, // is post is bookmarked or not
+        bookmarkLoading: false, // UI loading (per post)
+        bookmarkStatus: null, // "saved" | "unsaved" (for message)
+    };
+
+    // response
+    return res.status(200).json({
+        success: true,
+        postData,
+    });
+
+};
+
+// GET MY POSTS
 export const getMyPosts = async (req, res, next) => {
 
     // extract user id 
@@ -297,8 +387,6 @@ export const getMyPosts = async (req, res, next) => {
             path: "comments",
             populate: { path: "user", select: "username profileImage" }
         });
-
-    // console.log(posts[0]._doc);
 
     // return response
     return res.status(200).json({
@@ -977,7 +1065,7 @@ export const getCommentsForPost = async (req, res, next) => {
     return res.status(200).json({
         success: true,
         postId,
-        count: mapped.length, 
+        count: mapped.length,
         actualCount, // actual comment count
         comments: mapped // comments
     });
