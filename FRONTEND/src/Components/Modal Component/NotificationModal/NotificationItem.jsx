@@ -21,8 +21,6 @@ const NotificationItem = ({ notification, closeModal }) => {
     // destruvture data from notificaion object
     const { _id: notificationId, type, sender, post, comment, reply, isRead, createdAt } = notification;
 
-    console.log(post.id)
-
     /* -------------------------------------- */
 
     // state to store expended status for comment content
@@ -79,8 +77,6 @@ const NotificationItem = ({ notification, closeModal }) => {
 
     // function to handle navigate to single post
     const navigateToPost = (id) => {
-
-        console.log(id);
         
         // navigate to single post page 
         navigate(`/app/post/${id}`);

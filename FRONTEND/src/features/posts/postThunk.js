@@ -21,7 +21,7 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
 
         // form data to send file and text data
         const formData = new FormData();
-        
+
         // text fields
         formData.append("caption", postData.caption);
         formData.append("location", postData.location);
@@ -44,7 +44,7 @@ export const createPost = createAsyncThunk('posts/createPost', async ({ files, p
         console.log(err);
 
         const message = err.response?.data?.message || "Something went wrong";
-        
+
         // toast message
         toast(message, {
             className: "custom-toast",
@@ -69,11 +69,11 @@ export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { reje
         const { data } = await api.get(url);
 
         // console.log(data);
-        
+
         // return data
         return data; // { posts, nextCursor, success }
 
-        
+
     } catch (err) {
 
         return rejectWithValue(err.response?.data?.message || "Something went wrong");
@@ -110,6 +110,24 @@ export const handlePostBookmark = createAsyncThunk("posts/handlePostBookmark", a
         const { data } = await api.patch(`/api/posts/bookMarkPost/${id}`);
 
         // return data
+        return data;
+
+    } catch (err) {
+
+        return rejectWithValue(err.response?.data?.message || "Something went wrong");
+    }
+
+});
+
+// thunk to get single post
+export const getSinglePost = createAsyncThunk("posts/getSinglePost", async (postId, { rejectWithValue }) => {
+
+    try {
+
+        // calling api
+        const { data } = await api.get(`/api/posts/getPost/${postId}`);
+
+        // return data 
         return data;
 
     } catch (err) {

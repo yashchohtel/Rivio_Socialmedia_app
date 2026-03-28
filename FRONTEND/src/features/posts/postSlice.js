@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createPost, handlePostBookmark, handlePostLike, loadFeed } from "./postThunk";
+import { createPost, getSinglePost, handlePostBookmark, handlePostLike, loadFeed } from "./postThunk";
 import { getCommentsForPost } from "../comment/commentThunk";
 
 // initial state for post slice
@@ -13,6 +13,9 @@ const initialState = {
     phase: null, // phase is for post uploading feature
     message: null, // message is for succes message
     error: null, // this is for erroe message
+
+    singlePost: null, // state to store single post
+    singlePostLoading: false, // loading for single post
 };
 
 // creating slice for auth 
@@ -70,7 +73,12 @@ const postSlice = createSlice({
             if (post) {
                 post.commentsCount += incrementBy;
             }
-        }
+        },
+
+        // clear single post
+        clearSinglePost: (state) => {
+            state.singlePost = null;
+        },
 
     },
 
@@ -222,12 +230,43 @@ const postSlice = createSlice({
                 }
             })
 
+            // LOAD SINGLE POST
+            .addCase(getSinglePost.pending, (state) => {
+
+                // loading true
+                state.singlePostLoading = true;
+
+                // error null
+                state.error = null;
+
+            })
+            .addCase(getSinglePost.fulfilled, (state, action) => {
+
+                // post loading false
+                state.singlePostLoading = false;
+
+                // get data from actoin payload
+                const { postData } = action.payload
+
+                // set postData in single post
+                state.singlePost = postData;
+            })
+            .addCase(getSinglePost.rejected, (state, action) => {
+
+                // loading false
+                state.singlePostLoading = false;
+
+                // setting error
+                state.error = action.payload;
+
+            })
+
     }
 
 });
 
 // export reducer function
-export const { clearMessages, clearBookmarkStatus, updatePostLikes, updatePostCommentsCount } = postSlice.actions;
+export const { clearMessages, clearBookmarkStatus, updatePostLikes, updatePostCommentsCount, clearSinglePost } = postSlice.actions;
 
 // export postSlice reducer
 export default postSlice.reducer;
