@@ -46,6 +46,9 @@ const SinglePost = () => {
             <PostCard
                 post={singlePost} // post data
                 // openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to post card
+
+
+                
             />
 
 
