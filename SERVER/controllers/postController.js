@@ -361,6 +361,8 @@ export const getPost = async (req, res, next) => {
         bookmarkStatus: null, // "saved" | "unsaved" (for message)
     };
 
+    console.log(postData);
+    
     // response
     return res.status(200).json({
         success: true,

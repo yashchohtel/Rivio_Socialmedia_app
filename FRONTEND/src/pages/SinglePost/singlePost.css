@@ -1,3 +1,41 @@
-h1{
-    color: wheat;
+.singePostPage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.singePostPage .singlePostContentCont {
+  width: 1040px;
+  display: flex;
+  margin-top: 2rem;
+}
+
+.singePostPage .postCardCont {
+  width: 650px;
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.singePostPage .accountSuggestionCont {
+  width: 280px;
+  height: 90vh;
+  margin-left: 8rem;
+  margin-top: 2.5rem;
+}
+
+/* ================= DESKTOP FIRST ================= */
+
+/* -------- Large Desktop -------- */
+@media (max-width: 1353px) {
+    
+  /* singlePost page content container */
+  .singePostPage .singlePostContentCont {
+    justify-content: center;
+  }
+
+  /* account sugestion container */
+  .singePostPage .accountSuggestionCont {
+    display: none;
+  }
 }

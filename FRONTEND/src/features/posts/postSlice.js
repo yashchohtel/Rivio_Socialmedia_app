@@ -230,7 +230,7 @@ const postSlice = createSlice({
                 }
             })
 
-            // LOAD SINGLE POST
+            // GET SINGLE POST
             .addCase(getSinglePost.pending, (state) => {
 
                 // loading true
@@ -261,7 +261,7 @@ const postSlice = createSlice({
 
             })
 
-    }
+    } 
 
 });
 

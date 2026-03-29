@@ -123,10 +123,10 @@ export const handlePostBookmark = createAsyncThunk("posts/handlePostBookmark", a
 export const getSinglePost = createAsyncThunk("posts/getSinglePost", async (postId, { rejectWithValue }) => {
 
     try {
-
+        
         // calling api
         const { data } = await api.get(`/api/posts/getPost/${postId}`);
-
+        
         // return data 
         return data;
 

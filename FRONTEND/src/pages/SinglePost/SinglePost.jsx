@@ -3,9 +3,9 @@ import './singlePost.css'
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getSinglePost } from '../../features/posts/postThunk';
-import { clearSinglePost } from '../../features/posts/postSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import PostCard from '../../Components/FeedComponent/PostCard/PostCard';
+import AccountSuggestion from '../../Components/AccountSuggestion/AccountSuggestion';
 
 const SinglePost = () => {
 
@@ -19,9 +19,7 @@ const SinglePost = () => {
 
     /* -------------------------------------- */
 
-    const { singlePost } = useSelector((state) => state.post);
-
-    console.log(singlePost);
+    const { singlePost, singlePostLoading } = useSelector((state) => state.post);
 
     /* -------------------------------------- */
 
@@ -31,26 +29,47 @@ const SinglePost = () => {
         // dispatcch getSinglePost
         dispatch(getSinglePost(postId));
 
-        return () => {
-
-            // clear single post from state
-            dispatch(clearSinglePost());
-        };
-
     }, [postId]);
+
+    /* -------------------------------------- */
+
+    // post card skeleton loading
+    if (singlePostLoading) return <p>Loading...</p>;
+
+    // if single post is null do not render component
+    if (!singlePost) return null;
 
     return (
 
         <>
 
-            <PostCard
-                post={singlePost} // post data
-                // openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to post card
+            {/* single post page */}
+            <div className="singePostPage">
 
+                {/* single post content container */}
+                <div className="singlePostContentCont">
 
-                
-            />
+                    {/* post card container */}
+                    <div className="postCardCont">
 
+                        {/* post card component */}
+                        <PostCard
+                            post={singlePost} // post data                
+                        />
+
+                    </div>
+
+                    {/* suggestion contaienr */}
+                    <div className="accountSuggestionCont">
+
+                        {/* account suggestion component */}
+                        <AccountSuggestion />
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </>
 
@@ -58,3 +77,4 @@ const SinglePost = () => {
 }
 
 export default SinglePost
+
