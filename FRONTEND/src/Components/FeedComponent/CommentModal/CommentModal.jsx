@@ -13,7 +13,7 @@ import CommentBox from '../CommentBox/CommentBox';
 import { useEffect } from 'react';
 import { getCommentsForPost } from '../../../features/comment/commentThunk';
 
-const CommentModal = ({ activePostId, openFeedActionOption }) => {
+const CommentModal = ({ activePostId }) => {
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
@@ -128,7 +128,6 @@ const CommentModal = ({ activePostId, openFeedActionOption }) => {
                                 location={location}
                                 isOwnPost={isOwnPost}
                                 isFollowing={isFollowing}
-                                openFeedActionOption={openFeedActionOption} // to open feed action option modal
                                 componentType="commentModal"
                             />
                         </div>

@@ -3,15 +3,26 @@ import { HiDotsHorizontal } from "react-icons/hi";
 import { timeAgo } from "../../../utility/postCardUtility";
 import { useNavigate } from "react-router-dom";
 import './postCardHeader.css';
+import { useDispatch } from "react-redux";
+import { openFeedActionOption } from "../../../features/ui/uiSlice";
 
-const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, openFeedActionOption, componentType }) => {
-    
+const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, componentType }) => {
+
     // initilize useNavigate 
     const navigate = useNavigate();
 
+    /* -------------------------------------- */
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    /* -------------------------------------- */
+    
     // safety check (important because tumne user null bhi rakha hai)
     if (!user) return null;
-
+    
+    /* -------------------------------------- */
+    
     // destructure user data
     const { _id, profileImage, username, isVerified } = user;
 
@@ -24,6 +35,16 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, ope
         })
 
     };
+
+    /* -------------------------------------- */
+
+    // function to open feed action option modal
+    const handleOpenModal = () => {
+
+        // dispatch open feed action option modal action
+        dispatch(openFeedActionOption());
+
+    }
 
     return (
 
@@ -86,7 +107,7 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, ope
 
                 {/* option */}
                 <div className="option"
-                    onClick={() => openFeedActionOption()}
+                    onClick={() => handleOpenModal()}
                 >
                     <span className="icon">
                         <HiDotsHorizontal />

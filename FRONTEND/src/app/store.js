@@ -4,6 +4,7 @@ import postReducer from '../features/posts/postSlice.js';
 import commentReducer from '../features/comment/commentSlice.js';
 import confirmReducer from '../features/confirmation/confirmationSlice.js';
 import notificationReducer from '../features/notification/notificationSlice.js'
+import uiReducer from "../features/ui/uiSlice.js";
 
 // configure store with 
 const store = configureStore({
@@ -25,6 +26,9 @@ const store = configureStore({
 
         // notification reducer
         notification: notificationReducer,
+
+        // ui reducer
+        ui: uiReducer,
 
     },
 

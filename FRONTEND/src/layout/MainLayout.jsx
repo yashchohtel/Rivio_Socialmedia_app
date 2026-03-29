@@ -8,6 +8,7 @@ import CreatePostModal from '../Components/Modal Component/CreatePostModal/Creat
 import GlobalDeleteConfirmation from '../Components/Modal Component/GlobalDeleteConfirmation/GlobalDeleteConfirmation';
 import { getAllNotifications } from '../features/notification/notificationThunk';
 import { useDispatch } from 'react-redux';
+import FeedActionOptionModal from '../Components/FeedComponent/FeedActionOptionModal/FeedActionOptionModal';
 
 const MainLayout = () => {
 
@@ -200,8 +201,11 @@ const MainLayout = () => {
                     <Outlet />
                 </div>
 
-                {/* delete confirmaton modal */}
+                {/* delete confirmaton modal (global component) */}
                 <GlobalDeleteConfirmation />
+
+                {/* feed action option modal (global component) */}
+                <FeedActionOptionModal />
 
             </div>
 
@@ -210,7 +214,3 @@ const MainLayout = () => {
 };
 
 export default MainLayout;
-
-
-
-

@@ -37,7 +37,7 @@ const GlobalDeleteConfirmation = () => {
 
     /* -------------------------------------- */
 
-    // jab tak isOpen false hai, kuch render mat karo
+    // if not open then return null (do not render component)
     if (!isOpen) return null;
 
     /* -------------------------------------- */

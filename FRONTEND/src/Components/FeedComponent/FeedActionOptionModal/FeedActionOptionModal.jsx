@@ -1,12 +1,39 @@
 import React from 'react'
 import './feedActionOptionModal.css'
+import { useDispatch, useSelector } from 'react-redux'; 
+import { closeFeedActionOption } from '../../../features/ui/uiSlice';
 
-const FeedActionOptionModal = ({ closeFeedActionOption }) => {
+const FeedActionOptionModal = () => {
+
+    // state to make feed action option modal active getting from ui slice
+    const { feedActionOptionModalActive } = useSelector((state) => state.ui);
+
+    /* -------------------------------------- */
+
+    // configure dispatch use to dispatch actions
+    const dispatch = useDispatch();
+
+    /* -------------------------------------- */
+
+    // if not open then return null (do not render component)
+    if (!feedActionOptionModalActive) return null;
+
+    /* -------------------------------------- */
+
+    // function to close feed action option modal
+    const handleCloseModal = () => {
+
+        // dispatch close feed action option modal action
+        dispatch(closeFeedActionOption());
+
+    }
+
     return (
+
         <>
             {/* feed action option modal */}
             <div className="FeedActionOptionModal"
-                onClick={() => closeFeedActionOption()}
+                onClick={() => handleCloseModal()}
             >
 
                 {/* feed action option */}
@@ -22,8 +49,11 @@ const FeedActionOptionModal = ({ closeFeedActionOption }) => {
                 </div>
 
             </div>
+
         </>
+
     )
+
 }
 
-export default FeedActionOptionModal
+export default FeedActionOptionModal;

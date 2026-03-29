@@ -7,7 +7,6 @@ import { loadFeed } from '../../../features/posts/postThunk';
 import { ImSpinner8 } from "react-icons/im";
 import FeedSkeleton from '../../Skeletons/FeedSkeleton/FeedSkeleton';
 import CommentModal from '../CommentModal/CommentModal';
-import FeedActionOptionModal from '../FeedActionOptionModal/FeedActionOptionModal';
 import { socket } from '../../../socket/socket';
 import { toast } from 'react-toastify';
 
@@ -21,21 +20,6 @@ const Feed = () => {
 
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
-
-    /* -------------------------------------- */
-
-    // state to make feed action option modal active
-    const [feedActionOptionModalActive, setFeedActionOptionModalActive] = useState(false);
-
-    // to open feed action option modal
-    const openFeedActionOption = useCallback(() => {
-        setFeedActionOptionModalActive(true);
-    }, [])
-
-    // to open feed action option modal
-    const closeFeedActionOption = useCallback(() => {
-        setFeedActionOptionModalActive(false);
-    }, [])
 
     /* -------------------------------------- */
 
@@ -119,7 +103,6 @@ const Feed = () => {
 
     /* -------------------------------------- */
 
-
     return (
 
         <>
@@ -136,7 +119,6 @@ const Feed = () => {
                 <PostCard
                     key={post._id} // unique key
                     post={post} // post data
-                    openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to post card
                 />
             ))}
 
@@ -144,14 +126,6 @@ const Feed = () => {
             {isCommentModalOpen && (
                 <CommentModal
                     activePostId={activePostId} // pass active post id to comment modal
-                    openFeedActionOption={openFeedActionOption} // pass open feed action option modal handler to comment modal
-                />
-            )}
-
-            {/* feed action option modal */}
-            {feedActionOptionModalActive && (
-                <FeedActionOptionModal
-                    closeFeedActionOption={closeFeedActionOption} // feed action option modal close handler
                 />
             )}
 

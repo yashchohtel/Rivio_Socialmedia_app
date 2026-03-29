@@ -5,7 +5,7 @@ import PostCardHeader from '../PostCardHeader/PostCardHeader';
 import PostCardFooter from '../PostCardFooter/PostCardFooter';
 import FeedImageContainer from '../FeedImageContainer/FeedImageContainer';
 
-const PostCard = ({ post, openFeedActionOption }) => {
+const PostCard = ({ post }) => {
 
     // destructure post data
     const { _id, user, createdAt, location, isOwnPost, isFollowing, media, commentsCount,sharesCount, likesCount, isLiked, isBookmarked, bookmarkStatus, caption } = post;
@@ -35,7 +35,6 @@ const PostCard = ({ post, openFeedActionOption }) => {
                     location={location}
                     isOwnPost={isOwnPost}
                     isFollowing={isFollowing}
-                    openFeedActionOption={openFeedActionOption} // to open feed action option modal
                     componentType="postCard"
                 />
 
