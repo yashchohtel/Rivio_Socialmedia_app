@@ -2,6 +2,7 @@ import React from 'react'
 import "./feedSkeleton.css"
 
 const FeedSkeleton = () => {
+    
     return (
         <>
             {/* post skeleton skeleton */}
