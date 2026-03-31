@@ -103,13 +103,31 @@ const postSlice = createSlice({
             })
             .addCase(createPost.fulfilled, (state, action) => {
 
+                // post loading false
                 state.postLoading = false;
+
+                // sucess true and message from payload
                 state.success = true;
                 state.message = action.payload?.message || "Post created successfully";
+
+                // phase uploaded
                 state.phase = "uploaded"
 
-                if (action.payload?.formattedPost) {
-                    state.posts.unshift(action.payload.formattedPost);
+                // new post data from payload
+                const newPost = action.payload?.formattedPost;
+
+                // if new post is available
+                if (newPost) {
+
+                    // normalize newly created post and store in postsById with post id as key
+                    state.postsById[newPost._id] = newPost;
+
+                    // add new post id to the start of feedIds array to show newly created post at the top of feed
+                    state.feedIds.unshift(newPost._id);
+
+                    // ⚠️ TEMP (jab tak UI migrate nahi hota)
+                    state.posts.unshift(newPost);
+
                 }
 
             })
@@ -183,7 +201,13 @@ const postSlice = createSlice({
                 // get data from actoin payload
                 const { postData } = action.payload
 
-                // set postData in single post
+                // normalize single post data and store in postsById 
+                state.postsById[postData._id] = postData;
+
+                // set single post id 
+                state.singlePostId = postData._id;
+
+                // {will be removed soon} set postData in single post
                 state.singlePost = postData;
             })
             .addCase(getSinglePost.rejected, (state, action) => {

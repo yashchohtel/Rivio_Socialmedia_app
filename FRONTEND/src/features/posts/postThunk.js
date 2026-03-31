@@ -68,8 +68,6 @@ export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { reje
         // calling api through axios instance
         const { data } = await api.get(url);
 
-        console.log(data);
-
         // return data
         return data; // { posts, nextCursor, success }
 
