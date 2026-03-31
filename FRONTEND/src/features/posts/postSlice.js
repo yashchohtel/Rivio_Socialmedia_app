@@ -4,9 +4,18 @@ import { getCommentsForPost } from "../comment/commentThunk";
 
 // initial state for post slice
 const initialState = {
+
+    postsById: {}, // to store posts in normalized form postId as key and post data as value
+    feedIds: [], // to store the order of posts in feed as array of postIds
+    singlePostId: null, // to store single post id when we are viewing single post
+
+    /* --------------- */
+
     posts: [],
-    postLoading: false, // for creating post
-    feedLoading: false, // for loading feed
+    singlePost: null, // state to store single post
+
+    /* --------------- */
+
     success: false, // for sucess flag
     hasMore: true, // for the feed
     cursor: null, // to get the next batch of posts for feed
@@ -14,7 +23,8 @@ const initialState = {
     message: null, // message is for succes message
     error: null, // this is for erroe message
 
-    singlePost: null, // state to store single post
+    postLoading: false, // for creating post
+    feedLoading: false, // for loading feed
     singlePostLoading: false, // loading for single post
 };
 
@@ -75,11 +85,6 @@ const postSlice = createSlice({
             }
         },
 
-        // clear single post
-        clearSinglePost: (state) => {
-            state.singlePost = null;
-        },
-
     },
 
     // extrareducers to handle async actions
@@ -97,8 +102,6 @@ const postSlice = createSlice({
                 state.success = false;
             })
             .addCase(createPost.fulfilled, (state, action) => {
-
-                // console.log(action.payload);
 
                 state.postLoading = false;
                 state.success = true;
@@ -125,16 +128,27 @@ const postSlice = createSlice({
             })
             .addCase(loadFeed.fulfilled, (state, action) => {
 
-                // console.log(action.payload);
-
-                state.feedLoading = false;
-                state.success = true;
-                state.phase = "feedLoaded";
+                state.feedLoading = false; // stop feed loading
+                state.success = true; // success true
+                state.phase = "feedLoaded"; // phase feed loaded-
 
                 // extracting posts, nextCursor and hasMore flag from payload
                 const { posts, nextCursor, hasMore } = action.payload;
 
-                //  append posts in posts initial state for fead
+                // store posts in normalized form in postsById and store the order of posts in feedIds
+                posts.forEach(post => {
+
+                    // if post id is not in postById then only push to feedIds to avoid duplicate id in feedIds
+                    if (!state.postsById[post._id]) {
+                        state.feedIds.push(post._id);
+                    }
+
+                    // store post in postsById with post id as key 
+                    state.postsById[post._id] = post;
+
+                });
+
+                // {will be removed soon} append posts in posts initial state for fead
                 state.posts = [...state.posts, ...posts];
 
                 // update cursor
@@ -149,6 +163,37 @@ const postSlice = createSlice({
                 state.success = false;
                 state.phase = "feedError";
                 state.error = action.payload;
+            })
+
+            // GET SINGLE POST
+            .addCase(getSinglePost.pending, (state) => {
+
+                // loading true
+                state.singlePostLoading = true;
+
+                // error null
+                state.error = null;
+
+            })
+            .addCase(getSinglePost.fulfilled, (state, action) => {
+
+                // post loading false
+                state.singlePostLoading = false;
+
+                // get data from actoin payload
+                const { postData } = action.payload
+
+                // set postData in single post
+                state.singlePost = postData;
+            })
+            .addCase(getSinglePost.rejected, (state, action) => {
+
+                // loading false
+                state.singlePostLoading = false;
+
+                // setting error
+                state.error = action.payload;
+
             })
 
             // LIKE POST
@@ -230,43 +275,12 @@ const postSlice = createSlice({
                 }
             })
 
-            // GET SINGLE POST
-            .addCase(getSinglePost.pending, (state) => {
-
-                // loading true
-                state.singlePostLoading = true;
-
-                // error null
-                state.error = null;
-
-            })
-            .addCase(getSinglePost.fulfilled, (state, action) => {
-
-                // post loading false
-                state.singlePostLoading = false;
-
-                // get data from actoin payload
-                const { postData } = action.payload
-
-                // set postData in single post
-                state.singlePost = postData;
-            })
-            .addCase(getSinglePost.rejected, (state, action) => {
-
-                // loading false
-                state.singlePostLoading = false;
-
-                // setting error
-                state.error = action.payload;
-
-            })
-
-    } 
+    }
 
 });
 
 // export reducer function
-export const { clearMessages, clearBookmarkStatus, updatePostLikes, updatePostCommentsCount, clearSinglePost } = postSlice.actions;
+export const { clearMessages, clearBookmarkStatus, updatePostLikes, updatePostCommentsCount } = postSlice.actions;
 
 // export postSlice reducer
 export default postSlice.reducer;

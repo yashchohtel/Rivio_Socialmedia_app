@@ -68,7 +68,7 @@ export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { reje
         // calling api through axios instance
         const { data } = await api.get(url);
 
-        // console.log(data);
+        console.log(data);
 
         // return data
         return data; // { posts, nextCursor, success }
@@ -78,6 +78,24 @@ export const loadFeed = createAsyncThunk("posts/loadFeed", async (cursor, { reje
 
         return rejectWithValue(err.response?.data?.message || "Something went wrong");
 
+    }
+
+});
+
+// thunk to get single post
+export const getSinglePost = createAsyncThunk("posts/getSinglePost", async (postId, { rejectWithValue }) => {
+
+    try {
+
+        // calling api
+        const { data } = await api.get(`/api/posts/getPost/${postId}`);
+
+        // return data 
+        return data;
+
+    } catch (err) {
+
+        return rejectWithValue(err.response?.data?.message || "Something went wrong");
     }
 
 });
@@ -110,24 +128,6 @@ export const handlePostBookmark = createAsyncThunk("posts/handlePostBookmark", a
         const { data } = await api.patch(`/api/posts/bookMarkPost/${id}`);
 
         // return data
-        return data;
-
-    } catch (err) {
-
-        return rejectWithValue(err.response?.data?.message || "Something went wrong");
-    }
-
-});
-
-// thunk to get single post
-export const getSinglePost = createAsyncThunk("posts/getSinglePost", async (postId, { rejectWithValue }) => {
-
-    try {
-        
-        // calling api
-        const { data } = await api.get(`/api/posts/getPost/${postId}`);
-        
-        // return data 
         return data;
 
     } catch (err) {
