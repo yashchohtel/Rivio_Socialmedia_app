@@ -48,20 +48,14 @@ const postSlice = createSlice({
             state.phase = null;
         },
 
-        // reducer function to clear book mark status
-        clearBookmarkStatus: (state, action) => {
-            const post = state.posts.find(p => p._id === action.payload);
-            if (post) post.bookmarkStatus = null;
-        },
-
         // update post like count
         updatePostLikes: (state, action) => {
 
             // get postsid and likes likesCount from payload 
             const { postId, likesCount } = action.payload;
 
-            // get post
-            const post = state.posts.find(p => p._id === postId);
+            // get post from postById
+            const post = state.postsById[postId];
 
             // increase likes count
             if (post) {
@@ -83,6 +77,19 @@ const postSlice = createSlice({
             if (post) {
                 post.commentsCount += incrementBy;
             }
+        },
+
+        // reducer function to clear book mark status
+        clearBookmarkStatus: (state, action) => {
+
+            // get postId from payload
+            const postId = action.payload;
+
+            // find post from postById
+            const post = state.postsById[postId];
+
+            //  reset book mark status
+            if (post) post.bookmarkStatus = null;
         },
 
     },
@@ -226,8 +233,8 @@ const postSlice = createSlice({
                 // get posid from action meta argument
                 const postId = action.meta.arg;
 
-                // find post
-                const post = state.posts.find(p => p._id === postId);
+                // find post from postById
+                const post = state.postsById[postId];
 
                 // optimistic increase isLiked status and likesCount
                 if (post) {
@@ -241,9 +248,10 @@ const postSlice = createSlice({
                 // extract data from payload
                 const { postId, liked, likesCount } = action.payload;
 
-                // find the post which we are handlin like 
-                const post = state.posts.find(p => p._id === postId);
+                // find post from postById
+                const post = state.postsById[postId];
 
+                // update isLiked status and likesCount with actual data from payload
                 if (post) {
                     post.isLiked = liked;
                     post.likesCount = likesCount;
@@ -256,25 +264,15 @@ const postSlice = createSlice({
             })
 
             // BOOKMARK POST
-            .addCase(handlePostBookmark.pending, (state, action) => {
-
-                // getting post
-                const post = state.posts.find(p => p._id === action.meta.arg);
-
-                // setting 
-                if (post) post.bookmarkLoading = true;
-
-            })
             .addCase(handlePostBookmark.fulfilled, (state, action) => {
 
                 // extract postId and bookMarked
                 const { postId, bookmarked } = action.payload;
 
-                // find posts
-                const post = state.posts.find(p => p._id === postId);
+                // find posts from postById
+                const post = state.postsById[postId];
 
                 if (post) {
-                    post.bookmarkLoading = false;
                     post.isBookmarked = bookmarked;
                     post.bookmarkStatus = bookmarked ? "saved" : "unsaved";
                 }

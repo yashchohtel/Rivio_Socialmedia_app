@@ -12,19 +12,23 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { clearBookmarkStatus } from '../../../features/posts/postSlice';
 
-const FeedImageContainer = ({ postId, media, bookmarkStatus, bookmarkActive, setBookmarkActive, componentType }) => {
+const FeedImageContainer = ({ postId, media, bookmarkActive, setBookmarkActive, bookmarkStatus, componentType }) => {
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
+    /* -------------------------------------- */
+
     // hide book mark toast
     useEffect(() => {
 
-        // if component type not equal to post card retur
+        // if component type not equal to post card return
         if (componentType !== "postCard") return
 
+        // if no bookmark status return (null or undefined)
         if (!bookmarkStatus) return;
 
+        // set book mark active to true to show toast
         setBookmarkActive(true);
 
         const timer = setTimeout(() => {

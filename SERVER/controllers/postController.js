@@ -115,8 +115,6 @@ export const createPost = async (req, res, next) => {
             isFollowing: false,
             isLiked: false,
             isBookmarked: false,
-
-            bookmarkLoading: false,
             bookmarkStatus: null,
         };
 
@@ -256,7 +254,6 @@ export const getAllPosts = async (req, res, next) => {
             isFollowing, // is current user following
             isLiked, // is liked flag
             isBookmarked, // is post is bookmarked or not
-            bookmarkLoading: false, // UI loading (per post)
             bookmarkStatus: null, // "saved" | "unsaved" (for message)
         };
 
@@ -357,7 +354,6 @@ export const getPost = async (req, res, next) => {
         isFollowing, // is current user following
         isLiked, // is liked flag
         isBookmarked, // is post is bookmarked or not
-        bookmarkLoading: false, // UI loading (per post)
         bookmarkStatus: null, // "saved" | "unsaved" (for message)
     };
 
@@ -464,7 +460,7 @@ export const likePost = async (req, res, next) => {
     // get socket id 
     const io = getIO();
 
-    // emit post_like_update evebt
+    // emit post_like_update event
     io.to(post._id.toString()).emit("post_like_update", {
         postId: post._id,
         likesCount: post.likesCount,

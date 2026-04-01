@@ -13,7 +13,7 @@ const PostCardFooterTop = (props) => {
 
     // destructure proops
     const { postId, commentsCount, sharesCount, isLiked, likesCount, isBookmarked, handleBookmarkActive } = props;
-
+    
     /* -------------------------------------- */
 
     // initilize dispatch
@@ -46,7 +46,7 @@ const PostCardFooterTop = (props) => {
     // handle postBookMark
     const handlePostBookMark = () => {
 
-        // set liked status inverse of previous state
+        // set bookmark status inverse of previous state
         setUiIsBookMarked(prev => !prev);
 
         // dispatch handle post like thunk
@@ -63,6 +63,7 @@ const PostCardFooterTop = (props) => {
 
     /* -------------------------------------- */
 
+    // effect to setUiIsBookMarked on isBookMarked field change
     useEffect(() => {
         setUiIsBookMarked(isBookmarked);
     }, [isBookmarked]);
@@ -70,7 +71,7 @@ const PostCardFooterTop = (props) => {
     // effect to setUiIsLiked on isLiked field change
     useEffect(() => {
         setUiIsLiked(isLiked);
-    }, [isLiked, likesCount]);
+    }, [isLiked]);
 
     /* -------------------------------------- */
 
