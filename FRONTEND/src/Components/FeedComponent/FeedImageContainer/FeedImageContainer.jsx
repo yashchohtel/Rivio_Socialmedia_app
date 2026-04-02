@@ -93,4 +93,4 @@ const FeedImageContainer = ({ postId, media, bookmarkActive, setBookmarkActive, 
     )
 }
 
-export default FeedImageContainer
+export default FeedImageContainer;
