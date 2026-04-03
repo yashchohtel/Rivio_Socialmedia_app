@@ -16,7 +16,7 @@ const Feed = () => {
     const dispatch = useDispatch();
 
     // Get auth loading state from Redux store
-    const { posts, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
+    const { feedIds, postsById, posts, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
 
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
@@ -63,7 +63,7 @@ const Feed = () => {
     useEffect(() => {
 
         // dispatch loadFeed thunk
-        if (posts.length === 0) {
+        if (feedIds.length === 0) {
             dispatch(loadFeed(null));
         }
 
@@ -78,11 +78,11 @@ const Feed = () => {
         const joinRooms = () => {
 
             // proceed if posts avilable
-            if (!posts || posts.length === 0) return;
+            if (!feedIds || feedIds.length === 0) return;
 
             // emit event for each post users load
-            posts.forEach(post => {
-                socket.emit("join_post_room", post._id);
+            feedIds.forEach(postId => {
+                socket.emit("join_post_room", postId);
             });
 
         };
@@ -99,7 +99,7 @@ const Feed = () => {
             socket.off("connect", joinRooms);
         };
 
-    }, [posts]);
+    }, [feedIds]);
 
     /* -------------------------------------- */
 
@@ -108,19 +108,30 @@ const Feed = () => {
         <>
 
             {/* show skeleton when post is loading */}
-            {feedLoading && posts.length === 0 && (
+            {feedLoading && feedIds.length === 0 && (
                 Array.from({ length: 6 }).map((_, i) => (
                     <FeedSkeleton key={i} />
                 ))
             )}
 
             {/* feed content */}
-            {posts && posts.map((post) => (
-                <PostCard
-                    key={post._id} // unique key
-                    post={post} // post data
-                />
-            ))}
+            {feedIds && feedIds.map((postId) => {
+
+                // get post data from postsById using postId
+                const post = postsById[postId];
+
+                // if no post data return null
+                if (!post) return null;
+
+                // render post card with post data
+                return (
+                    <PostCard
+                        key={post._id} // unique key
+                        post={post} // post data
+                    />
+                )
+
+            })}
 
             {/* comment modal for gloal comment system */}
             {isCommentModalOpen && (
