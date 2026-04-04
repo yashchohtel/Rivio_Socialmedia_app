@@ -20,7 +20,11 @@ const SinglePost = () => {
 
     /* -------------------------------------- */
 
-    const { singlePost, singlePostLoading } = useSelector((state) => state.post);
+    // get post data from redux store
+    const { postsById, singlePostId, singlePostLoading } = useSelector(state => state.post);
+
+    // get post data for single post id
+    const post = postsById[singlePostId];
 
     /* -------------------------------------- */
 
@@ -33,11 +37,6 @@ const SinglePost = () => {
     }, [postId]);
 
     /* -------------------------------------- */
-
-    useEffect(() => {
-        console.log("singlePost state:", singlePost);
-        console.log("singlePost state isliked:", singlePost?.isLiked);
-    }, [singlePost]);
 
     // post card skeleton loading
     if (singlePostLoading) {
@@ -64,11 +63,9 @@ const SinglePost = () => {
     }
 
     // if single post is null do not render component
-    if (!singlePost) return null;
+    if (!post) return null;
 
     /* -------------------------------------- */
-
-
 
     return (
 
@@ -85,7 +82,7 @@ const SinglePost = () => {
 
                         {/* post card component */}
                         <PostCard
-                            post={singlePost} // post data                
+                            post={post} // post data                
                         />
 
                     </div>
@@ -107,5 +104,5 @@ const SinglePost = () => {
     )
 }
 
-export default SinglePost
+export default SinglePost;
 

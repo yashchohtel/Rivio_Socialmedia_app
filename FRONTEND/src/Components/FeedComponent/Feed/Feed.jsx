@@ -16,7 +16,7 @@ const Feed = () => {
     const dispatch = useDispatch();
 
     // Get auth loading state from Redux store
-    const { feedIds, postsById, posts, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
+    const { feedIds, postsById, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
 
     // Get comment initial state from Redux store
     const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
@@ -100,9 +100,6 @@ const Feed = () => {
         };
 
     }, [feedIds]);
-
-
-    
 
     /* -------------------------------------- */
 

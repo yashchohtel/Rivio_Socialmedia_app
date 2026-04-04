@@ -18,11 +18,11 @@ const CommentModal = ({ activePostId }) => {
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
 
-    // posts from redux store
-    const { posts } = useSelector((state) => state.post);
+    // Get auth loading state from Redux store
+    const { postsById } = useSelector((state) => state.post);
 
     // get post data for active post id
-    const post = posts.find((p) => p._id === activePostId);
+    const post = postsById[activePostId];
 
     // destructure media from post data
     const { _id, commentsCount, likesCount, sharesCount, isLiked, isBookmarked, user, createdAt, location, isOwnPost, isFollowing, media, bookmarkStatus, caption } = post;
@@ -77,7 +77,7 @@ const CommentModal = ({ activePostId }) => {
 
     // state to store highlight status
     const [highlightFirst, setHighlightFirst] = useState(false);
-    
+
     // function to make first newly comment added highlight
     const highlightComment = () => {
         setHighlightFirst(true);
