@@ -70,8 +70,8 @@ const postSlice = createSlice({
             // get postId and incrementdBy
             const { postId, incrementBy } = action.payload;
 
-            // find post
-            const post = state.posts.find(p => p._id === postId);
+            // find post from postByid
+            const post = state.postsById[postId];
 
             // increase comments count
             if (post) {
@@ -288,13 +288,14 @@ const postSlice = createSlice({
                 // get postId and actualCount
                 const { postId, actualCount } = action.payload;
 
-                // find post
-                const post = state.posts.find(p => p._id === postId);
+                // find post from postById
+                const post = state.postsById[postId];
 
                 // synk with actual coment count
                 if (post) {
                     post.commentsCount = actualCount;
                 }
+                
             })
 
     }

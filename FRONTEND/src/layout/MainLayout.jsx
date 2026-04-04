@@ -7,8 +7,9 @@ import NotificationModal from '../Components/Modal Component/NotificationModal/N
 import CreatePostModal from '../Components/Modal Component/CreatePostModal/CreatePostModal';
 import GlobalDeleteConfirmation from '../Components/Modal Component/GlobalDeleteConfirmation/GlobalDeleteConfirmation';
 import { getAllNotifications } from '../features/notification/notificationThunk';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import FeedActionOptionModal from '../Components/FeedComponent/FeedActionOptionModal/FeedActionOptionModal';
+import CommentModal from '../Components/FeedComponent/CommentModal/CommentModal';
 
 const MainLayout = () => {
 
@@ -19,6 +20,11 @@ const MainLayout = () => {
 
     // configure dispatch use to dispatch actions
     const dispatch = useDispatch();
+
+    /* -------------------------------------- */
+
+    // getting state from redux store for comment modal
+    const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
 
     /* -------------------------------------- */
 
@@ -206,6 +212,11 @@ const MainLayout = () => {
 
                 {/* feed action option modal (global component) */}
                 <FeedActionOptionModal />
+
+                {/* comment modal (global component) */}
+                {isCommentModalOpen && (
+                    <CommentModal activePostId={activePostId} />
+                )}
 
             </div>
 

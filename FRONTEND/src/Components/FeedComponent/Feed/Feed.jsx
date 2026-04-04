@@ -18,8 +18,8 @@ const Feed = () => {
     // Get auth loading state from Redux store
     const { feedIds, postsById, feedLoading, hasMore, cursor } = useSelector((state) => state.post);
 
-    // Get comment initial state from Redux store
-    const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
+    // // Get comment initial state from Redux store
+    // const { activePostId, isCommentModalOpen } = useSelector((state) => state.comment);
 
     /* -------------------------------------- */
 
@@ -134,11 +134,11 @@ const Feed = () => {
             })}
 
             {/* comment modal for gloal comment system */}
-            {isCommentModalOpen && (
+            {/* {isCommentModalOpen && (
                 <CommentModal
                     activePostId={activePostId} // pass active post id to comment modal
                 />
-            )}
+            )} */}
 
             {/* feed loading spinner */}
             {feedLoading && (
