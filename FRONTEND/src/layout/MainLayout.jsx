@@ -145,10 +145,31 @@ const MainLayout = () => {
 
     // effect to check pathname and set sidebar collapse and active item status
     useEffect(() => {
+
+        // home
+        if (location.pathname === "/app") {
+            setIsSidebarCollapsed(false);
+            setActiveItem("home");
+        }
+
+        // explore
+        if (location.pathname.includes("explore")) {
+            setIsSidebarCollapsed(false);
+            setActiveItem("explore");
+        }
+
+        // message 
         if (location.pathname.includes("message")) {
             setIsSidebarCollapsed(true);
             setActiveItem("message");
         }
+
+        // profile
+        if (location.pathname.includes("profile")) {
+            setIsSidebarCollapsed(false);
+            setActiveItem("profile");
+        }
+
     }, [location.pathname]);
 
 
