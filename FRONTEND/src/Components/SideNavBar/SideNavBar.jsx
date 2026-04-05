@@ -12,7 +12,7 @@ import { FaPlus } from "react-icons/fa6";
 import { FaBars } from "react-icons/fa6";
 import { PiPaperPlaneTiltBold } from "react-icons/pi";
 import { PiPaperPlaneTiltFill } from "react-icons/pi";
-import MoreOption from "../Modal Component/MoreOptionModal/MoreOption";
+import MoreOption from "../Modal Component/MoreOptionModal/MoreOption"
 import { useSelector } from "react-redux";
 
 const SideNavBar = (props) => {
@@ -159,10 +159,9 @@ const SideNavBar = (props) => {
 
                         {/* profile */}
                         <Link
-                            to="/app/profile"
-                            onClick={() => {
-                                handlePageLinkClick("profile")
-                            }}
+                            to={`/app/profile/${user.id}`} // nevigate to profile page with user id
+                            state={{ user }} // pass user data as state to profile page
+                            onClick={() => handlePageLinkClick("profile")}
                             className={`linkContainer profile ${activeItem === "profile" ? "active" : ""}`}
                         >
                             <span className="icon imageIcon">

@@ -30,7 +30,7 @@ const MainLayout = () => {
 
     // state to make sidebar link active
     const [activeItem, setActiveItem] = useState("home");
-
+    
     // state to store last active page
     const [lastPageItem, setLastPageItem] = useState("home");
 
@@ -76,7 +76,7 @@ const MainLayout = () => {
         setIsSidebarCollapsed(false);
     }
 
-    /* -------------------------------------- */
+    /* -------------------------------------- */ 
 
     // state to handle modal open and clsoe
     const [activeModal, setActiveModal] = useState(null);
@@ -150,6 +150,7 @@ const MainLayout = () => {
     }, [location.pathname]);
 
     return (
+        
         <>
 
             <div className="mainLayout">

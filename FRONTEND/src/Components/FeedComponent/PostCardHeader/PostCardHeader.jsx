@@ -24,7 +24,7 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, com
     /* -------------------------------------- */
     
     // destructure user data
-    const { _id, profileImage, username, isVerified } = user;
+    const { id, profileImage, username, isVerified } = user;
 
     // function to handle navigate to user profile
     const navigateToProfile = (id) => {
@@ -51,7 +51,7 @@ const PostCardHeader = ({ user, createdAt, location, isOwnPost, isFollowing, com
         <div className="postCardHeader">
 
             {/* user info */}
-            <div className="userInfo" onClick={() => navigateToProfile(_id)}>
+            <div className="userInfo" onClick={() => navigateToProfile(id)}>
 
                 {/* avatar */}
                 <div className="avatar">
