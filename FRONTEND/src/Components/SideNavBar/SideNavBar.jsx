@@ -156,7 +156,7 @@ const SideNavBar = (props) => {
                             )}
 
                         </div>
-
+                        
                         {/* profile */}
                         <Link
                             to={`/app/profile/${user.id}`} // nevigate to profile page with user id

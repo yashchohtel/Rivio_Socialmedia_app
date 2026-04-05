@@ -30,10 +30,12 @@ const MainLayout = () => {
 
     // state to make sidebar link active
     const [activeItem, setActiveItem] = useState("home");
-    
+
     // state to store last active page
     const [lastPageItem, setLastPageItem] = useState("home");
 
+    console.log(lastPageItem);
+    
     // function to handle pagelink click
     const handlePageLinkClick = (item) => {
 
@@ -76,7 +78,7 @@ const MainLayout = () => {
         setIsSidebarCollapsed(false);
     }
 
-    /* -------------------------------------- */ 
+    /* -------------------------------------- */
 
     // state to handle modal open and clsoe
     const [activeModal, setActiveModal] = useState(null);
@@ -141,7 +143,7 @@ const MainLayout = () => {
 
     /* -------------------------------------- */
 
-    // effect to check pathname and set sidebar collapse and actie item status
+    // effect to check pathname and set sidebar collapse and active item status
     useEffect(() => {
         if (location.pathname.includes("message")) {
             setIsSidebarCollapsed(true);
@@ -149,8 +151,22 @@ const MainLayout = () => {
         }
     }, [location.pathname]);
 
+
+    // effect to set active itme null for some pages
+    useEffect(() => {
+
+        // get the current path name
+        const path = location.pathname;
+
+        // jin pages pe koi active nahi chahiye
+        if (path.includes("/app/post")) {
+            setActiveItem(null);
+        }
+
+    }, [location.pathname]);
+
     return (
-        
+
         <>
 
             <div className="mainLayout">
