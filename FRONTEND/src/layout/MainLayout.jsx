@@ -34,8 +34,6 @@ const MainLayout = () => {
     // state to store last active page
     const [lastPageItem, setLastPageItem] = useState("home");
 
-    console.log(lastPageItem);
-    
     // function to handle pagelink click
     const handlePageLinkClick = (item) => {
 
@@ -58,7 +56,7 @@ const MainLayout = () => {
         // modal active dikhe
         setActiveItem(modalname);
 
-        // toggle modal function if same close if new open
+        // toggle modal function if same close, if new open
         toggleModal(modalname);
 
     }
@@ -67,7 +65,7 @@ const MainLayout = () => {
 
     // state to make sidebar collapse
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
+    
     // to collapse sidebar
     const handleSBCollapse = () => {
         setIsSidebarCollapsed(true);
@@ -129,7 +127,6 @@ const MainLayout = () => {
 
         // set active item to last page when modal close
         setActiveItem(lastPageItem)
-
     };
 
     /* -------------------------------------- */
@@ -146,43 +143,33 @@ const MainLayout = () => {
     // effect to check pathname and set sidebar collapse and active item status
     useEffect(() => {
 
-        // home
-        if (location.pathname === "/app") {
-            setIsSidebarCollapsed(false);
-            setActiveItem("home");
-        }
-
-        // explore
-        if (location.pathname.includes("explore")) {
-            setIsSidebarCollapsed(false);
-            setActiveItem("explore");
-        }
-
-        // message 
-        if (location.pathname.includes("message")) {
-            setIsSidebarCollapsed(true);
-            setActiveItem("message");
-        }
-
-        // profile
-        if (location.pathname.includes("profile")) {
-            setIsSidebarCollapsed(false);
-            setActiveItem("profile");
-        }
-
-    }, [location.pathname]);
-
-
-    // effect to set active itme null for some pages
-    useEffect(() => {
-
         // get the current path name
         const path = location.pathname;
 
-        // jin pages pe koi active nahi chahiye
-        if (path.includes("/app/post")) {
-            setActiveItem(null);
+        // default active and collapse status
+        let active = "home";
+        let collapse = false;
+
+        if (path.includes("explore")) {
+            active = "explore";
         }
+        else if (path.includes("message")) {
+            active = "message";
+            collapse = true;
+        }
+        else if (path.includes("profile")) {
+            active = "profile";
+        }
+        else if (path.includes("/app/post")) {
+            active = null; // 
+        }
+        else if (path === "/app") {
+            active = "home";
+        }
+
+        // set active item and sidebar collapse status based on path
+        setActiveItem(active);
+        setIsSidebarCollapsed(collapse);
 
     }, [location.pathname]);
 
@@ -207,6 +194,7 @@ const MainLayout = () => {
                         handleSBCollapse={handleSBCollapse} // to collapse sidebar
                         handleSBExpande={handleSBExpande} // to expande sidebar
                         activeModal={activeModal} // active modal status
+                        closeModal={closeModal} // to close modal on link click
                     />
 
                     {/* search modal container  */}

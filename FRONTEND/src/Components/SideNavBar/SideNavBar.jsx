@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 const SideNavBar = (props) => {
 
     // destructuring props
-    const { activeItem, activeModal, isSidebarCollapsed, handlePageLinkClick, handleSBCollapse, handleSBExpande, handleModalLinkClick } = props
+    const { activeItem, activeModal, isSidebarCollapsed, handlePageLinkClick, handleSBCollapse, handleSBExpande, handleModalLinkClick, closeModal } = props
 
     /* -------------------------------------- */
 
@@ -55,9 +55,7 @@ const SideNavBar = (props) => {
 
                         {/* home */}
                         <Link to="/app"
-                            onClick={() => {
-                                handlePageLinkClick("home")
-                            }}
+                            onClick={() => handlePageLinkClick("home")}
                             className={`linkContainer home ${activeItem === "home" ? "active" : ""}`}
                         >
                             <span className="icon"> {activeItem === "home" ? <IoHome /> : <IoHomeOutline />} </span>
@@ -71,9 +69,7 @@ const SideNavBar = (props) => {
                         {/* search */}
                         <div
                             className={`linkContainer search ${activeItem === "search" ? "active" : ""}`}
-                            onClick={() => {
-                                handleModalLinkClick("search")
-                            }}
+                            onClick={() => handleModalLinkClick("search")}
                         >
                             <span className="icon"> <FaMagnifyingGlass /> </span>
 
@@ -87,9 +83,7 @@ const SideNavBar = (props) => {
                         <Link
                             to="/app/explore"
                             className={`linkContainer explore ${activeItem === "explore" ? "active" : ""}`}
-                            onClick={() => {
-                                handlePageLinkClick("explore")
-                            }}
+                            onClick={() => handlePageLinkClick("explore")}
                         >
                             <span className="icon"> {activeItem === "explore" ? <MdExplore /> : <MdOutlineExplore />} </span>
 
@@ -105,7 +99,7 @@ const SideNavBar = (props) => {
                             className={`linkContainer message ${activeItem === "message" ? "active" : ""}`}
                             onClick={() => {
                                 handlePageLinkClick("message")
-                                handleSBCollapse()
+                                handleSBCollapse() // collapse sidebar on message link click
                             }}
                         >
                             <span className="icon"> {activeItem === "message" ? <PiPaperPlaneTiltFill /> : <PiPaperPlaneTiltBold />} </span>
@@ -156,7 +150,7 @@ const SideNavBar = (props) => {
                             )}
 
                         </div>
-                        
+
                         {/* profile */}
                         <Link
                             to={`/app/profile/${user.id}`} // nevigate to profile page with user id
@@ -210,8 +204,9 @@ const SideNavBar = (props) => {
                     {/* overlay to cloe modal */}
                     <div
                         className={`overlay ${activeModal === "more" ? "active" : ""}`}
-                        onClick={() => {
-                            handleModalLinkClick("more")
+                        onClick={(e) => {
+                            e.stopPropagation(); // to stop event bubbling to parent elements
+                            closeModal();
                         }}
                     ></div>
 
