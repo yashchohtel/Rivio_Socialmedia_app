@@ -182,7 +182,9 @@ const SideNavBar = (props) => {
                     style={{ width: isSidebarCollapsed ? "max-content" : "" }}
                     onClick={() => {
                         handleModalLinkClick("more")
-                        handleSBExpande();
+                        if (!location.pathname.includes("/message")) {
+                            handleSBExpande();
+                        }
                     }}
                 >
                     <span className="icon"> <FaBars /> </span>

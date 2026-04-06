@@ -65,7 +65,7 @@ const MainLayout = () => {
 
     // state to make sidebar collapse
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-    
+
     // to collapse sidebar
     const handleSBCollapse = () => {
         setIsSidebarCollapsed(true);
@@ -84,14 +84,21 @@ const MainLayout = () => {
     // function to open modal and auto close other
     const toggleModal = (modalName) => {
 
+        // get the current path name
+        const path = location.pathname;
+
         // if the click is for same modal, close it
         if (activeModal === modalName) {
 
             // set active mdoal null to close modal
             setActiveModal(null);
 
-            // set active item to last page when modal close
-            setActiveItem(lastPageItem)
+            // set active item to last page when modal close (not on the specific page - single psost)
+            if (path.includes("/app/post")) {
+                setActiveItem(null)
+            } else {
+                setActiveItem(lastPageItem);
+            }
 
             // expande the side bar (dont expande if the last page was message because we want to keep ke collapsed)
             if (lastPageItem === "message") {
@@ -115,6 +122,9 @@ const MainLayout = () => {
     // function to close modal and expande sidebar
     const closeModal = () => {
 
+        // get the current path name
+        const path = location.pathname;
+
         // set modal name to null to close modal
         setActiveModal(null);
 
@@ -125,8 +135,13 @@ const MainLayout = () => {
             handleSBExpande();
         }
 
-        // set active item to last page when modal close
-        setActiveItem(lastPageItem)
+        // set active item to last page when modal close (not on the specific page - single psost)
+        if (path.includes("/app/post")) {
+            setActiveItem(null)
+        } else {
+            setActiveItem(lastPageItem);
+        }
+
     };
 
     /* -------------------------------------- */
@@ -181,7 +196,7 @@ const MainLayout = () => {
 
                 {/* navigation menu */}
                 <div
-                    className={`SideNavigationBar  ${activeItem === 'message' ? 'active' : ''}`}
+                   className={`SideNavigationBar ${location.pathname.includes("/message") ? "active" : ""}`}
                 >
 
                     {/* side navigation bar */}
