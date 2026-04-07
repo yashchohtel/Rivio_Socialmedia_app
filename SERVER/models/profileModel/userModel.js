@@ -103,9 +103,6 @@ const userSchema = new mongoose.Schema({
         default: false
     }
 
-
-    
-
 }, { timestamps: true });
 
 // Pre-save hook to hash the password before saving
