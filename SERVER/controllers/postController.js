@@ -356,8 +356,6 @@ export const getPost = async (req, res, next) => {
         isBookmarked, // is post is bookmarked or not
         bookmarkStatus: null, // "saved" | "unsaved" (for message)
     };
-
-    console.log(postData);
     
     // response
     return res.status(200).json({
