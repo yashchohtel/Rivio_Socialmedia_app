@@ -1,3 +1,5 @@
+
+
 // Custom ErrorHandler class extending the built-in Error class for handling errors in an Express application
 class ErrorHandler extends Error {
 
